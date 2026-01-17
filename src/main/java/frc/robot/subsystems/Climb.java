@@ -17,7 +17,15 @@ public class Climb extends SubsystemBase{
     private final PIDController climbPID;
     private final RelativeEncoder climbEncoder;
 
+    public Climb () {
+    // Initializing fields --> class Name = new smth();
+        Climb leaderMotor = new TalonFX();
+        Climb followerMotor = new TalonFX();
+        Climb bottomLimitSwitch = new DigitalInput();
+        Climb DigitalInput = new PIDController();
+        Climb climbEncoder = new RelativeEncoder(); 
 
+    }
 
 
     public Command runMotor() {
