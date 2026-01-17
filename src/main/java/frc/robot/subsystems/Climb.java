@@ -52,6 +52,10 @@ public class Climb extends SubsystemBase{
     //     return this.run(() -> climbPID)
     // } 
 
+    public double getEncoderPosition() {
+        return climbEncoder.getPosition();
+    }
+
     public void setVoltage(double v) {
         leaderMotor.setVoltage(v);
     }
