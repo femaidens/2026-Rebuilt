@@ -9,7 +9,10 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 public class Hopper extends SubsystemBase {
   /** Creates a new Hopper. */
-  public Hopper() {}
+  public Hopper() {
+    TalonFX motor = new TalonFX(0);
+
+  }
 
   @Override
   public void periodic() {
