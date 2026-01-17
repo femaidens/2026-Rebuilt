@@ -31,7 +31,7 @@ public class ModuleKraken implements Logged {
     private final CANcoder turnEncoder; 
     //PID? 
     private final PIDController drivePIDController; 
-    @edu.wpi.first.epilogue.Logged.NT private final PIDController turnPIDController;
+    @Log.NT private final PIDController turnPIDController;
     
     private final SimpleMotorFeedforward driveFF;
     private final SimpleMotorFeedforward turnFF;
