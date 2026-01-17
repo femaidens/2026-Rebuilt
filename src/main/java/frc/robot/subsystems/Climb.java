@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
 
-public class Climb extends SubsystemBase{
+public class Climb extends SubsystemBase {
     private final TalonFX leaderMotor;
     private final TalonFX followerMotor;
     private final DigitalInput bottomLimitSwitch;
@@ -26,7 +26,6 @@ public class Climb extends SubsystemBase{
         Climb climbEncoder = new RelativeEncoder(); 
 
     }
-
 
     public Command runMotor() {
         return this.run(() -> leaderMotor.set(Constants.ClimbConstants.MOTOR_SPEED));
