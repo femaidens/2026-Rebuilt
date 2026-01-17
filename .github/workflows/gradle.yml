@@ -1,26 +1,26 @@
 name: Java CI with Gradle
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-  workflow_dispatch:
+on: # What the possible triggers for this action are
+  push: # On a commit to a branch
+    branches: [ "main" ] # Only on the main branch
+  pull_request: # On a pull request
+  workflow_dispatch: # On manual trigger
 
 permissions:
-  contents: read
+  contents: read # Requires read access to the repository contents
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
+    - uses: actions/checkout@v3 # Check out the repository code
+    - name: Set up JDK 17 # Download and set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
-    - name: Build with Gradle
+    - name: Build with Gradle # Build the project using Gradle
       uses: gradle/gradle-build-action@v2.4.2
       with:
         arguments: build
