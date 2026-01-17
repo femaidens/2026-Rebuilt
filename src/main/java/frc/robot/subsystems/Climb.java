@@ -20,6 +20,10 @@ public class Climb extends SubsystemBase{
 
 
 
+    public Command runMotor() {
+        return this.run(() -> leaderMotor.set(Constants.ClimbConstants.MOTOR_SPEED));
+    }
+    
     public Command reverseMotorCmd() {
         return this.run(() -> {
             if(hitBottomLimit()) {
@@ -32,9 +36,17 @@ public class Climb extends SubsystemBase{
         });
     }
 
+    public boolean hitBottomLimit() {
+        return !bottomLimitSwitch.get();
+    }
 
+    // public Command setLevel(double setpoint) {
+    //     return this.run(() -> climbPID)
+    // } 
 
-
+    public void setVoltage(double v) {
+        leaderMotor.setVoltage(v);
+    }
 
 
 }
