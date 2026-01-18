@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.AbsoluteEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -15,7 +15,7 @@ public class Climb extends SubsystemBase {
     private final TalonFX followerMotor;
     private final DigitalInput bottomLimitSwitch;
     private final PIDController climbPID;
-    private final RelativeEncoder climbEncoder;
+    private final AbsoluteEncoder climbEncoder;
 
     public Climb () {
     // Initializing fields --> class Name = new smth();
