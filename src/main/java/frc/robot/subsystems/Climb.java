@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -15,7 +16,7 @@ public class Climb extends SubsystemBase {
     private final TalonFX followerMotor;
     private final DigitalInput bottomLimitSwitch;
     private final PIDController climbPID;
-    private final AbsoluteEncoder climbEncoder;
+    private final RelativeEncoder climbEncoder;
 
     public Climb () {
     // Initializing fields --> class Name = new smth();
@@ -35,6 +36,7 @@ public class Climb extends SubsystemBase {
         return this.run(() -> {
             if(hitBottomLimit()) {
                 leaderMotor.set(0);
+                climbEncoder.setPosition(0);
             } else {
                 leaderMotor.set(-Constants.ClimbConstants.MOTOR_SPEED);
             }
@@ -53,6 +55,10 @@ public class Climb extends SubsystemBase {
     // public Command setLevel(double setpoint) {
     //     return this.run(() -> climbPID)
     // } 
+    
+    public Command resetEncoderCmd() {
+        return this.runOnce(() -> climbEncoder.setPosition(0));
+    }
 
     public double getEncoderPosition() {
         return climbEncoder.getPosition();
