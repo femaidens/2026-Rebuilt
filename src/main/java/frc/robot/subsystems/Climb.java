@@ -35,12 +35,15 @@ public class Climb extends SubsystemBase {
         return this.run(() -> {
             if(hitBottomLimit()) {
                 leaderMotor.set(0);
-                climbEncoder.setPosition(0);
             } else {
                 leaderMotor.set(-Constants.ClimbConstants.MOTOR_SPEED);
             }
 
         });
+    }
+
+    public Command stopMotorCmd() {
+        return this.runOnce(() -> leaderMotor.set(0));
     }
 
     public boolean hitBottomLimit() {
