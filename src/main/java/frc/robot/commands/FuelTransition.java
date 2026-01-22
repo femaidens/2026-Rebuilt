@@ -3,10 +3,23 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Hopper;
 
 /** Add your docs here. */
 public class FuelTransition {
-    public FuelTransition(){
-        
+    private Hopper hopper;
+    public FuelTransition(Hopper hopper){
+        this.hopper = hopper;
     }
+    public Command indexToTransition(){
+        return hopper.runIndex()
+        .until(hopper::isFuelStaged)
+        .andThen(hopper.runTransition()).withTimeout(0.25)
+        .andThen(hopper.stopIndex())
+        .andThen(hopper.stopTransition());
+    }
+    
+   
 }
+
