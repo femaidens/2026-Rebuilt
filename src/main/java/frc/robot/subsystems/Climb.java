@@ -47,14 +47,6 @@ public class Climb extends SubsystemBase {
         return this.runOnce(() -> leaderMotor.set(0));
     }
 
-    public boolean readyToLift() {
-        if((getEncoderPosition() == 27) || (getEncoderPosition() == 45) || (getEncoderPosition() == 63)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public void climbPIDSet(double setpoint, boolean readyToLift) {
 	    if(readyToLift) {
 		    climbPID.setPID(
