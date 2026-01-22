@@ -66,11 +66,9 @@ public class Climb extends SubsystemBase {
 	    }
     }
 
-
-    public void climbPIDController (double current, double setpoint) {
+    public void climbPIDController(double current, double setpoint) {
 	    leaderMotor.setVoltage(climbPID.calculate(climbEncoder.getPosition(), setpoint));
     }
-
 
     public boolean hitBottomLimit() {
         return !bottomLimitSwitch.get();
@@ -91,6 +89,5 @@ public class Climb extends SubsystemBase {
     public void setVoltage(double v) {
         leaderMotor.setVoltage(v);
     }
-
 
 }
