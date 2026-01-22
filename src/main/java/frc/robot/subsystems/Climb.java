@@ -25,7 +25,7 @@ public class Climb extends SubsystemBase {
 		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, Motortype.kBrushless);
         bottomLimitSwitch = new DigitalInput(Ports.ClimbPorts.BOTTOM_LIMIT_SWITCH);
         climbEncoder = new RelativeEncoder(Ports.ClimbPorts.CLIMB_ENCODER);
-        climbPID = new PIDCONTROLLER(ClimbConstants.PIDConstants.kP, ClimbConstants.PIDConstants.kI, ClimbConstants.PIDConstants.kD);
+        climbPID = new PIDController(0,0,0);
     }
 
     public Command runMotor() {
@@ -47,6 +47,30 @@ public class Climb extends SubsystemBase {
     public Command stopMotorCmd() {
         return this.runOnce(() -> leaderMotor.set(0));
     }
+
+    public boolean readyToLift() {
+
+    }
+
+    public void climbPIDSet(double setpoint, boolean readyToLift) {
+	    if(readyToLift) {
+		    climbPID.setPID(
+            Constants.ClimbConstants.PIDConstants.kP_EXTEND,
+            Constants.ClimbConstants.PIDConstants.kI_EXTEND,
+		    Constants.ClimbConstants.PIDConstants.kD_EXTEND);
+	    } else {
+		    climbPID.setPID(
+		    Constants.ClimbConstants.PIDConstants.kP_RETRACT,
+		    Constants.ClimbConstants.PIDConstants.kI_RETRACT,
+		    Constants.ClimbConstants.PIDConstants.kD_RETRACT);
+	    }
+    }
+
+
+    public void climbPIDController (double current, double setpoint) {
+	    leaderMotor.setVoltage(climbPID.calculate(climbEncoder.getPosition(), setpoint));
+    }
+
 
     public boolean hitBottomLimit() {
         return !bottomLimitSwitch.get();
