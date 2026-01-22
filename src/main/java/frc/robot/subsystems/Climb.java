@@ -59,22 +59,22 @@ public class Climb extends SubsystemBase {
     public void climbPIDSet(double setpoint, boolean readyToLift) {
 	    if(readyToLift) {
 		    climbPID.setPID(
-            Constants.ClimbConstants.PIDConstants.kP_EXTEND,
-            Constants.ClimbConstants.PIDConstants.kI_EXTEND,
-		    Constants.ClimbConstants.PIDConstants.kD_EXTEND);
+                Constants.ClimbConstants.PIDConstants.kP_EXTEND,
+                Constants.ClimbConstants.PIDConstants.kI_EXTEND,
+                Constants.ClimbConstants.PIDConstants.kD_EXTEND
+            );
 	    } else {
 		    climbPID.setPID(
-		    Constants.ClimbConstants.PIDConstants.kP_RETRACT,
-		    Constants.ClimbConstants.PIDConstants.kI_RETRACT,
-		    Constants.ClimbConstants.PIDConstants.kD_RETRACT);
+                Constants.ClimbConstants.PIDConstants.kP_RETRACT,
+                Constants.ClimbConstants.PIDConstants.kI_RETRACT,
+                Constants.ClimbConstants.PIDConstants.kD_RETRACT
+            );
 	    }
     }
-
 
     public void climbPIDController (double current, double setpoint) {
 	    leaderMotor.setVoltage(climbPID.calculate(climbEncoder.getPosition(), setpoint));
     }
-
 
     public boolean hitBottomLimit() {
         return !bottomLimitSwitch.get();
