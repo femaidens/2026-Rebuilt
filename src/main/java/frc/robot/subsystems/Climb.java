@@ -18,13 +18,11 @@ public class Climb extends SubsystemBase {
     private final TalonFX followerMotor;
     private final DigitalInput bottomLimitSwitch;
     private final PIDController climbPID;
-    private final RelativeEncoder climbEncoder;
 
     public Climb () {
         leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, Motortype.kBrushless);
 		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, Motortype.kBrushless);
         bottomLimitSwitch = new DigitalInput(Ports.ClimbPorts.BOTTOM_LIMIT_SWITCH);
-        climbEncoder = new RelativeEncoder(Ports.ClimbPorts.CLIMB_ENCODER);
         climbPID = new PIDController(0,0,0);
     }
 
@@ -36,7 +34,7 @@ public class Climb extends SubsystemBase {
         return this.run(() -> {
             if(hitBottomLimit()) {
                 leaderMotor.set(0);
-                climbEncoder.setPosition(0);
+                leaderMotor.setPosition(0);
             } else {
                 leaderMotor.set(-Constants.ClimbConstants.MOTOR_SPEED);
             }
@@ -72,8 +70,8 @@ public class Climb extends SubsystemBase {
 	    }
     }
 
-    public void climbPIDController (double current, double setpoint) {
-	    leaderMotor.setVoltage(climbPID.calculate(climbEncoder.getPosition(), setpoint));
+    public void climbPIDController(double current, double setpoint) {
+	    leaderMotor.setVoltage(climbPID.calculate(leaderMotor.getPosition().getValueAsDouble(), setpoint));
     }
 
     public boolean hitBottomLimit() {
@@ -85,11 +83,11 @@ public class Climb extends SubsystemBase {
     // } 
     
     public Command resetEncoderCmd() {
-        return this.runOnce(() -> climbEncoder.setPosition(0));
+        return this.runOnce(() -> leaderMotor.setPosition(0));
     }
 
     public double getEncoderPosition() {
-        return climbEncoder.getPosition();
+        return leaderMotor.getPosition().getValueAsDouble();
     }
 
     public void setVoltage(double v) {
