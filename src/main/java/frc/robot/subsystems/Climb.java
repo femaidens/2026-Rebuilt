@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.ClimbConstants;
+import frc.robot.Ports;
 
 public class Climb extends SubsystemBase {
     private final TalonFX leaderMotor;
@@ -19,13 +21,11 @@ public class Climb extends SubsystemBase {
     private final RelativeEncoder climbEncoder;
 
     public Climb () {
-    // Initializing fields --> class Name = new smth();
-        Climb leaderMotor = new TalonFX();
-        Climb followerMotor = new TalonFX();
-        Climb bottomLimitSwitch = new DigitalInput();
-        Climb DigitalInput = new PIDController();
-        Climb climbEncoder = new RelativeEncoder(); 
-
+        leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, Motortype.kBrushless);
+		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, Motortype.kBrushless);
+        bottomLimitSwitch = new DigitalInput(Ports.ClimbPorts.BOTTOM_LIMIT_SWITCH);
+        climbEncoder = new RelativeEncoder(Ports.ClimbPorts.CLIMB_ENCODER);
+        climbPID = new PIDCONTROLLER(ClimbConstants.PIDConstants.kP, ClimbConstants.PIDConstants.kI, ClimbConstants.PIDConstants.kD);
     }
 
     public Command runMotor() {
