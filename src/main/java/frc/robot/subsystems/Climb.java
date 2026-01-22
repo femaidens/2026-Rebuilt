@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.RelativeEncoder;
@@ -20,8 +21,8 @@ public class Climb extends SubsystemBase {
     private final PIDController climbPID;
 
     public Climb () {
-        leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, Motortype.kBrushless);
-		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, Motortype.kBrushless);
+        leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, new CANBus());
+		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, new CANBus());
         bottomLimitSwitch = new DigitalInput(Ports.ClimbPorts.BOTTOM_LIMIT_SWITCH);
         climbPID = new PIDController(0,0,0);
     }
