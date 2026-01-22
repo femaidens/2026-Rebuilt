@@ -13,27 +13,48 @@ import frc.robot.Ports.HopperPorts;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class Hopper extends SubsystemBase {
   /** Creates a new Hopper. */
   private final TalonFX indexMotor;
-  private final TalonFXConfiguration config;
+  private final TalonFX hopperMotor;
   private final DigitalInput beambreak;
   
   public Hopper() {
     indexMotor = new TalonFX(HopperPorts.INDEX_MOTOR);
-    config = new TalonFXConfiguration();
+    configureTalonMotor(indexMotor, HopperConstants.INDEXER_CURRENT_LIMIT, NeutralModeValue.Brake);
+    hopperMotor = new TalonFX(HopperPorts.HOPPER_MOTOR);
+    configureTalonMotor(hopperMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Coast);
     beambreak = new DigitalInput(HopperPorts.BEAM_BREAK);
   }
 
-  public Command runMotor(){
+  //Indexer motor
+  public Command runIndex(){
     return this.run(() -> indexMotor.set(HopperConstants.MOTORSPEED));
   }
-  public Command stopMotor(){
+  public Command stopIndex(){
     return this.runOnce(() -> indexMotor.set(0));
+  }
+  //Wheels between shooter and hopper
+  public Command runTransition(){
+    return this.run(() -> hopperMotor.set(HopperConstants.MOTORSPEED));
+  }
+  public Command stopTransition(){
+    return this.runOnce(() -> hopperMotor.set(0));
   }
   public boolean isFuelStaged(){
     return !beambreak.get();
+  }
+
+  //Chat idk...configuring Talon
+  public static void configureTalonMotor(TalonFX motor, double currentlimit, NeutralModeValue mode){
+    TalonFXConfiguration config = new TalonFXConfiguration();
+    config.CurrentLimits.SupplyCurrentLimit = currentlimit;
+    config.CurrentLimits.SupplyCurrentLimitEnable = true;
+    config.MotorOutput.NeutralMode = mode;
+
+    motor.getConfigurator().apply(config);
   }
 
   @Override

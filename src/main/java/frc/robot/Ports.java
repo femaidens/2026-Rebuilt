@@ -9,6 +9,7 @@ public class Ports {
     public class HopperPorts{
         public static int INDEX_MOTOR = 0; 
         public static int BEAM_BREAK = 1;
+        public static int HOPPER_MOTOR = 2;
     }
     
 }

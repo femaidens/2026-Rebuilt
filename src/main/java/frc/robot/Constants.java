@@ -13,5 +13,7 @@ public class Constants {
     }
     public static class HopperConstants{
         public static double MOTORSPEED = 0.5;
+        public static double INDEXER_CURRENT_LIMIT = 30; //Do they have to be different..
+        public static double HOPPER_CURRENT_LIMIT = 40;
     }
 }
