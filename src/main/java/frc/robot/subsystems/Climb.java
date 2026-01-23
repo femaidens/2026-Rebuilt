@@ -7,7 +7,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.ClimbConstants;
 import frc.robot.Ports;
@@ -75,10 +74,6 @@ public class Climb extends SubsystemBase {
     public boolean hitBottomLimit() {
         return !bottomLimitSwitch.get();
     }
-
-    // public Command setLevel(double setpoint) {
-    //     return this.run(() -> climbPID)
-    // } 
     
     public Command resetEncoderCmd() {
         return this.runOnce(() -> leaderMotor.setPosition(0));
