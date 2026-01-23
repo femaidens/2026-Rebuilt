@@ -51,7 +51,6 @@ public class Hopper extends SubsystemBase {
   public static void configureTalonMotor(TalonFX motor, double currentlimit, NeutralModeValue mode){
     TalonFXConfiguration config = new TalonFXConfiguration();
     config.CurrentLimits.SupplyCurrentLimit = currentlimit;
-    config.CurrentLimits.SupplyCurrentLimitEnable = true;
     config.MotorOutput.NeutralMode = mode;
 
     motor.getConfigurator().apply(config);
