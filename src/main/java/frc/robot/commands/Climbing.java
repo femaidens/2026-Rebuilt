@@ -19,25 +19,12 @@ public class Climbing {
             .andThen(climb.stopMotorCmd());
     }
 
-    public Command levelTwoExtend() {
-        return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.LEVEL_TWO, true);
+    public Command levelTwoThreeExtend() {
+        return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.LEVEL_TWO_THREE, true);
     }
 
-    public Command levelTwoRetract() {
+    public Command levelTwoThreeRetract() {
         return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.MINIMUM, false);
     }
-
-    public Command levelThreeExtend() {
-        return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.LEVEL_THREE, true);
-    }
-
-    public Command levelThreeRetract() {
-        return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.MINIMUM, false);
-    }
-
-    // public Command resetClimb() {
-    //     return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.MINIMUM, false)
-    //         .andThen(climb.stopMotorCmd());
-    // }
 
 }

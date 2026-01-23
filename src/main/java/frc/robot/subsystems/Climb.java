@@ -44,7 +44,7 @@ public class Climb extends SubsystemBase {
         return this.runOnce(() -> leaderMotor.set(0));
     }
 
-    public void climbPIDSet(double setpoint, boolean readyToLift) {
+    public void climbPIDSet(boolean readyToLift) {
 	    if(readyToLift) {
 		    climbPID.setPID(
                 Constants.ClimbConstants.PIDConstants.kP_EXTEND,
@@ -66,7 +66,7 @@ public class Climb extends SubsystemBase {
 
     public Command setLevelCmd(double setpoint, boolean readyToLift) {
         return this.run(() -> {
-            climbPIDSet(setpoint, readyToLift);
+            climbPIDSet(readyToLift);
             climbPIDController(getEncoderPosition(), setpoint);
         });
     }

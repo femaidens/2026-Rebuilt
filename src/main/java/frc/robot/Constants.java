@@ -32,8 +32,7 @@ public final class Constants {
     public static class SetpointConstants {
       public static final double MINIMUM = 0;
       public static final double LEVEL_ONE = 27;
-      public static final double LEVEL_TWO = 45;
-      public static final double LEVEL_THREE = 63;
+      public static final double LEVEL_TWO_THREE = 18;
     }
   }
 
