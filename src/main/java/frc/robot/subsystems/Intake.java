@@ -7,8 +7,10 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.TalonFXSimState.MotorType;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */  
   private final TalonFX intakeMotor;
+  private final TalonFX followerIntakeMotor;
   private final TalonFX angleMotor;
   private final TalonFXConfiguration config;
   private final CANcoder encoder;
@@ -38,6 +41,7 @@ public class Intake extends SubsystemBase {
 
   public Intake() {
     intakeMotor = new TalonFX(IntakePorts.INTAKE_MOTOR, IntakeConstants.CANBUS);
+    followerIntakeMotor = new TalonFX(IntakePorts.FOLLOWER_INTAKE_MOTOR, IntakeConstants.CANBUS);
     angleMotor = new TalonFX(IntakePorts.ANGLE_MOTOR, IntakeConstants.CANBUS);
 
     encoder = new CANcoder(IntakePorts.CANCODER_ID, IntakeConstants.CANBUS);
@@ -47,6 +51,9 @@ public class Intake extends SubsystemBase {
     config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     intakeMotor.getConfigurator().apply(config);
     angleMotor.getConfigurator().apply(config);
+    followerIntakeMotor.getConfigurator().apply(config);
+
+    followerIntakeMotor.setControl(new Follower(intakeMotor.getDeviceID(), MotorAlignmentValue.Aligned)); 
 
     encoderConfig = new MagnetSensorConfigs();
     encoderConfig.withAbsoluteSensorDiscontinuityPoint(0.625); //225 degrees 
@@ -86,7 +93,6 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("At desired angle", atAngle());
     SmartDashboard.putNumber("Current Angle", getAngle());
   }
 }
