@@ -36,8 +36,8 @@ public class Climb extends SubsystemBase {
             configs.withCurrentLimits(null);
 
         leaderMotor.getConfigurator().apply(configs);
+        followerMotor.getConfigurator().apply(configs);
         followerMotor.setControl(follower);
-
 
     }
 
