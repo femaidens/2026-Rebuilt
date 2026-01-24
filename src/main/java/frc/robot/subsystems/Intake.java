@@ -54,6 +54,10 @@ public class Intake extends SubsystemBase {
     anglePid = new PIDController(IntakeConstants.PIDConstants.kP, IntakeConstants.PIDConstants.kI, IntakeConstants.PIDConstants.kP);
   }
 
+  public Command setAnglePidCmd(double setpoint){
+    return this.run(() -> setAnglePid(setpoint));
+  }
+
   public Command setIntakeMotorCmd(){
     return this.run(() -> intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED));
   }
