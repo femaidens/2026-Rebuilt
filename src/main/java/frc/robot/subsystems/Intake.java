@@ -21,6 +21,7 @@ import frc.robot.subsystems.DriveConstants.Translation;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -85,6 +86,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putBoolean("At desired angle", atAngle());
+    SmartDashboard.putNumber("Current Angle", getAngle());
   }
 }
