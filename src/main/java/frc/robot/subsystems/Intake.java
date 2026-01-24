@@ -37,8 +37,6 @@ public class Intake extends SubsystemBase {
   private final MagnetSensorConfigs encoderConfig;
   private final PIDController anglePid; 
 
-  private double setpoint;
-
   public Intake() {
     intakeMotor = new TalonFX(IntakePorts.INTAKE_MOTOR, IntakeConstants.CANBUS);
     followerIntakeMotor = new TalonFX(IntakePorts.FOLLOWER_INTAKE_MOTOR, IntakeConstants.CANBUS);

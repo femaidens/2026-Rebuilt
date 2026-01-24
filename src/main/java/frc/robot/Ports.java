@@ -27,5 +27,6 @@ public class Ports {
         public static final int INTAKE_MOTOR = 0;
         public static final int ANGLE_MOTOR = 0;
         public static final int CANCODER_ID = 0;
+        public static final int FOLLOWER_INTAKE_MOTOR = 0;
     }
 }
