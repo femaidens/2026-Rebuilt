@@ -15,8 +15,7 @@ public class Climbing {
     }
 
     public Command levelOneRetract() {
-        return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.MINIMUM, false)
-            .andThen(climb.stopMotorCmd());
+        return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.MINIMUM, false);
     }
 
     public Command levelTwoThreeExtend() {
