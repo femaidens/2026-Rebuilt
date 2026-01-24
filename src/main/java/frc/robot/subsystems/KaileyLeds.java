@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Ports;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -12,8 +13,8 @@ public class KaileyLeds extends SubsystemBase{
     private final AddressableLEDBuffer buffer;
 
     public KaileyLeds() {
-        lights = new AddressableLED(Ports.LedPorts.LED_PORT);
-        buffer = new AddressableLEDBuffer(Constants.LedConstants.LED_LENGTH);
+        lights = new AddressableLED(Ports.LedPorts.KAILEY_LED_PORT);
+        buffer = new AddressableLEDBuffer(Constants.LedConstants.KAILEY_LED_LENGTH);
     }
 
 }

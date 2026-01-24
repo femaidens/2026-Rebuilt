@@ -19,5 +19,6 @@ public final class Constants {
 
   public static class LedConstants {
     public static final int LYDIA_LED_LENGTH = 67;
+    public static final int KAILEY_LED_LENGTH = 100;
   }
 }
