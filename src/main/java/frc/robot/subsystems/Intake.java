@@ -33,7 +33,7 @@ public class Intake extends SubsystemBase {
   private final TalonFX followerIntakeMotor;
   private final TalonFX angleMotor;
   private final TalonFXConfiguration angleConfig;
-    private final TalonFXConfiguration motorConfig;
+  private final TalonFXConfiguration motorConfig;
   private final CANcoder encoder;
   private final MagnetSensorConfigs encoderConfig;
   private final PIDController anglePid; 
@@ -89,13 +89,14 @@ public class Intake extends SubsystemBase {
     angleMotor.setVoltage(anglePid.calculate(getAngle(), setpoint));
   }
 
-  public boolean atAngle(double setpoint){
+  public boolean atAngle(){
     return anglePid.atSetpoint();
   }
 
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Current Angle", atAngle());
     SmartDashboard.putNumber("Current Angle", getAngle());
   }
 }
