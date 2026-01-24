@@ -32,7 +32,8 @@ public class Intake extends SubsystemBase {
   private final TalonFX intakeMotor;
   private final TalonFX followerIntakeMotor;
   private final TalonFX angleMotor;
-  private final TalonFXConfiguration config;
+  private final TalonFXConfiguration angleConfig;
+    private final TalonFXConfiguration motorConfig;
   private final CANcoder encoder;
   private final MagnetSensorConfigs encoderConfig;
   private final PIDController anglePid; 
@@ -44,12 +45,16 @@ public class Intake extends SubsystemBase {
 
     encoder = new CANcoder(IntakePorts.CANCODER_ID, IntakeConstants.CANBUS);
 
-    config = new TalonFXConfiguration();
-    config.CurrentLimits.SupplyCurrentLimit = IntakeConstants.CURRENT_LIMIT;
-    config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-    intakeMotor.getConfigurator().apply(config);
-    angleMotor.getConfigurator().apply(config);
-    followerIntakeMotor.getConfigurator().apply(config);
+    angleConfig = new TalonFXConfiguration();
+    angleConfig.CurrentLimits.SupplyCurrentLimit = IntakeConstants.CURRENT_LIMIT;
+    angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    motorConfig = new TalonFXConfiguration();
+    motorConfig.CurrentLimits.SupplyCurrentLimit = IntakeConstants.CURRENT_LIMIT;
+    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    intakeMotor.getConfigurator().apply(motorConfig);
+    followerIntakeMotor.getConfigurator().apply(motorConfig);
+    angleMotor.getConfigurator().apply(angleConfig);
+    
 
     followerIntakeMotor.setControl(new Follower(intakeMotor.getDeviceID(), MotorAlignmentValue.Aligned)); 
 
