@@ -26,4 +26,27 @@ public class Climbing {
         return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.MINIMUM, false);
     }
 
+
+    //Sequential Commands
+    public Command climbOneCmd() {
+        return levelOneExtend()
+            .andThen(levelOneRetract());
+    }
+
+    public Command climbTwoCmd() {
+        return levelOneExtend()
+            .andThen(levelOneRetract())
+            .andThen(levelTwoThreeExtend())
+            .andThen(levelTwoThreeRetract());
+    }
+
+    public Command climbThreeCmd() {
+        return levelOneExtend()
+            .andThen(levelOneRetract())
+            .andThen(levelTwoThreeExtend())
+            .andThen(levelTwoThreeRetract())
+            .andThen(levelTwoThreeExtend())
+            .andThen(levelTwoThreeRetract());
+    }
+
 }

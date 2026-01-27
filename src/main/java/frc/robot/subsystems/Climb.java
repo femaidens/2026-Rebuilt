@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +18,7 @@ import frc.robot.Constants;
 // import frc.robot.Constants.ClimbConstants;
 import frc.robot.Ports;
 
+@Logged
 public class Climb extends SubsystemBase {
     //might have to add a field for CANBus - yet to be tested
     private final TalonFX leaderMotor;
