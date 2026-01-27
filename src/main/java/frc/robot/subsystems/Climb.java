@@ -14,21 +14,24 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+// import frc.robot.Constants.ClimbConstants;
 import frc.robot.Ports;
 
 public class Climb extends SubsystemBase {
+    //might have to add a field for CANBus - yet to be tested
     private final TalonFX leaderMotor;
     private final TalonFX followerMotor;
     private final DigitalInput bottomLimitSwitch;
     private final PIDController climbPID;
 
     public Climb () {
-        leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, new CANBus()); // might change new CANBus() to rio
+        leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, new CANBus());
 		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, new CANBus());
         bottomLimitSwitch = new DigitalInput(Ports.ClimbPorts.BOTTOM_LIMIT_SWITCH);
         climbPID = new PIDController(0,0,0);
 
-        Follower follower = new Follower(Ports.ClimbPorts.LEADER_MOTOR, MotorAlignmentValue.Aligned); // use id for first parameter from phoenix tuner
+        Follower follower = new Follower(Ports.ClimbPorts.LEADER_MOTOR, MotorAlignmentValue.Aligned);
+        //Leader ID does not equal leader motor port. have to assign leader id by checking pheonix tuner
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         //configs not finalized - subject to change
