@@ -6,15 +6,63 @@ import frc.robot.Ports;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import edu.wpi.first.wpilibj.util.Color;
 
-public class KaileyLeds extends SubsystemBase{
-    private final AddressableLED lights;
+public class KaileyLeds extends SubsystemBase {
+    private final AddressableLED strip;
     private final AddressableLEDBuffer buffer;
+    private int count = 0;
 
     public KaileyLeds() {
-        lights = new AddressableLED(Ports.LedPorts.KAILEY_LED_PORT);
+        strip = new AddressableLED(Ports.LedPorts.KAILEY_LED_PORT);
         buffer = new AddressableLEDBuffer(Constants.LedConstants.KAILEY_LED_LENGTH);
+
+        strip.setLength(buffer.getLength());
+        strip.setData(buffer);
+        strip.start();
+    }
+
+    public void fillStrip(int r, int g, int b) {
+        for(int i = 0; i < buffer.getLength(); i++) {
+            buffer.setRGB(i, r, g, b);
+        }
+        strip.setData(buffer);
+    }
+
+    public void solidPurple() {
+        fillStrip(160, 32, 340);
+    }
+
+    public void solidGreen() {
+        fillStrip(0, 255, 0);
+    }
+
+    public void clear() {
+        fillStrip(0, 0, 0);
+    }
+
+    public void pulseEffect() {
+        count++;
+        if(count < 40) {
+            solidPurple();
+        }
+        else if(count < 80) {
+            solidGreen();
+        }
+        count = 0;
+    }
+
+    public void sparkleEffect() {
+        fillStrip(160, 32, 340);
+        for(int i = 0; i < 10; i++) {
+            int position = (int) (Math.random() * buffer.getLength());
+            buffer.setRGB(position, 0, 255, 0);
+        }
+        strip.setData(buffer);
+    }
+
+    @Override
+    public void periodic() {
+        pulseEffect();
     }
 
 }
