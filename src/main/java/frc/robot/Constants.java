@@ -21,11 +21,17 @@ public final class Constants {
   public static class ShooterConstants{
     public static final int CURRENT_LIMIT = 0;
     public static final double SHOOTER_MOTOR_SPEED = 0;
+    public static final double ANGLE_MOTOR_SPEED = 0;
     public static CANBus CANBUS = new CANBus("rio");
-      // public static class PIDConstants {
-      // public static final double kP = 0;
-      // public static final double kI = 0;
-      // public static final double kD = 0;
-    //}
-  }
+      public static class PIDConstants {
+        public static final double kP = 0;
+        public static final double kI = 0;
+        public static final double kD = 0;
+     }
+      public static class SetpointConstants {
+        public static final double SMALL_ANGLE = 0;
+        public static final double MIDDLE_ANGLE = 0;
+        public static final double LARGE_ANGLE = 0;
+      }
+}
 }
