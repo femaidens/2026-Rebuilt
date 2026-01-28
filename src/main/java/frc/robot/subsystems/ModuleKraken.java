@@ -49,10 +49,10 @@ public class ModuleKraken implements Logged {
             boolean turnInverted) {
         this.chassisAngularOffset = chassisAngularOffset;
 
-        driveMotor = new TalonFX(driveID, Translation.CANBUS);
+        driveMotor = new TalonFX(driveID, Translation.CAN_BUS);
         configureDriveTalon(driveMotor, Translation.CURRENT_LIMIT);
 
-        turnMotor = new TalonFX(turnID, Translation.CANBUS);
+        turnMotor = new TalonFX(turnID, Translation.CAN_BUS);
         configureTurnTalon(turnMotor, CANCoderID, Turn.CURRENT_LIMIT, turnInverted);
 
         drivePIDController = new PIDController(Translation.PID.P, Translation.PID.I, Translation.PID.D); 
@@ -66,7 +66,7 @@ public class ModuleKraken implements Logged {
         
 
         directionConfig = new MagnetSensorConfigs();
-        turnEncoder = new CANcoder(CANCoderID, Translation.CANBUS);
+        turnEncoder = new CANcoder(CANCoderID, Translation.CAN_BUS);
         directionConfig.withAbsoluteSensorDiscontinuityPoint(0.5);
         directionConfig.MagnetOffset = magnetOffset;
         turnEncoder.getConfigurator().apply(directionConfig.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
