@@ -65,9 +65,9 @@ public class Shooter extends SubsystemBase {
       return this.run(() -> shooterPID(setpoint));
     }
   
-  public Command adjustAngleCmd() {
-    return this.run(()-> angleMotor.set(Constants.ShooterConstants.ANGLE_MOTOR_SPEED));
-  }
+  // public Command adjustAngleCmd() {
+  //   return this.run(()-> angleMotor.set(Constants.ShooterConstants.ANGLE_MOTOR_SPEED));
+  // }
 
   @Override
   public void periodic() {
