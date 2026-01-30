@@ -12,21 +12,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Ports;
+import frc.robot.Ports.LedPorts;
 
 public class LydiaLeds extends SubsystemBase {
     private final AddressableLED ledLight;
     private final AddressableLEDBuffer ledBuffer;
-    private final AddressableLEDBufferView ledBufferViewLeft;
-    private final AddressableLEDBufferView ledBufferViewRight;
+    // private final AddressableLEDBufferView ledBufferViewLeft;
+    // private final AddressableLEDBufferView ledBufferViewRight;
 
-    private final Color firstRed, firstBlue, bumperRed, bumperBlue, green, purple;
+    private final Color firstRed, firstBlue, bumperRed, bumperBlue, green, purple, black;
 
 
     public LydiaLeds() {
         ledLight = new AddressableLED(Ports.LedPorts.LYDIA_LED_PORT);
         ledBuffer = new AddressableLEDBuffer(Constants.LedConstants.LYDIA_LED_LENGTH);
-        ledBufferViewLeft = ledBuffer.createView(0,35);
-        ledBufferViewRight = ledBuffer.createView(35,69);
+        // ledBufferViewLeft = ledBuffer.createView(0,35);
+        // ledBufferViewRight = ledBuffer.createView(35,69);
 
         firstRed = Color.kFirstRed;
         firstBlue = Color.kFirstBlue;
@@ -34,6 +35,7 @@ public class LydiaLeds extends SubsystemBase {
         bumperBlue = Color.kMediumBlue;
         green = Color.kGreenYellow;
         purple = Color.kDarkViolet;
+        black = Color.kBlack;
 
 
         ledLight.setLength(ledBuffer.getLength());
@@ -47,7 +49,7 @@ public class LydiaLeds extends SubsystemBase {
     //Solid color Cmds
     public Command setDefault() {
         return this.run(() -> {
-            LEDPattern off = LEDPattern.solid(Color.kBlack);
+            LEDPattern off = LEDPattern.solid(black);
             off.applyTo(ledBuffer);
         });
     }
@@ -107,6 +109,20 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern femaidensSplit = LEDPattern.steps(Map.of(0, purple, 0.5, green));
             femaidensSplit.applyTo(ledBuffer);
+        });
+    }
+
+    public Command setFemaidensBlink() {
+        return this.run(() -> {
+            LEDPattern solidPurple = LEDPattern.solid(purple);
+            LEDPattern solidGreen = LEDPattern.solid(green);
+            LEDPattern off = LEDPattern.solid(black);
+
+            while (true) {
+                solidPurple.applyTo(ledBuffer);
+                off.applyTo(ledBuffer);
+                solidGreen.applyTo(ledBuffer);
+            }
         });
     }
     
