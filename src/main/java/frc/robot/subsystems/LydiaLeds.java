@@ -48,26 +48,32 @@ public class LydiaLeds extends SubsystemBase {
 
     public void setFirstRed() {
         firstRed.applyTo(ledBuffer);
+        ledLight.setData(ledBuffer);
     }
 
     public void setFirstBlue() {
         firstBlue.applyTo(ledBuffer);
+        ledLight.setData(ledBuffer);
     }
 
     public void setBumperRed() {
         bumperRed.applyTo(ledBuffer);
+        ledLight.setData(ledBuffer);
     }
 
      public void setBumperBlue() {
         bumperBlue.applyTo(ledBuffer);
+        ledLight.setData(ledBuffer);
     }
 
      public void setGreen() {
         green.applyTo(ledBuffer);
+        ledLight.setData(ledBuffer);
     }
 
      public void setPurple() {
         purple.applyTo(ledBuffer);
+        ledLight.setData(ledBuffer);
     }
     
     @Override
