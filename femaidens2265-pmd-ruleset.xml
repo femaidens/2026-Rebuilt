@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="femaidens2265-pmd-ruleset"
+  xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+
+  <description>
+    The PMD config for FRC team 2265, the Iron Maidens.
+    Please ask Jacob the programming mentor or the programming heads before
+    removing rules.
+    If we are suppressing many violations of the same rule, we should
+    probably remove it.
+  </description>
+
+  <rule ref="category/java/design.xml/MutableStaticState" />
+
+  <rule ref="category/java/errorprone.xml/AssignmentToNonFinalStatic" />
+
+</ruleset>

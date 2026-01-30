@@ -3,6 +3,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2026.2.1"
+    id 'pmd' // PMD for static analysis
 }
 
 java {
@@ -88,6 +89,15 @@ test {
     testLogging {
         exceptionFormat TestExceptionFormat.FULL
     }
+}
+
+// Static analysis
+
+pmd {
+    toolVersion = "7.20.0"
+    consoleOutput = true
+    ruleSetFiles = files("femaidens2265-pmd-ruleset.xml")
+    ruleSets = [] // Explicitly set so we don't use the default ruleset
 }
 
 // Simulation configuration (e.g. environment variables).
