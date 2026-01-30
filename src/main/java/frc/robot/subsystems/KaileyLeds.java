@@ -29,11 +29,11 @@ public class KaileyLeds extends SubsystemBase {
     }
 
     public void solidPurple() {
-        fillStrip(160, 32, 340);
+        fillStrip(104, 66, 152);
     }
 
     public void solidGreen() {
-        fillStrip(0, 255, 0);
+        fillStrip(162, 212, 10);
     }
 
     public void clear() {
@@ -52,10 +52,10 @@ public class KaileyLeds extends SubsystemBase {
     }
 
     public void sparkleEffect() {
-        fillStrip(160, 32, 340);
+        fillStrip(104, 66, 152);
         for(int i = 0; i < 10; i++) {
             int position = (int) (Math.random() * buffer.getLength());
-            buffer.setRGB(position, 0, 255, 0);
+            buffer.setRGB(position, 162, 212, 10);
         }
         strip.setData(buffer);
     }
