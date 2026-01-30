@@ -96,7 +96,7 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Current Angle", atAngle());
+    SmartDashboard.putBoolean("At Correct Angle", atAngle());
     SmartDashboard.putNumber("Current Angle", getAngle());
   }
 }
