@@ -1,10 +1,14 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.AddressableLEDBufferView;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.LEDPattern.GradientType;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Ports;
@@ -12,27 +16,24 @@ import frc.robot.Ports;
 public class LydiaLeds extends SubsystemBase {
     private final AddressableLED ledLight;
     private final AddressableLEDBuffer ledBuffer;
-    private final AddressableLEDBufferView ledBufferView;
+    private final AddressableLEDBufferView ledBufferViewLeft;
+    private final AddressableLEDBufferView ledBufferViewRight;
 
-    private final LEDPattern firstRed;
-    private final LEDPattern firstBlue;
-    private final LEDPattern bumperRed;
-    private final LEDPattern bumperBlue;
-    private final LEDPattern green;
-    private final LEDPattern purple;
+    private final Color firstRed, firstBlue, bumperRed, bumperBlue, green, purple;
 
 
     public LydiaLeds() {
         ledLight = new AddressableLED(Ports.LedPorts.LYDIA_LED_PORT);
         ledBuffer = new AddressableLEDBuffer(Constants.LedConstants.LYDIA_LED_LENGTH);
-        ledBufferView = ledBuffer.createView(0,41);
+        ledBufferViewLeft = ledBuffer.createView(0,35);
+        ledBufferViewRight = ledBuffer.createView(35,69);
 
-        firstRed = LEDPattern.solid(Color.kFirstRed);
-        firstBlue = LEDPattern.solid(Color.kFirstBlue);
-        bumperRed = LEDPattern.solid(Color.kFirebrick);
-        bumperBlue = LEDPattern.solid(Color.kMediumBlue);
-        green = LEDPattern.solid(Color.kGreenYellow);
-        purple = LEDPattern.solid(Color.kDarkViolet);
+        firstRed = Color.kFirstRed;
+        firstBlue = Color.kFirstBlue;
+        bumperRed = Color.kFirebrick;
+        bumperBlue = Color.kMediumBlue;
+        green = Color.kGreenYellow;
+        purple = Color.kDarkViolet;
 
 
         ledLight.setLength(ledBuffer.getLength());
@@ -42,44 +43,78 @@ public class LydiaLeds extends SubsystemBase {
 
     }
 
-    public Command setSolidColor() {
-        return 
+
+    //Solid color Cmds
+    public Command setDefault() {
+        return this.run(() -> {
+            LEDPattern off = LEDPattern.solid(Color.kBlack);
+            off.applyTo(ledBuffer);
+        });
     }
 
-    public void setFirstRed() {
-        firstRed.applyTo(ledBuffer);
-        ledLight.setData(ledBuffer);
+    public Command setFirstRedSolid() {
+        return this.run(() -> {
+            LEDPattern solid = LEDPattern.solid(firstRed);
+            solid.applyTo(ledBuffer);
+        });
     }
 
-    public void setFirstBlue() {
-        firstBlue.applyTo(ledBuffer);
-        ledLight.setData(ledBuffer);
+    public Command setFirstBlueSolid() {
+        return this.run(() -> {
+            LEDPattern solid = LEDPattern.solid(firstBlue);
+            solid.applyTo(ledBuffer);
+        });
     }
 
-    public void setBumperRed() {
-        bumperRed.applyTo(ledBuffer);
-        ledLight.setData(ledBuffer);
+    public Command setBumperRedSolid() {
+        return this.run(() -> {
+            LEDPattern solid = LEDPattern.solid(bumperRed);
+            solid.applyTo(ledBuffer);
+        });
     }
 
-     public void setBumperBlue() {
-        bumperBlue.applyTo(ledBuffer);
-        ledLight.setData(ledBuffer);
+     public Command setBumperBlueSolid() {
+        return this.run(() -> {
+            LEDPattern solid = LEDPattern.solid(bumperBlue);
+            solid.applyTo(ledBuffer);
+        });
     }
 
-     public void setGreen() {
-        green.applyTo(ledBuffer);
-        ledLight.setData(ledBuffer);
+     public Command setGreenSolid() {
+        return this.run(() -> {
+            LEDPattern solid = LEDPattern.solid(green);
+            solid.applyTo(ledBuffer);
+        });
     }
 
-     public void setPurple() {
-        purple.applyTo(ledBuffer);
-        ledLight.setData(ledBuffer);
+     public Command setPurpleSolid() {
+        return this.run(() -> {
+            LEDPattern solid = LEDPattern.solid(purple);
+            solid.applyTo(ledBuffer);
+        });
+    }
+
+
+    //Pattern color Cmds
+    public Command setFemaidensGrad() {
+        return this.run(() -> {
+            LEDPattern femaidensGradient = LEDPattern.gradient(GradientType.kContinuous, green, purple);
+            femaidensGradient.applyTo(ledBuffer);
+        });
+    }
+
+    public Command setFemaidensSplit() {
+        return this.run(() -> {
+            LEDPattern femaidensSplit = LEDPattern.steps(Map.of(0, purple, 0.5, green));
+            femaidensSplit.applyTo(ledBuffer);
+        });
     }
     
+
+
     @Override
     public void periodic() {
         ledLight.setData(ledBuffer);
-        //highk dont know if i need this
     }
 
 }
