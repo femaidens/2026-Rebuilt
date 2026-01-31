@@ -8,6 +8,9 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.KaileyLeds;
+import frc.robot.subsystems.KaseyLeds;
+import frc.robot.subsystems.LydiaLeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -22,9 +25,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
+  private final KaileyLeds kailey = new KaileyLeds();
+  private final LydiaLeds lydia = new LydiaLeds();
+  private final KaseyLeds kasey = new KaseyLeds();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -46,9 +52,20 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+        operJoy.leftTrigger().onTrue(lydia.setDefault());
+        operJoy.rightTrigger().onTrue(kailey.clear());
+
+        operJoy.a().onTrue(kailey.solidPurple());
+        operJoy.x().onTrue(kailey.solidGreen());
+        operJoy.y().onTrue(kailey.pulseEffect());
+
+        operJoy.b().onTrue(lydia.setPurpleSolid());
+        operJoy.leftBumper().onTrue(lydia.setGreenSolid());
+        operJoy.rightBumper().onTrue(lydia.setFemaidensGrad());
+
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    
   }
 
   /**
