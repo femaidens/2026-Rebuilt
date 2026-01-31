@@ -24,10 +24,10 @@ public class FuelTransition {
     */
     //No beambreak b/w anymore
     public Command indexToTransition(){
-        return hopper.runIndex()
-        .alongWith(hopper.runTransition()).withTimeout(0.25)
-        .andThen(hopper.stopIndex())
-        .andThen(hopper.stopTransition());
+        return hopper.runSpindexer()
+        .alongWith(hopper.runIndexer()).withTimeout(0.25)
+        .andThen(hopper.stopSpindexer())
+        .andThen(hopper.stopIndexer());
         
     }
    
