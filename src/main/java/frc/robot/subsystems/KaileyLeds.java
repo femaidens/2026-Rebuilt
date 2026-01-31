@@ -25,29 +25,28 @@ public class KaileyLeds extends SubsystemBase {
     public void fillStrip(int g, int r, int b) {
         for(int i = 0; i < buffer.getLength(); i++) {
             buffer.setRGB(i, g, r, b);
-            //System.out.println("LED running");
         }
         strip.setData(buffer);
-        // System.out.println("LED running");
     }
 
     public Command solidPurple() {
         return this.run(() -> {
             fillStrip(66, 104, 152);
-            System.out.println("LED running purple");
+            System.out.println("LED Purple");
         });
     }
 
     public Command solidGreen() {
         return this.run(() -> {
             fillStrip(212, 162, 10);
-            System.out.println("LED running green");
+            System.out.println("LED Green");
         });
     }
 
     public Command clear() {
         return this.run(() -> {
             fillStrip(0, 0, 0);
+            System.out.println("LED Reset");
         });
     }
 
@@ -63,7 +62,7 @@ public class KaileyLeds extends SubsystemBase {
             else {
                 count = 0;
             }
-            System.out.println("LED running pulse");
+            System.out.println("LED Pulse");
         });
     }
 
@@ -75,6 +74,7 @@ public class KaileyLeds extends SubsystemBase {
                 buffer.setRGB(position, 212, 162, 10);
             }
             strip.setData(buffer);
+            System.out.println("LED Sparkle");
         });
     }
 
@@ -91,6 +91,7 @@ public class KaileyLeds extends SubsystemBase {
             }
             strip.setData(buffer);
             count++;
+            System.out.println("LED Progress Mask");
         });
     }
 
@@ -101,18 +102,15 @@ public class KaileyLeds extends SubsystemBase {
                 int g = 0;
                 int b = 0;
                 if (i < buffer.getLength() / 2) {
-                    g = (i * 255) / (buffer.getLength() / 2);
-                    r = 66;
-                    b = 104;
-                }
+                    g = 255;
+                } 
                 else {
-                    r = 66;
-                    b = 152;
-                    g = ((i - (buffer.getLength() / 2)) * 255) / (buffer.getLength() / 2);
+                    b = 255;
                 }
-                buffer.setRGB(i, r, g, b);
+                buffer.setRGB(i, g, r, b);
             }
             strip.setData(buffer);
+            System.out.println("LED Offset Gradient");
         });
     }
 
@@ -120,20 +118,22 @@ public class KaileyLeds extends SubsystemBase {
         return this.run(() -> {
             for (int i = 0; i < buffer.getLength(); i++) {
                 int g = (i * 255) / buffer.getLength();
-                buffer.setRGB(i, 0, g / 2, 0);
+                buffer.setRGB(i, g / 2, 0, 0);
             }
             strip.setData(buffer);
+            System.out.println("LED Green Gradient");
         });
     }
 
-    public Command dimPurpleGradient() {
+    public Command purpleGradient() {
         return this.run(() -> {
             for (int i = 0; i < buffer.getLength(); i++) {
                 int r = (i * 66) / buffer.getLength();
                 int b = (i * 152) / buffer.getLength();
-                buffer.setRGB(i, r / 2, 0, b / 2);
+                buffer.setRGB(i, 0, r / 2, b / 2);
             }
             strip.setData(buffer);
+            System.out.println("LED Purple Gradient");
         });
     }
 
