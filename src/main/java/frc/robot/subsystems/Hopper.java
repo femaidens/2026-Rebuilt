@@ -22,9 +22,9 @@ public class Hopper extends SubsystemBase {
   private final DigitalInput beambreak;
   
   public Hopper() {
-    indexMotor = new TalonFX(HopperPorts.INDEX_MOTOR);
+    indexMotor = new TalonFX(HopperPorts.INDEX_MOTOR, HopperConstants.canbus);
     configureTalonMotor(indexMotor, HopperConstants.INDEXER_CURRENT_LIMIT, NeutralModeValue.Brake);
-    hopperMotor = new TalonFX(HopperPorts.HOPPER_MOTOR);
+    hopperMotor = new TalonFX(HopperPorts.HOPPER_MOTOR, HopperConstants.canbus);
     configureTalonMotor(hopperMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Coast);
     beambreak = new DigitalInput(HopperPorts.BEAM_BREAK);
   }
