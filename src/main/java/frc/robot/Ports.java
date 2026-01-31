@@ -21,5 +21,7 @@ public class Ports {
         public static final int FRONT_RIGHT_CANCODER = 2;
         public static final int REAR_LEFT_CANCODER = 3;
         public static final int REAR_RIGHT_CANCODER = 1;
+
+        public static final int GYRO_ID = 14; 
     }
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.SignalLogger;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
@@ -47,7 +48,9 @@ public class Drive extends SubsystemBase implements Logged {
 
   private final List<ModuleKraken> modules;
 
-  private final AHRS gyro;
+  // private final AHRS gyro;
+
+  private final Pigeon2 gyro;
 
   public final SwerveDriveOdometry odometry;
 
@@ -70,8 +73,8 @@ public class Drive extends SubsystemBase implements Logged {
 
     // totally not sure, would need to check
     
-    gyro = new AHRS(NavXComType.kMXP_SPI);
-
+    // gyro = new AHRS(NavXComType.kMXP_SPI);
+    gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CANBUS);
     odometry = new SwerveDriveOdometry(
       Drivetrain.kDriveKinematics, 
       gyro.getRotation2d(), 
@@ -251,8 +254,15 @@ public class Drive extends SubsystemBase implements Logged {
    * resets the odometry to the specified pose
    */
   public void resetOdometry(Pose2d pose) {
+    // odometry.resetPosition(
+    //   Rotation2d.fromRadians(gyro.getYaw()),
+    //   new SwerveModulePosition[]{
+    //     frontLeft.getSwerveModulePosition(),
+    //     frontRight.getSwerveModulePosition(),
+    //     rearLeft.getSwerveModulePosition(),
+    //     rearRight.getSwerveModulePosition()}, pose);
     odometry.resetPosition(
-      Rotation2d.fromRadians(gyro.getYaw()),
+      gyro.getRotation2d(),
       new SwerveModulePosition[]{
         frontLeft.getSwerveModulePosition(),
         frontRight.getSwerveModulePosition(),
@@ -266,7 +276,8 @@ public class Drive extends SubsystemBase implements Logged {
    */
   @Log.NT
   public double getAngle(){
-    return -1 * gyro.getAngle();
+    // return -1 * gyro.getAngle();
+    return gyro.getRotation2d().getRadians();
   }
 
   /**
@@ -274,11 +285,14 @@ public class Drive extends SubsystemBase implements Logged {
    * 
    * @return new yaw angle in radians (ideally)
    */
-  public double setYawOffset() {
-    gyro.setAngleAdjustment(-Math.PI / 2); // need to double check!
-    return gyro.getYaw();
+  // public double setYawOffset() {
+  //   gyro.setAngleAdjustment(-Math.PI / 2); // need to double check!
+  //   return gyro.getYaw();
+  // }
+  public double getYawOffset(){
+    gyro.setYaw(-90.0);
+    return gyro.getRotation2d().getRadians();
   }
-
   /**
    * Zero the gyro heading
    */
