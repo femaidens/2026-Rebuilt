@@ -27,6 +27,11 @@ public class FuelTransition {
         return hopper.runSpindexer()
         .alongWith(hopper.runIndexer());
     }
+
+    public Command stopTransitioning(){
+        return hopper.stopSpindexer()
+        .alongWith(hopper.stopIndexer());
+    }
    
 }
 
