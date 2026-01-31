@@ -59,7 +59,7 @@ public class Intake extends SubsystemBase {
     encoderConfig.withAbsoluteSensorDiscontinuityPoint(0.625); //225 degrees 
     encoder.getConfigurator().apply(encoderConfig.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
-    anglePid = new PIDController(IntakeConstants.PIDConstants.kP, IntakeConstants.PIDConstants.kI, IntakeConstants.PIDConstants.kP);
+    anglePid = new PIDController(IntakeConstants.PIDConstants.kP, IntakeConstants.PIDConstants.kI, IntakeConstants.PIDConstants.kD);
   }
 
   public Command setAnglePidCmd(double setpoint){
@@ -70,11 +70,11 @@ public class Intake extends SubsystemBase {
     return this.run(() -> intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED));
   }
 
-  public Command stopIntakeMotor(){
+  public Command stopIntakeMotorCmd(){
     return this.run(() -> intakeMotor.setVoltage(0));
   }
 
-  public Command stopAngleMotor(){
+  public Command stopAngleMotorCmd(){
     return this.run(() -> angleMotor.setVoltage(0));
   }
 

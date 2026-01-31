@@ -23,7 +23,7 @@ public final class Constants {
 
   public static class IntakeConstants {
     public static final int CURRENT_LIMIT = 30;
-    public static final double INTAKE_MOTOR_SPEED = 0;
+    public static final double INTAKE_MOTOR_SPEED = 0.5;
     public static CANBus CANBUS= new CANBus("rio");
       public static class PIDConstants {
       public static final double kP = 2;
