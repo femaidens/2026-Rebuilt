@@ -12,6 +12,8 @@ public class FuelTransition {
     public FuelTransition(Hopper hopper){
         this.hopper = hopper;
     }
+
+    /** 
     public Command indexToTransition(){
         return hopper.runIndex()
         .until(hopper::isFuelStaged)
@@ -19,7 +21,15 @@ public class FuelTransition {
         .andThen(hopper.stopIndex())
         .andThen(hopper.stopTransition());
     }
-    
+    */
+    //No beambreak b/w anymore
+    public Command indexToTransition(){
+        return hopper.runIndex()
+        .alongWith(hopper.runTransition()).withTimeout(0.25)
+        .andThen(hopper.stopIndex())
+        .andThen(hopper.stopTransition());
+        
+    }
    
 }
 

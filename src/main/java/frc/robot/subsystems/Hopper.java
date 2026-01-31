@@ -19,14 +19,14 @@ public class Hopper extends SubsystemBase {
   /** Creates a new Hopper. */
   private final TalonFX indexMotor;
   private final TalonFX hopperMotor;
-  private final DigitalInput beambreak;
+  // private final DigitalInput beambreak;
   
   public Hopper() {
     indexMotor = new TalonFX(HopperPorts.INDEX_MOTOR, HopperConstants.canbus);
     configureTalonMotor(indexMotor, HopperConstants.INDEXER_CURRENT_LIMIT, NeutralModeValue.Brake);
     hopperMotor = new TalonFX(HopperPorts.HOPPER_MOTOR, HopperConstants.canbus);
     configureTalonMotor(hopperMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Coast);
-    beambreak = new DigitalInput(HopperPorts.BEAM_BREAK);
+    // beambreak = new DigitalInput(HopperPorts.BEAM_BREAK);
   }
 
   //Indexer motor
@@ -37,16 +37,18 @@ public class Hopper extends SubsystemBase {
     return this.runOnce(() -> indexMotor.set(0));
   }
   //Wheels between shooter and hopper
+  
   public Command runTransition(){
     return this.run(() -> hopperMotor.set(HopperConstants.MOTORSPEED));
   }
   public Command stopTransition(){
     return this.runOnce(() -> hopperMotor.set(0));
   }
+  /** 
   public boolean isFuelStaged(){
     return !beambreak.get();
   }
-
+  */
   //Chat idk...configuring Talon
   public static void configureTalonMotor(TalonFX motor, double currentlimit, NeutralModeValue mode){
     TalonFXConfiguration config = new TalonFXConfiguration();
@@ -59,6 +61,6 @@ public class Hopper extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    SmartDashboard.putBoolean("FUEL STAGED", isFuelStaged());
+    // SmartDashboard.putBoolean("FUEL STAGED", isFuelStaged());
   }
 }
