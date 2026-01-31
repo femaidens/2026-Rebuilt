@@ -45,9 +45,11 @@ public class Intake extends SubsystemBase {
     angleConfig = new TalonFXConfiguration();
     angleConfig.CurrentLimits.SupplyCurrentLimit = IntakeConstants.CURRENT_LIMIT;
     angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
     motorConfig = new TalonFXConfiguration();
     motorConfig.CurrentLimits.SupplyCurrentLimit = IntakeConstants.CURRENT_LIMIT;
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+    
     intakeMotor.getConfigurator().apply(motorConfig);
     followerIntakeMotor.getConfigurator().apply(motorConfig);
     angleMotor.getConfigurator().apply(angleConfig);
