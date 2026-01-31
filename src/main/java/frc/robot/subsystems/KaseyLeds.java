@@ -22,103 +22,135 @@ import edu.wpi.first.wpilibj.LEDReader;
 public class KaseyLeds extends SubsystemBase {
     private final AddressableLED leds; 
     private final AddressableLEDBuffer buffer; //led buffer
-
-    // private final Color red, blue, green, purple, pink
-
-    public KaseyLeds () {
-        leds = new AddressableLED(Ports.LedPorts.LED_PORT);
-        buffer = new AddressableLEDBuffer (Constants.LedConstants.KASEY_LED_LENGTH);
+    private boolean movingForward;
+    private double currentProgress; // [0,1]
+    
+    
+        // private final Color red, blue, green, purple, pink
+    
+        public KaseyLeds () {
+            leds = new AddressableLED(Ports.LedPorts.LED_PORT);
+            buffer = new AddressableLEDBuffer (Constants.LedConstants.KASEY_LED_LENGTH);
+            
+            leds.setLength(buffer.getLength());
+            leds.setData(buffer);
+            leds.start();
+    
+            movingForward = true;
+            currentProgress = 0;
+        }
         
-        leds.setLength(buffer.getLength());
-        leds.setData(buffer);
-        leds.start();
-    }
-    
-    public void setLEDPurple() {
-        for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB (i, 165, 92, 255);
-        }
-        leds.setData(buffer);
-    }
-    
-    public void setLEDGreen() {
-        for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB(i, 104, 255, 84);
-        }
-        leds.setData(buffer);
-    }
-
-  public void setLEDRed() {
-        for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB (i, 255, 0, 0);
-        }
-        leds.setData(buffer);
-    }
-
-    public void setLEDBlue() {
-        for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB (i, 0, 221, 255);
-        }
-        leds.setData(buffer);
-    }
-
-    
-    public void setLEDPink() {
-        for (var i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB (i, 255, 74, 158);
-        }
-        leds.setData(buffer);
-    }
-
-
-    public Command setDefault() {
-        return this.run(() -> {
-            for (int i = 0; i < buffer.getLength(); i++) {
-                buffer.setRGB (i, 0, 0 ,0);
+        public void setLEDPurple() {
+            for (var i = 0; i < buffer.getLength(); i++) {
+                buffer.setRGB (i, 165, 92, 255);
             }
             leds.setData(buffer);
-        });
-    }
-
-    public Command setPurpleCommand() {
-        return this.run(() -> setLEDPurple());
         }
-
-    public Command setGreenCommand() {
-        return this.run(() -> setLEDGreen());
-    }
-
-    public Command setRedCommand() {
-        return this.run(() -> setLEDRed());
-    }
-
-    public Command setBlueCommand() {
-        return this.run(() -> setLEDBlue());
-    }
-
-    public Command setPinkCommand() {
-        return this.run(() -> setLEDPink());
-    }
-
-    //beautiful transitions
-    public Command breatheEffect() {
-        return this.run(() -> {
-            LEDPattern base = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kBlue);
-            LEDPattern pattern = base.breathe(Seconds.of(2));
-
-
-            pattern.applyTo(buffer);
+        
+        public void setLEDGreen() {
+            for (var i = 0; i < buffer.getLength(); i++) {
+                buffer.setRGB(i, 104, 255, 84);
+            }
             leds.setData(buffer);
+        }
+    
+      public void setLEDRed() {
+            for (var i = 0; i < buffer.getLength(); i++) {
+                buffer.setRGB (i, 255, 0, 0);
+            }
+            leds.setData(buffer);
+        }
+    
+        public void setLEDBlue() {
+            for (var i = 0; i < buffer.getLength(); i++) {
+                buffer.setRGB (i, 0, 221, 255);
+            }
+            leds.setData(buffer);
+        }
+    
+        
+        public void setLEDPink() {
+            for (var i = 0; i < buffer.getLength(); i++) {
+                buffer.setRGB (i, 255, 74, 158);
+            }
+            leds.setData(buffer);
+        }
+    
+    
+        public Command setDefault() {
+            return this.run(() -> {
+                for (int i = 0; i < buffer.getLength(); i++) {
+                    buffer.setRGB (i, 0, 0 ,0);
+                }
+                leds.setData(buffer);
+            });
+        }
+    
+        public Command setPurpleCommand() {
+            return this.run(() -> setLEDPurple());
+            }
+    
+        public Command setGreenCommand() {
+            return this.run(() -> setLEDGreen());
+        }
+    
+        public Command setRedCommand() {
+            return this.run(() -> setLEDRed());
+        }
+    
+        public Command setBlueCommand() {
+            return this.run(() -> setLEDBlue());
+        }
+    
+        public Command setPinkCommand() {
+            return this.run(() -> setLEDPink());
+        }
+    
+        //beautiful transitions
+        public Command breatheEffect() {
+            return this.run(() -> {
+                LEDPattern base = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kBlue);
+                LEDPattern pattern = base.breathe(Seconds.of(2));
+    
+    
+                pattern.applyTo(buffer);
+                leds.setData(buffer);
+            });
+        }
+    
+        public double getLedProgress () {
+            return currentProgress;
+        }
+    
+        public Command ProgressMaskEffect() {
+            return this.run(() -> {
+            LEDPattern base = LEDPattern.gradient(LEDPattern.GradientType.kDiscontinuous, Color.kRed, Color.kBlue);
+            LEDPattern mask = LEDPattern.progressMaskLayer(this::getLedProgress);
+            LEDPattern heightDisplay = base.mask(mask);
+    
+            heightDisplay.applyTo(buffer);
+    
+            leds.setData(buffer);
+    
         });
     }
-
-    @Override
-    public void periodic() {
-        leds.setData(buffer);
-        breatheEffect().schedule();
+    
+        @Override
+        public void periodic() {
+            leds.setData(buffer);
+            breatheEffect().schedule();
+    
+            if(movingForward) {
+                currentProgress += 0.1;
+            } else {
+                currentProgress -= 0.1;
+            }
+            if (currentProgress==1 || currentProgress==0) {
+                movingForward = !movingForward;
+            }
+    
+        }
     }
-
-}
 
 
 
