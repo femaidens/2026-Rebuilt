@@ -57,10 +57,12 @@ public class RobotContainer {
         operJoy.a().onTrue(lydia.setBumperBlueSolid());
         operJoy.x().onTrue(lydia.setBumperRedSolid());
         operJoy.b().onTrue(lydia.setPurpleSolid());
-        operJoy.y().onTrue(lydia.setFemaidensSplit());
-        operJoy.leftBumper().onTrue(lydia.setGreenSolid());
-        operJoy.rightBumper().onTrue(lydia.setFemaidensGrad());
-        operJoy.rightTrigger().onTrue(lydia.setFirstBlueSolid());
+        operJoy.y().onTrue(lydia.setGreenSolid());
+        operJoy.leftBumper().onTrue(lydia.setFemaidensSplit());
+        operJoy.rightBumper().onTrue(lydia.setFirstRedSolid());
+        operJoy.rightTrigger().onTrue(lydia.setFemaidensPan());
+        operJoy.start().onTrue(lydia.setFemaidensStaticGrad());
+        operJoy.back().onTrue(lydia.setFemaidensScrollGrad());
         
 
 
@@ -69,6 +71,11 @@ public class RobotContainer {
         // operJoy.a().onTrue(kailey.solidPurple());
         // operJoy.x().onTrue(kailey.solidGreen());
         // operJoy.y().onTrue(kailey.pulseEffect());
+        // operJoy.b().onTrue(kailey.sparkleEffect());
+        // operJoy.leftBumper().onTrue(kailey.progressMask());
+        // operJoy.rightBumper().onTrue(kailey.offsetGradient());
+        // operJoy.leftTrigger().onTrue(kailey.greenGradient());
+        // operJoy.start().onTrue(kailey.purpleGradient());
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,

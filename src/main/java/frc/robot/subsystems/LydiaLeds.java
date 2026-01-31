@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Percent;
+import static edu.wpi.first.units.Units.Second;
+
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.AddressableLED;
@@ -30,9 +33,9 @@ public class LydiaLeds extends SubsystemBase {
         // ledBufferViewRight = ledBuffer.createView(35,69);
 
         //FYI - colors do not match the colors that appear on LEDS
-        firstRed = Color.kGreen; //deep red
-        firstBlue = Color.kChartreuse; //orange
-        bumperRed = Color.kCoral; //green
+        firstRed = Color.kGreen; //deep red (first)
+        firstBlue = Color.kDarkViolet; //navy blue (first)
+        bumperRed = Color.kDarkGreen; //red - not as bright
         bumperBlue = Color.kMediumBlue; //deep blue
         green = Color.kFirstRed; //bright green
         purple = Color.kFirstBlue; //shows purple
@@ -113,12 +116,36 @@ public class LydiaLeds extends SubsystemBase {
 
 
     //Pattern color Cmds
-    public Command setFemaidensGrad() {
+    public Command setFemaidensStaticGrad() {
         return this.run(() -> {
             LEDPattern femaidensGradient = LEDPattern.gradient(GradientType.kContinuous, green, purple);
             femaidensGradient.applyTo(ledBuffer);
             ledLight.setData(ledBuffer);
-            System.out.println("LED Femaidens Gradient");
+            System.out.println("LED Femaidens Static Gradient");
+        });
+    }
+
+    public Command setFemaidensScrollGrad() {
+        return this.run(() -> {
+            LEDPattern femaidensGradient = LEDPattern.gradient(GradientType.kContinuous, green, purple);
+            LEDPattern scroll = femaidensGradient.scrollAtRelativeSpeed(Percent.per(Second).of(25));
+            scroll.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Femaidens Scroll Gradient");
+        });
+    }
+
+    public Command setFemaidensPan() {
+        return this.run(() -> {
+            Map<Number, Color> maskSteps = Map.of(0, purple, 0.25, green, 0.5, black);
+            LEDPattern femaidensGradient = LEDPattern.gradient(GradientType.kContinuous, green, purple);
+            LEDPattern mask = LEDPattern.steps(maskSteps).scrollAtRelativeSpeed(Percent.per(Second).of(15));
+            
+            LEDPattern pan = femaidensGradient.mask(mask);
+
+            pan.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Femaidens Pan Gradient");
         });
     }
 
