@@ -74,7 +74,7 @@ public class Drive extends SubsystemBase implements Logged {
     // totally not sure, would need to check
     
     // gyro = new AHRS(NavXComType.kMXP_SPI);
-    gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CANBUS);
+    gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CAN_BUS);
     odometry = new SwerveDriveOdometry(
       Drivetrain.kDriveKinematics, 
       gyro.getRotation2d(), 

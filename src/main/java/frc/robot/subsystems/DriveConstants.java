@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
 
+import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.swerve.SwerveModule;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -45,9 +46,9 @@ public class DriveConstants {
         public static final double REAR_LEFT_MAG_OFFSET = 0.1311;
         public static final double REAR_RIGHT_MAG_OFFSET = -0.4675;
 
-        // CHANGE THIS FOR TALONS! 
-        public static final String CANBUS = "rio"; 
-        
+        // CHANGE THIS FOR TALONS! (Update: Fixed For Now...)
+        public static final CANBus CAN_BUS = new CANBus(); 
+
         public static final LinearVelocity MAX_TRANSLATION_VELOCITY = MetersPerSecond.of(1);
         public static final LinearAcceleration MAX_TRANSLATION_ACCELERATION = MetersPerSecondPerSecond.of(1.0);
         

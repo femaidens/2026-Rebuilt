@@ -6,7 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.subsystems.Drive;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -21,15 +24,29 @@ public class RobotContainer {
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  private final CommandXboxController driveJoy =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+      private final Drive drive;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    configureBindings();
-  }
+        drive = new Drive();
+        configureBindings();
 
+        configureDefaultCmds();
+
+  }
+ private void configureDefaultCmds() {
+        drive.setDefaultCommand(
+                new RunCommand(
+                        () -> drive.drive(
+                                () -> MathUtil.applyDeadband(driveJoy.getLeftY(), 0.1),
+                                () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1),
+                                () -> MathUtil.applyDeadband(driveJoy.getRightX(), 0.1)),
+                        drive));
+ }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
