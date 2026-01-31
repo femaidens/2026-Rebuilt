@@ -24,18 +24,19 @@ public class LydiaLeds extends SubsystemBase {
 
 
     public LydiaLeds() {
-        ledLight = new AddressableLED(Ports.LedPorts.LYDIA_LED_PORT);
+        ledLight = new AddressableLED(Ports.LedPorts.LED_PORT);
         ledBuffer = new AddressableLEDBuffer(Constants.LedConstants.LYDIA_LED_LENGTH);
         // ledBufferViewLeft = ledBuffer.createView(0,35);
         // ledBufferViewRight = ledBuffer.createView(35,69);
 
-        firstRed = Color.kFirstRed;
-        firstBlue = Color.kFirstBlue;
-        bumperRed = Color.kFirebrick;
-        bumperBlue = Color.kMediumBlue;
-        green = Color.kGreenYellow;
-        purple = Color.kDarkViolet;
-        black = Color.kBlack;
+        //FYI - colors do not match the colors that appear on LEDS
+        firstRed = Color.kGreen; //deep red
+        firstBlue = Color.kChartreuse; //orange
+        bumperRed = Color.kCoral; //green
+        bumperBlue = Color.kMediumBlue; //deep blue
+        green = Color.kFirstRed; //bright green
+        purple = Color.kFirstBlue; //shows purple
+        black = Color.kBlack; //off
 
 
         ledLight.setLength(ledBuffer.getLength());
@@ -51,6 +52,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern off = LEDPattern.solid(black);
             off.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Off");
         });
     }
 
@@ -58,6 +61,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern solid = LEDPattern.solid(firstRed);
             solid.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED First Red");
         });
     }
 
@@ -65,6 +70,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern solid = LEDPattern.solid(firstBlue);
             solid.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED First Blue");
         });
     }
 
@@ -72,6 +79,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern solid = LEDPattern.solid(bumperRed);
             solid.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Bumper Red");
         });
     }
 
@@ -79,6 +88,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern solid = LEDPattern.solid(bumperBlue);
             solid.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Bumper Blue");
         });
     }
 
@@ -86,6 +97,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern solid = LEDPattern.solid(green);
             solid.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Green");
         });
     }
 
@@ -93,6 +106,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern solid = LEDPattern.solid(purple);
             solid.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Purple");
         });
     }
 
@@ -102,6 +117,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern femaidensGradient = LEDPattern.gradient(GradientType.kContinuous, green, purple);
             femaidensGradient.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Femaidens Gradient");
         });
     }
 
@@ -109,6 +126,8 @@ public class LydiaLeds extends SubsystemBase {
         return this.run(() -> {
             LEDPattern femaidensSplit = LEDPattern.steps(Map.of(0, purple, 0.5, green));
             femaidensSplit.applyTo(ledBuffer);
+            ledLight.setData(ledBuffer);
+            System.out.println("LED Femaidens Split");
         });
     }
 
@@ -123,6 +142,7 @@ public class LydiaLeds extends SubsystemBase {
                 off.applyTo(ledBuffer);
                 solidGreen.applyTo(ledBuffer);
             }
+            // System.out.println("LED Femaidens Blink");
         });
     }
     

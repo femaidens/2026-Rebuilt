@@ -19,7 +19,7 @@ public class KaseyLeds extends SubsystemBase {
 
     //idk if i made it too long and complicated --> reminder to maybe change stuff idk
     public KaseyLeds () {
-        leds = new AddressableLED(Ports.LedPorts.KASEY_LED_PORT);
+        leds = new AddressableLED(Ports.LedPorts.LED_PORT);
         buffer = new AddressableLEDBuffer (Constants.LedConstants.KASEY_LED_LENGTH);
         
         leds.setLength(buffer.getLength());

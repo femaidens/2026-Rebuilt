@@ -14,7 +14,7 @@ public class KaileyLeds extends SubsystemBase {
     private int count = 0;
 
     public KaileyLeds() {
-        strip = new AddressableLED(Ports.LedPorts.KAILEY_LED_PORT);
+        strip = new AddressableLED(Ports.LedPorts.LED_PORT);
         buffer = new AddressableLEDBuffer(Constants.LedConstants.KAILEY_LED_LENGTH);
 
         strip.setLength(buffer.getLength());
@@ -22,24 +22,26 @@ public class KaileyLeds extends SubsystemBase {
         strip.start();
     }
 
-    public Command fillStrip(int r, int g, int b) {
-        return this.run(() -> {
-            for(int i = 0; i < buffer.getLength(); i++) {
-                buffer.setRGB(i, r, g, b);
-            }
-            strip.setData(buffer);
-        });
+    public void fillStrip(int r, int g, int b) {
+        for(int i = 0; i < buffer.getLength(); i++) {
+            buffer.setRGB(i, r, g, b);
+            //System.out.println("LED running");
+        }
+        strip.setData(buffer);
+        // System.out.println("LED running");
     }
 
     public Command solidPurple() {
         return this.run(() -> {
             fillStrip(104, 66, 152);
+            System.out.println("LED running purple");
         });
     }
 
     public Command solidGreen() {
         return this.run(() -> {
             fillStrip(162, 212, 10);
+            System.out.println("LED running green");
         });
     }
 
@@ -53,12 +55,15 @@ public class KaileyLeds extends SubsystemBase {
         return this.run(() -> {
             count++;
             if(count < 40) {
-                solidPurple();
+                fillStrip(104, 66, 152);
             }
             else if(count < 80) {
-                solidGreen();
+                fillStrip(162, 212, 10);
             }
-            count = 0;
+            else {
+                count = 0;
+            }
+            System.out.println("LED running pulse");
         });
     }
 
@@ -76,7 +81,6 @@ public class KaileyLeds extends SubsystemBase {
     @Override
     public void periodic() {
         strip.setData(buffer);
-        pulseEffect().schedule();
     }
 
 }
