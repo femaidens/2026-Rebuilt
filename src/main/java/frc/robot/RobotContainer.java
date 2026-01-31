@@ -11,6 +11,8 @@ import frc.robot.commands.Autos;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.FuelTransition;
+import frc.robot.subsystems.Hopper;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,11 +26,15 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driveJoy = new CommandXboxController(OperatorConstants.DRIVER_PORT);
-
   private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
+
+  private final Hopper hopper;
+  private final FuelTransition fuelTransition;
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    hopper = new Hopper();
+    fuelTransition = new FuelTransition(hopper);
     configureBindings();
   }
 
@@ -49,6 +55,9 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // driveJoy.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+    operJoy.rightBumper()
+      .whileTrue(fuelTransition.indexToTransition())
+      .onFalse(fuelTransition.stopTransitioning());
   }
 
   /**
