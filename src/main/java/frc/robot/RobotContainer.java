@@ -25,9 +25,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  private final KaileyLeds kailey = new KaileyLeds();
+  // private final KaileyLeds kailey = new KaileyLeds();
   private final LydiaLeds lydia = new LydiaLeds();
-  private final KaseyLeds kasey = new KaseyLeds();
+  //private final KaseyLeds kasey = new KaseyLeds();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
@@ -53,15 +53,23 @@ public class RobotContainer {
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
         operJoy.leftTrigger().onTrue(lydia.setDefault());
-        operJoy.rightTrigger().onTrue(kailey.clear());
-
-        operJoy.a().onTrue(kailey.solidPurple());
-        operJoy.x().onTrue(kailey.solidGreen());
-        operJoy.y().onTrue(kailey.pulseEffect());
-
+        
+        operJoy.a().onTrue(lydia.setBumperBlueSolid());
+        operJoy.x().onTrue(lydia.setBumperRedSolid());
         operJoy.b().onTrue(lydia.setPurpleSolid());
+        operJoy.y().onTrue(lydia.setFemaidensSplit());
         operJoy.leftBumper().onTrue(lydia.setGreenSolid());
         operJoy.rightBumper().onTrue(lydia.setFemaidensGrad());
+        operJoy.rightTrigger().onTrue(lydia.setFirstBlueSolid());
+        
+
+
+        // operJoy.rightTrigger().onTrue(kailey.clear());
+
+        // operJoy.a().onTrue(kailey.solidPurple());
+        // operJoy.x().onTrue(kailey.solidGreen());
+        // operJoy.y().onTrue(kailey.pulseEffect());
+
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

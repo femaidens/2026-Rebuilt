@@ -26,7 +26,7 @@ public class KaseyLeds extends SubsystemBase {
     // private final Color red, blue, green, purple, pink
 
     public KaseyLeds () {
-        leds = new AddressableLED(Ports.LedPorts.KASEY_LED_PORT);
+        leds = new AddressableLED(Ports.LedPorts.LED_PORT);
         buffer = new AddressableLEDBuffer (Constants.LedConstants.KASEY_LED_LENGTH);
         
         leds.setLength(buffer.getLength());
