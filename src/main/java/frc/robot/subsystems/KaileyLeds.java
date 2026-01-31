@@ -97,43 +97,52 @@ public class KaileyLeds extends SubsystemBase {
 
     public Command offsetGradient() {
         return this.run(() -> {
-            for(int i = 0; i < buffer.getLength(); i++) {
+            for (int i = 0; i < buffer.getLength(); i++) {
                 int r = 0;
-                int g = 0;
                 int b = 0;
+
                 if (i < buffer.getLength() / 2) {
-                    g = 255;
-                } 
-                else {
+                    r = (255 * i) / (buffer.getLength() / 2);
                     b = 255;
                 }
-                buffer.setRGB(i, g, r, b);
+                else {
+                    b = (255 * (buffer.getLength() - i - 1)) / (buffer.getLength() / 2);
+                    r = 255;
+                }
+                buffer.setRGB(i, 0, r, b);
             }
             strip.setData(buffer);
-            System.out.println("LED Offset Gradient");
         });
     }
 
-    public Command greenGradient() {
+    public Command greenScroll() {
         return this.run(() -> {
+            int index1 = count % buffer.getLength();
             for (int i = 0; i < buffer.getLength(); i++) {
-                int g = (i * 255) / buffer.getLength();
+                int index2 = (i + index1) % buffer.getLength();
+                int g = (index2 * 255) / buffer.getLength();
                 buffer.setRGB(i, g / 2, 0, 0);
             }
             strip.setData(buffer);
-            System.out.println("LED Green Gradient");
+            System.out.println("LED Green Scroll");
+
+            count++;
         });
     }
 
-    public Command purpleGradient() {
+    public Command purpleScroll() {
         return this.run(() -> {
+            int index1 = count % buffer.getLength();
             for (int i = 0; i < buffer.getLength(); i++) {
-                int r = (i * 66) / buffer.getLength();
-                int b = (i * 152) / buffer.getLength();
+                int index2 = (i + index1) % buffer.getLength();
+                int r = (index2 * 66) / buffer.getLength();
+                int b = (index2 * 152) / buffer.getLength();
                 buffer.setRGB(i, 0, r / 2, b / 2);
             }
             strip.setData(buffer);
-            System.out.println("LED Purple Gradient");
+            System.out.println("LED Purple Scroll");
+
+            count++;
         });
     }
 
