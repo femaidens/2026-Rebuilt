@@ -19,10 +19,10 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveConstants.Translation;
 import frc.robot.subsystems.DriveConstants.Turn;
-import monologue.Logged;
-import monologue.Annotations.Log;
+import edu.wpi.first.epilogue.Logged;
 
-public class ModuleKraken implements Logged {
+@Logged
+public class ModuleKraken {
     private final TalonFX driveMotor;
     private final TalonFX turnMotor;
 
@@ -31,7 +31,7 @@ public class ModuleKraken implements Logged {
     private final CANcoder turnEncoder; 
     //PID? 
     private final PIDController drivePIDController; 
-    @Log.NT private final PIDController turnPIDController;
+    private final PIDController turnPIDController; //log
     
     private final SimpleMotorFeedforward driveFF;
     private final SimpleMotorFeedforward turnFF;

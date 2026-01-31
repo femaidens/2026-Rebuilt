@@ -12,9 +12,13 @@ import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.swerve.SwerveModule;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
@@ -111,6 +115,9 @@ public class DriveConstants {
         public static final double MAX_ROT_SPEED = Math.PI * 2; //in rad/s
         public static final double SPEED_FACTOR = 1.0;
         public static final double WHEEL_COF = 1; // not true
+
+         public static final Matrix<N3, N1> STATE_STD_DEV = VecBuilder.fill(0.9, 0.9, 0.9);
+        public static final Matrix<N3, N1> VISION_STD_DEV = VecBuilder.fill(0.1, 0.1, 0.1);
     }
     public static final class NeoMotorConstants {
         public static final double FREE_SPEED_RPM = 5676;

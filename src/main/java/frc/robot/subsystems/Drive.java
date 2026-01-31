@@ -13,12 +13,15 @@ import static edu.wpi.first.units.Units.Volts;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
+import org.photonvision.EstimatedRobotPose;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.SignalLogger;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -36,10 +39,14 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Ports.DrivetrainPorts;
 import frc.robot.subsystems.DriveConstants.Drivetrain;
 import frc.robot.subsystems.DriveConstants.Translation;
-import monologue.Annotations.Log;
-import monologue.Logged;
+import edu.wpi.first.epilogue.Logged;
 
-public class Drive extends SubsystemBase implements Logged {
+@Logged
+public class Drive extends SubsystemBase {
+
+  private final Vision vision;
+
+  private final SwerveDrivePoseEstimator swerveEstimator;
 
   private final ModuleKraken frontLeft;
   private final ModuleKraken frontRight;
@@ -60,6 +67,7 @@ public class Drive extends SubsystemBase implements Logged {
 
   /** Creates a new Drive. */
   public Drive() {
+    vision = new Vision();
     // frontLeft = new ModuleSpark(DrivetrainPorts.FRONT_LEFT_DRIVE, DrivetrainPorts.FRONT_LEFT_TURN, Translation.FRONT_LEFT_ANGOFFSET);
     // frontRight = new ModuleSpark(DrivetrainPorts.FRONT_RIGHT_DRIVE, DrivetrainPorts.FRONT_RIGHT_TURN, Translation.FRONT_RIGHT_ANGOFFSET);
     // rearLeft = new ModuleSpark(DrivetrainPorts.REAR_LEFT_DRIVE, DrivetrainPorts.REAR_LEFT_TURN, Translation.REAR_LEFT_ANGOFFSET);
@@ -86,6 +94,15 @@ public class Drive extends SubsystemBase implements Logged {
       });
       zeroHeading();
 
+      swerveEstimator = new SwerveDrivePoseEstimator(
+        DriveConstants.Drivetrain.kDriveKinematics,
+        gyro.getRotation2d(),
+        getSwerveModulePosition(),
+        new Pose2d(),
+        DriveConstants.Drivetrain.STATE_STD_DEV,
+        DriveConstants.Drivetrain.VISION_STD_DEV
+    );
+
       driveRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(null, null,
         //  Volts.of(2).per(Seconds.of(1)),
@@ -98,6 +115,10 @@ public class Drive extends SubsystemBase implements Logged {
           this));
   
 
+    }
+
+        public Pose2d getPose2d(){
+        return swerveEstimator.getEstimatedPosition();
     }
 
   // consider changing to profiledpid control
@@ -223,28 +244,23 @@ public class Drive extends SubsystemBase implements Logged {
   /**
    * @return currently-estimated pose of robot
    */
-  @Log.NT
   public Pose2d getPose(){
     return odometry.getPoseMeters();
   }
 
-  @Log.NT
   public SwerveModuleState[] getSwerveModuleStates(){
     return modules.stream().map(m -> m.getState()).toArray(SwerveModuleState[]::new);
   }
 
-  @Log.NT
   public SwerveModuleState[] getDesiredSwerveModuleStates(){
     return modules.stream().map(m -> m.getDesiredState()).toArray(SwerveModuleState[] :: new);
   }
 
-  @Log.NT
   public double[] getVoltage(){
     double[] voltages = {frontLeft.getVoltage(), frontRight.getVoltage(), rearLeft.getVoltage(), rearRight.getVoltage()};
     return voltages;
   }
 
-  @Log.NT
   public double[] getAbsolutes(){
     double[] absolutes = {frontLeft.getAbsolute(), frontRight.getAbsolute(), rearLeft.getAbsolute(), rearRight.getAbsolute()};
     return absolutes;
@@ -274,10 +290,9 @@ public class Drive extends SubsystemBase implements Logged {
    * Gets the angle of the gyro in radians (ideally)
    * @return in radians
    */
-  @Log.NT
   public double getAngle(){
     // return -1 * gyro.getAngle();
-    return gyro.getRotation2d().getRadians();
+    return gyro.getRotation2d().getDegrees();
   }
 
   /**
@@ -290,7 +305,7 @@ public class Drive extends SubsystemBase implements Logged {
   //   return gyro.getYaw();
   // }
   public double getYawOffset(){
-    gyro.setYaw(-90.0);
+    gyro.setYaw(0);
     return gyro.getRotation2d().getRadians();
   }
   /**
@@ -321,11 +336,15 @@ public class Drive extends SubsystemBase implements Logged {
   public void periodic() {
     // This method will be called once per scheduler run
     // if gyro is inverted, getRotation2d() --- getAngle() can be negated
-    odometry.update(
-      gyro.getRotation2d(), 
-      new SwerveModulePosition[] {
-        frontLeft.getSwerveModulePosition(), frontRight.getSwerveModulePosition(), rearLeft.getSwerveModulePosition(), rearRight.getSwerveModulePosition()
-    });
+  swerveEstimator.update(gyro.getRotation2d(), getSwerveModulePosition());
+
+    List<EstimatedRobotPose> visionUpdates = vision.getVisionUpdates();
+    for (EstimatedRobotPose update : visionUpdates) {
+        swerveEstimator.addVisionMeasurement(
+            update.estimatedPose.toPose2d(), 
+            update.timestampSeconds
+        );
+    }
     //SmartDashboard.getNumber("Angle", getAngle());
     SmartDashboard.putNumber("Gyro Angle", getAngle());
     SmartDashboard.updateValues();
