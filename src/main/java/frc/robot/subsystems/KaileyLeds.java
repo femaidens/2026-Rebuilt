@@ -22,9 +22,9 @@ public class KaileyLeds extends SubsystemBase {
         strip.start();
     }
 
-    public void fillStrip(int r, int g, int b) {
+    public void fillStrip(int g, int r, int b) {
         for(int i = 0; i < buffer.getLength(); i++) {
-            buffer.setRGB(i, r, g, b);
+            buffer.setRGB(i, g, r, b);
             //System.out.println("LED running");
         }
         strip.setData(buffer);
@@ -33,14 +33,14 @@ public class KaileyLeds extends SubsystemBase {
 
     public Command solidPurple() {
         return this.run(() -> {
-            fillStrip(104, 66, 152);
+            fillStrip(66, 104, 152);
             System.out.println("LED running purple");
         });
     }
 
     public Command solidGreen() {
         return this.run(() -> {
-            fillStrip(162, 212, 10);
+            fillStrip(212, 162, 10);
             System.out.println("LED running green");
         });
     }
@@ -55,10 +55,10 @@ public class KaileyLeds extends SubsystemBase {
         return this.run(() -> {
             count++;
             if(count < 40) {
-                fillStrip(104, 66, 152);
+                fillStrip(66, 104,152);
             }
             else if(count < 80) {
-                fillStrip(162, 212, 10);
+                fillStrip(212, 162, 10);
             }
             else {
                 count = 0;
@@ -69,10 +69,69 @@ public class KaileyLeds extends SubsystemBase {
 
     public Command sparkleEffect() {
         return this.run(() -> {
-            fillStrip(104, 66, 152);
+            fillStrip(66, 104, 152);
             for(int i = 0; i < 10; i++) {
                 int position = (int) (Math.random() * buffer.getLength());
-                buffer.setRGB(position, 162, 212, 10);
+                buffer.setRGB(position, 212, 162, 10);
+            }
+            strip.setData(buffer);
+        });
+    }
+
+    public Command progressMask() {
+        return this.run(() -> {
+            double progress = (count % 100) / 100.0;
+            for(int i = 0; i < buffer.getLength(); i++) {
+                if(i < progress * buffer.getLength()) {
+                    buffer.setRGB(i, 66, 104, 152);
+                }
+                else {
+                    buffer.setRGB(i, 212, 162, 10);
+                }
+            }
+            strip.setData(buffer);
+            count++;
+        });
+    }
+
+    public Command offsetGradient() {
+        return this.run(() -> {
+            for(int i = 0; i < buffer.getLength(); i++) {
+                int r = 0;
+                int g = 0;
+                int b = 0;
+                if (i < buffer.getLength() / 2) {
+                    g = (i * 255) / (buffer.getLength() / 2);
+                    r = 66;
+                    b = 104;
+                }
+                else {
+                    r = 66;
+                    b = 152;
+                    g = ((i - (buffer.getLength() / 2)) * 255) / (buffer.getLength() / 2);
+                }
+                buffer.setRGB(i, r, g, b);
+            }
+            strip.setData(buffer);
+        });
+    }
+
+    public Command greenGradient() {
+        return this.run(() -> {
+            for (int i = 0; i < buffer.getLength(); i++) {
+                int g = (i * 255) / buffer.getLength();
+                buffer.setRGB(i, 0, g / 2, 0);
+            }
+            strip.setData(buffer);
+        });
+    }
+
+    public Command dimPurpleGradient() {
+        return this.run(() -> {
+            for (int i = 0; i < buffer.getLength(); i++) {
+                int r = (i * 66) / buffer.getLength();
+                int b = (i * 152) / buffer.getLength();
+                buffer.setRGB(i, r / 2, 0, b / 2);
             }
             strip.setData(buffer);
         });
