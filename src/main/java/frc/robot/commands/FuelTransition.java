@@ -22,13 +22,10 @@ public class FuelTransition {
         .andThen(hopper.stopTransition());
     }
     */
-    //No beambreak b/w anymore
+    //No beambreak b/w anymore, runs while trigger pressed, stops when released
     public Command indexToTransition(){
         return hopper.runSpindexer()
-        .alongWith(hopper.runIndexer()).withTimeout(0.25)
-        .andThen(hopper.stopSpindexer())
-        .andThen(hopper.stopIndexer());
-        
+        .alongWith(hopper.runIndexer());
     }
    
 }
