@@ -16,6 +16,7 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.epilogue.Logged;
@@ -98,6 +99,11 @@ public class Vision {
     //     }
     //     return poses;
     // }
+
+    public Translation2d getTargetTranslation(int tagID){
+        var tagPose = TAG_LAYOUT.getTagPose(tagID);
+        return tagPose.get().toPose2d().getTranslation();
+    }
 
     public List<EstimatedRobotPose> getVisionUpdates(){
         List<EstimatedRobotPose> results = new ArrayList<>();
