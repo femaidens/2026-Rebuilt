@@ -78,6 +78,17 @@ public class RobotContainer {
         // operJoy.start().onTrue(kailey.purpleGradient());
 
 
+
+        // operJoy.leftTrigger().onTrue(kasey.setDefault());
+
+        // operJoy.a().onTrue(kasey.setPurpleCommand());
+        // operJoy.x().onTrue(kasey.setGreenCommand());
+        // operJoy.y().onTrue(kasey.setRedCommand());
+        // operJoy.b().onTrue(kasey.setBlueCommand());
+        // operJoy.leftBumper().onTrue(kasey.breatheEffect());
+        // operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
+        // operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
+
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     
