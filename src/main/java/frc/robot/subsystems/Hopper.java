@@ -17,8 +17,8 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class Hopper extends SubsystemBase {
   /** Creates a new Hopper. */
-  private final TalonFX indexMotor;
-  private final TalonFX spindexerMotor;
+  private TalonFX indexMotor;
+  private TalonFX spindexerMotor;
   // private final DigitalInput beambreak;
   
   public Hopper() {
@@ -27,6 +27,12 @@ public class Hopper extends SubsystemBase {
     spindexerMotor = new TalonFX(HopperPorts.HOPPER_MOTOR, HopperConstants.canbus);
     configureTalonMotor(spindexerMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Coast);
     // beambreak = new DigitalInput(HopperPorts.BEAM_BREAK);
+  }
+
+  //testing purposes
+  public Hopper(TalonFX indexMotor, TalonFX spindexerMotor){
+    this.indexMotor = indexMotor;
+    this.spindexerMotor = spindexerMotor;
   }
 
   //Indexer motor
