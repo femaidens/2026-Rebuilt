@@ -17,12 +17,21 @@ public class Climb extends SubsystemBase {
     private final TalonFX followerMotor;
     private final DigitalInput bottomLimitSwitch;
     private final PIDController climbPID;
+    
+    public Climb(TalonFX leaderMotor, TalonFX followerMotor,DigitalInput bottomLimitSwitch, PIDController climbPID) {
+        this.leaderMotor = leaderMotor;
+        this.followerMotor = followerMotor;
+        this.bottomLimitSwitch = bottomLimitSwitch;
+        this.climbPID = climbPID;
+    }
+
 
     public Climb () {
         leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, new CANBus());
 		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, new CANBus());
         bottomLimitSwitch = new DigitalInput(Ports.ClimbPorts.BOTTOM_LIMIT_SWITCH);
         climbPID = new PIDController(0,0,0);
+        
     }
 
     public Command runMotor() {
@@ -71,6 +80,7 @@ public class Climb extends SubsystemBase {
             climbPIDController(getEncoderPosition(), setpoint);
         });
     }
+    
 
     public boolean hitBottomLimit() {
         return !bottomLimitSwitch.get();
