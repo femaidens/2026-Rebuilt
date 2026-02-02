@@ -77,7 +77,7 @@ public class IntakeTest {
 
   @Test
   void notAtCorrectPos(){
-  StatusSignal<Angle> fakeData = mock(StatusSignal.class);
+    StatusSignal<Angle> fakeData = mock(StatusSignal.class);
     when(encoder.getAbsolutePosition()).thenReturn(fakeData);
     when(fakeData.getValueAsDouble()).thenReturn(0.0);
     when(anglePid.atSetpoint()).thenReturn(false);
