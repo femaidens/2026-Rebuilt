@@ -55,9 +55,9 @@ public class Drive extends SubsystemBase {
 
   private final List<ModuleKraken> modules;
 
-  // private final AHRS gyro;
+  private final AHRS gyro;
 
-  private final Pigeon2 gyro;
+  // private final Pigeon2 gyro;
 
   public final SwerveDriveOdometry odometry;
 
@@ -81,8 +81,8 @@ public class Drive extends SubsystemBase {
 
     // totally not sure, would need to check
     
-    // gyro = new AHRS(NavXComType.kMXP_SPI);
-    gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CAN_BUS);
+    gyro = new AHRS(NavXComType.kMXP_SPI);
+    // gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CAN_BUS);
     odometry = new SwerveDriveOdometry(
       Drivetrain.kDriveKinematics, 
       gyro.getRotation2d(), 
@@ -113,8 +113,6 @@ public class Drive extends SubsystemBase {
           volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
           null,
           this));
-  
-
     }
 
         public Pose2d getPose2d(){
@@ -300,14 +298,14 @@ public class Drive extends SubsystemBase {
    * 
    * @return new yaw angle in radians (ideally)
    */
-  // public double setYawOffset() {
-  //   gyro.setAngleAdjustment(-Math.PI / 2); // need to double check!
-  //   return gyro.getYaw();
-  // }
-  public double getYawOffset(){
-    gyro.setYaw(0);
-    return gyro.getRotation2d().getRadians();
+  public double setYawOffset() {
+    gyro.setAngleAdjustment(-Math.PI / 2); // need to double check!
+    return gyro.getYaw();
   }
+  // public double getYawOffset(){
+  //   gyro.setYaw(0);
+  //   return gyro.getRotation2d().getRadians();
+  // }
   /**
    * Zero the gyro heading
    */
