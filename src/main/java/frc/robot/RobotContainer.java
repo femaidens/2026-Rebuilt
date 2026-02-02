@@ -74,8 +74,8 @@ public class RobotContainer {
         // operJoy.b().onTrue(kailey.sparkleEffect());
         // operJoy.leftBumper().onTrue(kailey.progressMask());
         // operJoy.rightBumper().onTrue(kailey.offsetGradient());
-        // operJoy.leftTrigger().onTrue(kailey.greenGradient());
-        // operJoy.start().onTrue(kailey.purpleGradient());
+        // operJoy.leftTrigger().onTrue(kailey.greenScroll());
+        // operJoy.start().onTrue(kailey.purpleScroll());
 
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
