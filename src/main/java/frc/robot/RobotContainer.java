@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 import frc.robot.subsystems.Drive;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -59,6 +58,15 @@ import edu.wpi.first.epilogue.Logged;
    * joysticks}.
    */
   private void configureBindings() {
+
+    driveJoy.a().whileTrue(
+      drive.run( () -> 
+        drive.alignRotation(
+          () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1),
+          () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1)
+        )
+      )
+    );
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));

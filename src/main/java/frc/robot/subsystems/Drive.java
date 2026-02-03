@@ -21,6 +21,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -32,6 +33,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -45,6 +48,8 @@ import edu.wpi.first.epilogue.Logged;
 public class Drive extends SubsystemBase {
 
   private final Vision vision;
+
+  private final PIDController rotPidController;
 
   private final SwerveDrivePoseEstimator swerveEstimator;
 
@@ -68,6 +73,10 @@ public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
   public Drive() {
     vision = new Vision();
+
+    rotPidController = new PIDController(DriveConstants.Translation.PID.P, DriveConstants.Translation.PID.I, DriveConstants.Translation.PID.D);
+    rotPidController.enableContinuousInput(-180, 180);
+    rotPidController.setTolerance(3);
     // frontLeft = new ModuleSpark(DrivetrainPorts.FRONT_LEFT_DRIVE, DrivetrainPorts.FRONT_LEFT_TURN, Translation.FRONT_LEFT_ANGOFFSET);
     // frontRight = new ModuleSpark(DrivetrainPorts.FRONT_RIGHT_DRIVE, DrivetrainPorts.FRONT_RIGHT_TURN, Translation.FRONT_RIGHT_ANGOFFSET);
     // rearLeft = new ModuleSpark(DrivetrainPorts.REAR_LEFT_DRIVE, DrivetrainPorts.REAR_LEFT_TURN, Translation.REAR_LEFT_ANGOFFSET);
@@ -119,6 +128,25 @@ public class Drive extends SubsystemBase {
         return swerveEstimator.getEstimatedPosition();
     }
 
+    public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed){
+      Pose2d currentPose = this.getPose2d();
+      var alliance = DriverStation.getAlliance();
+      Translation2d targetLocation;
+      Translation2d difference = new Translation2d(.343, 0);
+
+      if(alliance.isPresent() && alliance.get() == Alliance.Red){
+        targetLocation = vision.getTargetTranslation(10).minus(difference);
+      } else{
+        targetLocation = vision.getTargetTranslation(26).plus(difference);
+      }
+
+      Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
+
+      double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(), targetAngle.getDegrees()+90);
+
+    this.drive(xSpeed, ySpeed, () -> rotOutput);
+
+    }
   // consider changing to profiledpid control
   /**
    * drivin
