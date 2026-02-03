@@ -122,7 +122,7 @@ public class KaseyLeds extends SubsystemBase {
             return currentProgress;
         }
     
-        public Command ProgressMaskEffect() {
+        public Command progressMaskEffect() {
             return this.run(() -> {
             LEDPattern base = LEDPattern.gradient(LEDPattern.GradientType.kDiscontinuous, Color.kRed, Color.kBlue);
             LEDPattern mask = LEDPattern.progressMaskLayer(this::getLedProgress);

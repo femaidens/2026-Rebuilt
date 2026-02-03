@@ -26,8 +26,8 @@ public class RobotContainer {
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // private final KaileyLeds kailey = new KaileyLeds();
-  private final LydiaLeds lydia = new LydiaLeds();
-  //private final KaseyLeds kasey = new KaseyLeds();
+  //private final LydiaLeds lydia = new LydiaLeds();
+  private final KaseyLeds kasey = new KaseyLeds();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
@@ -52,8 +52,9 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-        operJoy.leftTrigger().onTrue(lydia.setDefault());
+        //operJoy.leftTrigger().onTrue(lydia.setDefault());
         
+        /* 
         operJoy.a().onTrue(lydia.setBumperBlueSolid());
         operJoy.x().onTrue(lydia.setBumperRedSolid());
         operJoy.b().onTrue(lydia.setPurpleSolid());
@@ -63,7 +64,7 @@ public class RobotContainer {
         operJoy.rightTrigger().onTrue(lydia.setFemaidensPan());
         operJoy.start().onTrue(lydia.setFemaidensStaticGrad());
         operJoy.back().onTrue(lydia.setFemaidensScrollGrad());
-        
+        */
 
 
         // operJoy.rightTrigger().onTrue(kailey.clear());
@@ -79,15 +80,15 @@ public class RobotContainer {
 
 
 
-        // operJoy.leftTrigger().onTrue(kasey.setDefault());
+         operJoy.leftTrigger().onTrue(kasey.setDefault());
 
-        // operJoy.a().onTrue(kasey.setPurpleCommand());
-        // operJoy.x().onTrue(kasey.setGreenCommand());
-        // operJoy.y().onTrue(kasey.setRedCommand());
-        // operJoy.b().onTrue(kasey.setBlueCommand());
-        // operJoy.leftBumper().onTrue(kasey.breatheEffect());
-        // operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
-        // operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
+        operJoy.a().onTrue(kasey.setPurpleCommand());
+         operJoy.x().onTrue(kasey.setGreenCommand());
+         operJoy.y().onTrue(kasey.setRedCommand());
+         operJoy.b().onTrue(kasey.setBlueCommand());
+         operJoy.leftBumper().onTrue(kasey.breatheEffect());
+         operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
+         operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

@@ -69,7 +69,7 @@ public class KaileyLeds extends SubsystemBase {
     public Command sparkleEffect() {
         return this.run(() -> {
             fillStrip(66, 104, 152);
-            for(int i = 0; i < 10; i++) {
+            for(int i = 0; i < 50; i++) {
                 int position = (int) (Math.random() * buffer.getLength());
                 buffer.setRGB(position, 212, 162, 10);
             }
