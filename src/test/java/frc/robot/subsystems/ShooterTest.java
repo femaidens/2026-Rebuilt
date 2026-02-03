@@ -6,9 +6,11 @@ package frc.robot.subsystems;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 
@@ -34,13 +36,16 @@ public class ShooterTest {
   private TalonFX angleMotor;
 
   @Mock
-  private PIDController anglePid;
+  private PIDController anglePID;
+  
+  @Mock
+  private TalonFX encoder;
 
   private Shooter shooter;
 
  @BeforeEach
   void setUp() {
-    shooter = new Shooter(shooterMotor, angleMotor, anglePid);
+    shooter = new Shooter(shooterMotor, angleMotor, anglePID, encoder);
   }
 
   @Test
@@ -54,10 +59,17 @@ public class ShooterTest {
 //not finished yet
   @Test
   void setAngle(){
+    StatusSignal<Angle> fakeData = mock(StatusSignal.class);
+    when(encoder.getPosition()).thenReturn(fakeData);
+    when(fakeData.getValueAsDouble()).thenReturn(2.1);
+
     Command setAngleCmd = shooter.setAngle(3.0);
     setAngleCmd.initialize();
     setAngleCmd.execute();
 
-    assertEquals(setAngleCmd, setAngleCmd);
+    assertEquals(756.0, shooter.getCurrentPosition());
+
+    verify(anglePID).calculate(3.0, 756.0);
+    verify(angleMotor).setVoltage(anyDouble());
   }
 }

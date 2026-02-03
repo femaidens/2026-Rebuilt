@@ -26,15 +26,16 @@ public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   private final TalonFX shooterMotor; // starting the rollers
   private final TalonFX angleMotor; // adjusting shooter to desired angle
-  private static TalonFX encoder;
+  private final TalonFX encoder;
   //private final TalonFXConfiguration angleConfig;
   private final TalonFXConfiguration motorConfig;
   private final PIDController shooterPID;
 
-  public Shooter(TalonFX shooterMotor, TalonFX angleMotor, PIDController shooterPID){
+  public Shooter(TalonFX shooterMotor, TalonFX angleMotor, PIDController shooterPID, TalonFX encoder){
     this.shooterMotor = shooterMotor;
     this.angleMotor = angleMotor;
     this.shooterPID = shooterPID;
+    this.encoder = encoder;
     motorConfig = new TalonFXConfiguration();
 
   }
