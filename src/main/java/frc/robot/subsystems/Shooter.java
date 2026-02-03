@@ -23,11 +23,19 @@ public class Shooter extends SubsystemBase {
   // One motor is for starting the rollers, the other is for angling the shooter
   /** Creates a new Shooter. */
   private final TalonFX shooterMotor; // starting the rollers
-  private static TalonFX angleMotor; // adjusting shooter to desired angle
+  private final TalonFX angleMotor; // adjusting shooter to desired angle
   //private static CANcoder encoder;
   //private final TalonFXConfiguration angleConfig;
   private final TalonFXConfiguration motorConfig;
-  private static PIDController shooterPID;
+  private final PIDController shooterPID;
+
+  public Shooter(TalonFX shooterMotor, TalonFX angleMotor, PIDController shooterPID){
+    this.shooterMotor = shooterMotor;
+    this.angleMotor = angleMotor;
+    this.shooterPID = shooterPID;
+    motorConfig = new TalonFXConfiguration();
+
+  }
           
   public Shooter() {
     shooterMotor = new TalonFX(ShooterPorts.SHOOTER_MOTOR, ShooterConstants.CANBUS);
@@ -48,8 +56,8 @@ public class Shooter extends SubsystemBase {
         Constants.ShooterConstants.PIDConstants.kD
       );
     }
-    public static void shooterPID(double setpoint){
-        angleMotor.setVoltage(shooterPID.calculate(setpoint));
+    public void shooterPID(double setpoint){
+        angleMotor.setVoltage(shooterPID.calculate(setpoint ));
     }
   
   public Command runShooterMotorCmd(){
