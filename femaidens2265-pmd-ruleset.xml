@@ -16,4 +16,26 @@
 
   <rule ref="category/java/errorprone.xml/AssignmentToNonFinalStatic" />
 
+  <rule ref="category/java/errorprone.xml/CompareObjectsWithEquals" />
+
+  <rule ref="category/java/errorprone.xml/EqualsNull" />
+
+  <rule ref="category/java/errorprone.xml/IdenticalConditionalBranches" />
+
+  <rule ref="category/java/errorprone.xml/MisplacedNullCheck" />
+
+  <rule ref="category/java/errorprone.xml/UseEqualsToCompareStrings" />
+
+  <rule ref="category/java/errorprone.xml/UnconditionalIfStatement" />
+
+  <rule ref="category/java/bestpractices.xml/UnnecessaryWarningSuppression" />
+
+  <rule ref="category/java/bestpractices.xml/MissingOverride" />
+
+  <rule ref="category/java/codestyle.xml/UnnecessarySemicolon" />
+
+  <rule ref="category/java/codestyle.xml/UnnecessaryReturn" />
+
+  <rule ref="category/java/errorprone.xml/BrokenNullCheck" />
+
 </ruleset>
