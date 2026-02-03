@@ -1,14 +1,30 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.swerve.SimSwerveDrivetrain.SimSwerveModule;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Drive extends SubsystemBase{
+
+    private final SimSwerveModule[] modules;
+    private final SwerveDriveKinematics kinematics;
+    private final SwerveDriveOdometry odometry;
+
+    private SimGyro gyro;
+
+    private ChassisSpeeds speeds = new ChassisSpeeds();
+  
+    private Field2d field = new Field2d();
 
     public Drive() {
         // All other subsystem initialization
@@ -28,7 +44,7 @@ public class Drive extends SubsystemBase{
         AutoBuilder.configure(
                 this::getPose, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-                this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+                this::getSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
@@ -49,5 +65,21 @@ public class Drive extends SubsystemBase{
                 this // Reference to this subsystem to set requirements
         );
     }
+
+
+
+    public Pose2d getPose() {
+        return odometry.getPoseMeters();
+    }
+
+    public void resetPose(Pose2d pose) {
+        System.out.println(pose);
+        odometry.resetPosition(gyro.getRotation2d(), getPositions(), pose);
+    }
+
+    public ChassisSpeeds getSpeeds() {
+        return kinematics.toChassisSpeeds(getModuleStates());
+    }
+
 }
     
