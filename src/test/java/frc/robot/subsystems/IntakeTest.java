@@ -46,23 +46,14 @@ public class IntakeTest {
   private TalonFX angleMotor;
 
   @Mock
-  private TalonFXConfiguration angleConfig;
-
-  @Mock
-  private TalonFXConfiguration motorConfig;
-
-  @Mock
   private CANcoder encoder;
-
-  @Mock
-  private MagnetSensorConfigs encoderConfig;
 
   @Mock
   private PIDController anglePid;
 
   @BeforeEach
   void setUp() {
-    intake = new Intake(intakeMotor, followerIntakeMotor, angleMotor,encoder, motorConfig, angleConfig, encoderConfig, anglePid);
+    intake = new Intake(intakeMotor, followerIntakeMotor, angleMotor, encoder, anglePid);
   }
 
   @Test

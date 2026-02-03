@@ -64,14 +64,14 @@ public class Intake extends SubsystemBase {
     anglePid = new PIDController(IntakeConstants.PIDConstants.kP, IntakeConstants.PIDConstants.kI, IntakeConstants.PIDConstants.kD);
   }
 
-  public Intake(TalonFX iM, TalonFX fM, TalonFX aM, CANcoder e, TalonFXConfiguration mC, TalonFXConfiguration aC, MagnetSensorConfigs sC, PIDController p ){
+  public Intake(TalonFX iM, TalonFX fM, TalonFX aM, CANcoder e, PIDController p ){
     intakeMotor = iM;
     followerIntakeMotor = fM;
     angleMotor = aM;
     encoder = e;
-    motorConfig = mC;
-    angleConfig = aC;
-    encoderConfig = sC;
+    motorConfig = new TalonFXConfiguration();
+    angleConfig = new TalonFXConfiguration();
+    encoderConfig = new MagnetSensorConfigs();
     anglePid = p;
   }
 
