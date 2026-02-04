@@ -95,7 +95,7 @@ public class DriveSim extends SubsystemBase {
     rotationPID = new PIDConstants(Turn.PID.P, Turn.PID.I, Turn.PID.D);
     holonomicDriveController = new PPHolonomicDriveController(translationPID, rotationPID);
     //angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
-    
+    simAngle = 0.0;
     m_field = new Field2d();
     odometry = new SwerveDriveOdometry(
         Drivetrain.kDriveKinematics,
