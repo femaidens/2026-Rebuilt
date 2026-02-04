@@ -13,9 +13,9 @@ public class Constants {
         public static final int OPERATOR_PORT = 1;
     }
     public static class HopperConstants{
-        public static double MOTORSPEED = 0.5;
-        public static double INDEXER_CURRENT_LIMIT = 30; 
-        public static double HOPPER_CURRENT_LIMIT = 40;
-        public static CANBus canbus = new CANBus("rio");
+        public static final double MOTORSPEED = 0.5;
+        public static final double INDEXER_CURRENT_LIMIT = 30; 
+        public static final double HOPPER_CURRENT_LIMIT = 40;
+        public static final CANBus canbus = new CANBus("rio");
     }
 }

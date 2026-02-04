@@ -7,9 +7,9 @@ package frc.robot;
 /** Add your docs here. */
 public class Ports {
     public class HopperPorts{
-        public static int INDEX_MOTOR = 0; 
-        public static int BEAM_BREAK = 1;
-        public static int HOPPER_MOTOR = 2;
+        public static final int INDEX_MOTOR = 0; 
+        public static final int BEAM_BREAK = 1;
+        public static final int HOPPER_MOTOR = 2;
     }
     
 }
