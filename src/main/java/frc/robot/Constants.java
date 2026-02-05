@@ -22,12 +22,18 @@ public final class Constants {
    public static class ShooterConstants{
     public static final int CURRENT_LIMIT = 0;
     public static final double SHOOTER_MOTOR_SPEED = 0;
+    public static final double SHOOTER_CRUISE_SPEED = 0;
+
     public static CANBus CANBUS = new CANBus("rio");
       
     public static class PIDConstants {
-      public static final double kP = 0;
+      public static final double kP = 0.01;
       public static final double kI = 0;
-      public static final double kD = 0;
+      public static final double kD = 0.001;
+    }
+    public static class FFConstants {
+      public static final double kS = 0;
+      public static final double kV = 0;
     }
   }
 }
