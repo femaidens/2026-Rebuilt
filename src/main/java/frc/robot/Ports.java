@@ -6,6 +6,11 @@ package frc.robot;
 
 /** Add your docs here. */
 public class Ports {
+    public class ShooterPorts {
+        public static final int SHOOTER_MOTOR  = 0;
+        public static final int ANGLE_MOTOR = 0;
+        public static final int CANCODER_ID = 0;
+    }
         public class DrivetrainPorts {
         public static final int FRONT_LEFT_DRIVE = 13;
         public static final int REAR_LEFT_DRIVE = 11;
