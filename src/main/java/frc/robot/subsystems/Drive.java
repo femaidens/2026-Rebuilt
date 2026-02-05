@@ -21,6 +21,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -133,18 +134,24 @@ public class Drive extends SubsystemBase {
       var alliance = DriverStation.getAlliance();
       Translation2d targetLocation;
       Translation2d difference = new Translation2d(.343, 0);
+      double angularOffset;
 
       if(alliance.isPresent() && alliance.get() == Alliance.Red){
         targetLocation = vision.getTargetTranslation(10).minus(difference);
+        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180/Math.PI);
       } else{
         targetLocation = vision.getTargetTranslation(26).plus(difference);
+        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180/Math.PI);
       }
 
       Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
 
-      double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(), targetAngle.getDegrees()+90);
+      double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(), targetAngle.getDegrees() + 90 + angularOffset); 
+      // for rotOutput, +90 bc shooter is 90 deg away from front of robot and +angularOffset cuz shooter isn't centered
 
-    this.drive(xSpeed, ySpeed, () -> rotOutput);
+      double clampedrotOutput = MathUtil.clamp(rotOutput, -0.5, 0.5);
+
+    this.drive(xSpeed, ySpeed, () -> clampedrotOutput);
 
     }
   // consider changing to profiledpid control

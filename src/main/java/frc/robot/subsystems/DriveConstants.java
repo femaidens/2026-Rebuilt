@@ -63,6 +63,12 @@ public class DriveConstants {
             public static final double D = 0.00005;
         }
 
+        public class autoPID {
+            public static final double P = .001;
+            public static final double I = 0;
+            public static final double D = .00005;
+        }
+
 
         public class FF {
             public static final double S = 0.064397;
