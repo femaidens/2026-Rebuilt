@@ -104,7 +104,7 @@ public class AutoShooter extends SubsystemBase {
 
     motorConfig = new TalonFXConfiguration();
     motorConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
-    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake; 
+    motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; 
 
     // OPTIMIZE SIGNALS: Set frequencies for high-speed SysId 
     shooterMotor.getVelocity().setUpdateFrequency(100);
