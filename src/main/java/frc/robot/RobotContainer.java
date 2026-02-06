@@ -34,14 +34,16 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
       private final Drive drive;
       private final AutoShooter autoshooter;
-      private final Pose2d kClimbPose;
+      //private final Pose2d kClimbPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
         drive = new Drive();
         autoshooter = new AutoShooter();
-        kClimbPose = new Pose2d(null, null, null);
+        // kClimbPose = new Pose2d(
+
+        // );
         
         configureBindings();
         configureDefaultCmds();
@@ -76,11 +78,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
       )
     );
 
-    driveJoy.b().onTrue(
-      drive.run( () ->
-        drive.driveToPose(kClimbPose)
-      )
-    );
+    // driveJoy.b().onTrue(
+    //   drive.run( () ->
+    //     drive.driveToPose(kClimbPose)
+    //   )
+    // );
 
     driveJoy.x().whileTrue(
       autoshooter.run( () -> 
