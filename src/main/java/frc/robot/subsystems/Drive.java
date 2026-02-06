@@ -5,6 +5,8 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -20,7 +22,7 @@ public class Drive extends SubsystemBase{
     private final SwerveDriveKinematics kinematics;
     private final SwerveDriveOdometry odometry;
 
-    private SimGyro gyro;
+    private AHRS gyro;
 
     private ChassisSpeeds speeds = new ChassisSpeeds();
   
