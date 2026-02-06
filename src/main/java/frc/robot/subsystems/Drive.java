@@ -60,9 +60,9 @@ public class Drive extends SubsystemBase {
 
   private final List<ModuleKraken> modules;
 
-  private final AHRS gyro;
+  //private final AHRS gyro;
 
-  // private final Pigeon2 gyro;
+  private final Pigeon2 gyro;
 
   public final SwerveDriveOdometry odometry;
 
@@ -90,8 +90,8 @@ public class Drive extends SubsystemBase {
 
     // totally not sure, would need to check
     
-    gyro = new AHRS(NavXComType.kMXP_SPI);
-    // gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CAN_BUS);
+    //gyro = new AHRS(NavXComType.kMXP_SPI);
+    gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CAN_BUS);
     odometry = new SwerveDriveOdometry(
       Drivetrain.kDriveKinematics, 
       gyro.getRotation2d(), 
@@ -133,16 +133,21 @@ public class Drive extends SubsystemBase {
       var alliance = DriverStation.getAlliance();
       Translation2d targetLocation;
       Translation2d difference = new Translation2d(.343, 0);
+      double angularOffset;
+      
 
       if(alliance.isPresent() && alliance.get() == Alliance.Red){
         targetLocation = vision.getTargetTranslation(10).minus(difference);
+        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation));
+        
       } else{
         targetLocation = vision.getTargetTranslation(26).plus(difference);
+        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation));
       }
 
       Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
 
-      double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(), targetAngle.getDegrees()+90);
+      double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(), targetAngle.getDegrees() + 90 + angularOffset);
 
     this.drive(xSpeed, ySpeed, () -> rotOutput);
 
@@ -318,7 +323,7 @@ public class Drive extends SubsystemBase {
    */
   public double getAngle(){
     // return -1 * gyro.getAngle();
-    return gyro.getRotation2d().getDegrees();
+    return gyro.getYaw().getValueAsDouble();
   }
 
   /**
@@ -326,10 +331,10 @@ public class Drive extends SubsystemBase {
    * 
    * @return new yaw angle in radians (ideally)
    */
-  public double setYawOffset() {
-    gyro.setAngleAdjustment(-Math.PI / 2); // need to double check!
-    return gyro.getYaw();
-  }
+  // public double setYawOffset() {
+  //   gyro.setAngleAdjustment(-Math.PI / 2); // need to double check!
+  //   return gyro.getYaw();
+  // }
   // public double getYawOffset(){
   //   gyro.setYaw(0);
   //   return gyro.getRotation2d().getRadians();
