@@ -5,13 +5,17 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.subsystems.AutoShooter;
 import frc.robot.subsystems.Drive;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -29,13 +33,17 @@ import edu.wpi.first.epilogue.Logged;
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
       private final Drive drive;
+      private final AutoShooter autoshooter;
+      private final Pose2d kClimbPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
         drive = new Drive();
+        autoshooter = new AutoShooter();
+        kClimbPose = new Pose2d(null, null, null);
+        
         configureBindings();
-
         configureDefaultCmds();
 
   }
@@ -67,6 +75,37 @@ import edu.wpi.first.epilogue.Logged;
         )
       )
     );
+
+    driveJoy.b().onTrue(
+      drive.run( () ->
+        drive.driveToPose(kClimbPose)
+      )
+    );
+
+    driveJoy.x().whileTrue(
+      autoshooter.run( () -> 
+        autoshooter.autoShoot()
+      )
+      ).onFalse(
+        autoshooter.stopShooterMotorCmd()
+    );
+
+    driveJoy.rightBumper().whileTrue(
+      autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+    );
+
+    driveJoy.leftBumper().whileTrue(
+      autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
+    );
+
+    driveJoy.rightTrigger().whileTrue(
+      autoshooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
+    );
+
+    driveJoy.leftTrigger().whileTrue(
+      autoshooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
+    );
+ 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));

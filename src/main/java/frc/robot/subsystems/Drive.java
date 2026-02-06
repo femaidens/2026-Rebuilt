@@ -21,6 +21,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -50,6 +51,8 @@ public class Drive extends SubsystemBase {
   private final Vision vision;
 
   private final PIDController rotPidController;
+  private final PIDController xPidController;
+  private final PIDController yPidController;
 
   private final SwerveDrivePoseEstimator swerveEstimator;
 
@@ -74,9 +77,19 @@ public class Drive extends SubsystemBase {
   public Drive() {
     vision = new Vision();
 
-    rotPidController = new PIDController(DriveConstants.Translation.PID.P, DriveConstants.Translation.PID.I, DriveConstants.Translation.PID.D);
+    rotPidController = new PIDController(DriveConstants.Translation.rotPID.P, DriveConstants.Translation.rotPID.I, DriveConstants.Translation.rotPID.D);
+    xPidController = new PIDController(DriveConstants.Translation.xPID.P, DriveConstants.Translation.xPID.I, DriveConstants.Translation.xPID.D);
+    yPidController = new PIDController(DriveConstants.Translation.yPID.P, DriveConstants.Translation.yPID.I, DriveConstants.Translation.yPID.D);
+
+
     rotPidController.enableContinuousInput(-180, 180);
+    xPidController.enableContinuousInput(-180, 180);
+    yPidController.enableContinuousInput(-180, 180);
+
     rotPidController.setTolerance(3);
+    xPidController.setTolerance(0.05);
+    yPidController.setTolerance(0.05);
+
     // frontLeft = new ModuleSpark(DrivetrainPorts.FRONT_LEFT_DRIVE, DrivetrainPorts.FRONT_LEFT_TURN, Translation.FRONT_LEFT_ANGOFFSET);
     // frontRight = new ModuleSpark(DrivetrainPorts.FRONT_RIGHT_DRIVE, DrivetrainPorts.FRONT_RIGHT_TURN, Translation.FRONT_RIGHT_ANGOFFSET);
     // rearLeft = new ModuleSpark(DrivetrainPorts.REAR_LEFT_DRIVE, DrivetrainPorts.REAR_LEFT_TURN, Translation.REAR_LEFT_ANGOFFSET);
@@ -127,6 +140,38 @@ public class Drive extends SubsystemBase {
         public Pose2d getPose2d(){
         return swerveEstimator.getEstimatedPosition();
     }
+  
+
+    public void driveToPose(Pose2d targetPose){
+      Pose2d currentPose = this.getPose2d();
+      double xSpeed = xPidController.calculate(currentPose.getX(), targetPose.getX());
+      double ySpeed = yPidController.calculate(currentPose.getY(), targetPose.getY());
+      double rotSpeed = rotPidController.calculate(
+        currentPose.getRotation().getDegrees(), 
+        90 //double check where climb is
+    );
+      xSpeed = MathUtil.clamp(xSpeed, -2.0, 2.0); 
+      ySpeed = MathUtil.clamp(ySpeed, -2.0, 2.0);
+      rotSpeed = MathUtil.clamp(rotSpeed, -3.0, 3.0);
+      
+      this.driveRaw(xSpeed, ySpeed, rotSpeed);
+    }
+
+    public double distanceFromTarget(){
+      Pose2d currentPose = this.getPose2d();
+      var alliance = DriverStation.getAlliance();
+      Translation2d difference = new Translation2d(.343, 0);
+      Translation2d targetLocation;
+
+      if(alliance.isPresent() && alliance.get() == Alliance.Red){
+        targetLocation = vision.getTargetTranslation(10).minus(difference);
+      } else{
+        targetLocation = vision.getTargetTranslation(26).plus(difference);
+      }
+
+      return currentPose.getTranslation().getDistance(targetLocation);
+
+    }
 
     public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed){
       Pose2d currentPose = this.getPose2d();
@@ -134,23 +179,30 @@ public class Drive extends SubsystemBase {
       Translation2d targetLocation;
       Translation2d difference = new Translation2d(.343, 0);
       double angularOffset;
-      
 
       if(alliance.isPresent() && alliance.get() == Alliance.Red){
         targetLocation = vision.getTargetTranslation(10).minus(difference);
-        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation));
-        
+        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180/Math.PI);
       } else{
         targetLocation = vision.getTargetTranslation(26).plus(difference);
-        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation));
+        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180/Math.PI);
       }
 
       Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
 
-      double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(), targetAngle.getDegrees() + 90 + angularOffset);
+      double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(), targetAngle.getDegrees() + 90 + angularOffset); 
+      // for rotOutput, +90 bc shooter is 90 deg away from front of robot and +angularOffset cuz shooter isn't centered
 
-    this.drive(xSpeed, ySpeed, () -> rotOutput);
+      double clampedrotOutput = MathUtil.clamp(rotOutput, -0.5, 0.5);
 
+    this.drive(xSpeed, ySpeed, () -> clampedrotOutput);
+
+    }
+
+    public void driveRaw(double xVolts, double yVolts, double rotVolts) {
+        speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVolts, yVolts, rotVolts, gyro.getRotation2d());
+        SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
+        setModuleStates(moduleStates);
     }
   // consider changing to profiledpid control
   /**
