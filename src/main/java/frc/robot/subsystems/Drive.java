@@ -173,6 +173,12 @@ public class Drive extends SubsystemBase {
 
     }
 
+    public Rotation2d getRotation2d() {
+        // Pigeon2 Yaw is CCW-Positive by default in Phoenix 6, 
+        // which matches WPILib's coordinate system!
+        return Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
+    }
+
     public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed){
       Pose2d currentPose = this.getPose2d();
       var alliance = DriverStation.getAlliance();
