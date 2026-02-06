@@ -129,6 +129,22 @@ public class Drive extends SubsystemBase {
         return swerveEstimator.getEstimatedPosition();
     }
 
+    public double distanceFromTarget(){
+      Pose2d currentPose = this.getPose2d();
+      var alliance = DriverStation.getAlliance();
+      Translation2d difference = new Translation2d(.343, 0);
+      Translation2d targetLocation;
+
+      if(alliance.isPresent() && alliance.get() == Alliance.Red){
+        targetLocation = vision.getTargetTranslation(10).minus(difference);
+      } else{
+        targetLocation = vision.getTargetTranslation(26).plus(difference);
+      }
+
+      return currentPose.getTranslation().getDistance(targetLocation);
+
+    }
+
     public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed){
       Pose2d currentPose = this.getPose2d();
       var alliance = DriverStation.getAlliance();

@@ -24,6 +24,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Voltage;
@@ -31,6 +32,7 @@ import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Ports.*;
 import frc.robot.Constants.*;
+import frc.robot.subsystems.*;
 
 public class AutoShooter extends SubsystemBase {
   // One motor is for starting the rollers, the other is for angling the shooter
@@ -53,6 +55,8 @@ public class AutoShooter extends SubsystemBase {
   private final InterpolatingDoubleTreeMap angleTable;
 
   private final SysIdRoutine shooterRoutine;
+
+  private final Drive drive;
 //   private final SimpleMotorFeedforward ff;
 
 //   private final InterpolatingDoubleTreeMap velocityMap = new InterpolatingDoubleTreeMap();
@@ -64,6 +68,8 @@ public class AutoShooter extends SubsystemBase {
     
     velocityTable = new InterpolatingDoubleTreeMap();
     angleTable = new InterpolatingDoubleTreeMap();
+
+    drive = new Drive();
 
     encoder = new CANcoder(ShooterPorts.CANCODER_ID);
 
@@ -87,6 +93,9 @@ public class AutoShooter extends SubsystemBase {
     angleConfig = new TalonFXConfiguration();
     angleConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
     angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
+    angleConfig.Slot0.kP = 5.0; 
+    angleConfig.Slot0.kD = 0.1;
 
     angleConfig.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
     angleConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
@@ -127,9 +136,26 @@ public class AutoShooter extends SubsystemBase {
     angleTable.put(0.0, 0.0);
   }
 
+  public void autoShoot(){
+    double distanceFromTarget = drive.distanceFromTarget();
+    double targetVelocity = velocityTable.get(distanceFromTarget);
+    double currentVelocity = shooterMotor.getVelocity().getValueAsDouble();
+    double targetAngle = angleTable.get(distanceFromTarget);
+
+    double ff = shooterFF.calculate(targetVelocity);
+    double pid = shooterPID.calculate(currentVelocity, targetVelocity);
+
+    shooterMotor.setControl(shooterVoltage.withOutput(ff + pid));
+    angleMotor.setControl(angleVoltage.withPosition(targetAngle));
+  }
+
 
   public Command runShooterMotorCmd(){
     return this.run(() -> shooterMotor.set(ShooterConstants.SHOOTER_MOTOR_SPEED));
+  }
+
+  public Command runAngleMotorCmd(){
+    return this.run(() -> angleMotor.set(ShooterConstants.ANGLE_MOTOR_SPEED));
   }
 
   //so we don't need to ramp up from rest every time
@@ -140,6 +166,11 @@ public class AutoShooter extends SubsystemBase {
   public Command stopShooterMotorCmd() {
     return this.runOnce(() -> shooterMotor.set(0));
   }
+
+   public Command stopAngleMotorCmd() {
+    return this.runOnce(() -> angleMotor.set(0));
+  }
+
 
   // quasi CMD
     public Command sysIdQuasistatic(SysIdRoutine.Direction direction) {
