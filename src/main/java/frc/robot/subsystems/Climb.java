@@ -27,8 +27,8 @@ public class Climb extends SubsystemBase {
     private final PIDController climbPID;
 
     public Climb () {
-        leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, new CANBus());
-		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, new CANBus());
+        leaderMotor = new TalonFX(Ports.ClimbPorts.LEADER_MOTOR, Constants.ClimbConstants.CAN_BUS);
+		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, Constants.ClimbConstants.CAN_BUS);
         bottomLimitSwitch = new DigitalInput(Ports.ClimbPorts.BOTTOM_LIMIT_SWITCH);
         climbPID = new PIDController(0,0,0);
 
