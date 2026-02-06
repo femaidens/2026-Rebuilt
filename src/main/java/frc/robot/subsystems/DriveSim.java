@@ -9,6 +9,7 @@ import com.studica.frc.AHRS;
 import com.studica.frc.AHRS.NavXComType;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.ctre.phoenix6.sim.Pigeon2SimState;
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -44,11 +45,12 @@ public class DriveSim extends SubsystemBase {
 
   private int dev;
   //private SimDouble angle;
-  private double simAngle;
   private double angle1;
+  private double simAngle;
   private Field2d m_field;
   private SwerveDriveOdometry odometry;
   private Pigeon2 gyro;
+  private final Pigeon2SimState gyroSim;
   private ChassisSpeeds speeds;
   private final ModuleSim frontLeft;
   private final ModuleSim frontRight;
@@ -91,11 +93,11 @@ public class DriveSim extends SubsystemBase {
     
     dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
     gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CAN_BUS);
+    gyroSim = gyro.getSimState();
     translationPID = new PIDConstants(Translation.PID.P,Translation.PID.I, Translation.PID.D );
     rotationPID = new PIDConstants(Turn.PID.P, Turn.PID.I, Turn.PID.D);
     holonomicDriveController = new PPHolonomicDriveController(translationPID, rotationPID);
     //angle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
-    simAngle = 0.0;
     m_field = new Field2d();
     odometry = new SwerveDriveOdometry(
         Drivetrain.kDriveKinematics,
@@ -148,8 +150,9 @@ public class DriveSim extends SubsystemBase {
       double yVel = ySpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
       double rotVel = rotSpeed.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
 
-      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, new Rotation2d(angle1));
+      //speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, new Rotation2d(angle1));
       //angle.set(angle.get() + 0.02 * Units.radiansToDegrees(speeds.omegaRadiansPerSecond));
+      speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, new Rotation2d(Math.toRadians(gyro.getYaw().getValueAsDouble())));
       angle1 +=  0.02 * Units.radiansToDegrees(speeds.omegaRadiansPerSecond);
       SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
       moduleStates[0].optimize(moduleStates[0].angle);
@@ -206,6 +209,10 @@ public class DriveSim extends SubsystemBase {
     angle1 = 0;
   }
 
+  public double getGyroAngle(){
+    return gyro.getYaw().getValueAsDouble();
+  }
+
   @Override
   public void simulationPeriodic() {
     // m_field.setRobotPose(1, 6, Rotation2d.fromDegrees(100));
@@ -215,16 +222,22 @@ public class DriveSim extends SubsystemBase {
     // m_field.getObject("traj").setTrajectory(m_trajectory);
     publisher.set(this.getStates());
     desiredPublisher.set(this.getDesiredStates());
-    odometry.update(new Rotation2d(angle1 ),
+  
+
+    odometry.update(new Rotation2d(getGyroAngle()),
         new SwerveModulePosition[] {
             frontLeft.getSwerveModulePosition(), frontRight.getSwerveModulePosition(),
             rearLeft.getSwerveModulePosition(), rearRight.getSwerveModulePosition()
         });
         // System.out.println(angle1 );
 
+    ChassisSpeeds currentSpeeds = Drivetrain.kDriveKinematics.toChassisSpeeds(getStates());
+    double newYaw = Units.radiansToDegrees(currentSpeeds.omegaRadiansPerSecond * 0.02);
+    gyroSim.addYaw(newYaw);
+
     m_field.setRobotPose(odometry.getPoseMeters().getX(), odometry.getPoseMeters().getY(), new Rotation2d(Units.degreesToRadians(angle1 )));
     SmartDashboard.putData("Field", m_field);
-    SmartDashboard.putNumber("Gyro angle", angle1);
+    SmartDashboard.putNumber("Gyro angle", getGyroAngle());
   }
 
   public Pose2d getPose(){
