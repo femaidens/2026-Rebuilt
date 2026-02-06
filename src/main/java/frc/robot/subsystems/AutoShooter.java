@@ -22,6 +22,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -34,6 +35,7 @@ import frc.robot.Ports.*;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
 
+@Logged
 public class AutoShooter extends SubsystemBase {
   // One motor is for starting the rollers, the other is for angling the shooter
   /** Creates a new Shooter. */
@@ -149,6 +151,13 @@ public class AutoShooter extends SubsystemBase {
     angleMotor.setControl(angleVoltage.withPosition(targetAngle));
   }
 
+  public double getShooterVelocity(){
+    return shooterMotor.getVelocity().getValueAsDouble();
+  }
+
+  public double getAngle(){
+    return encoder.getAbsolutePosition().getValueAsDouble();
+  }
 
   public Command runShooterMotorCmd(){
     return this.run(() -> shooterMotor.set(ShooterConstants.SHOOTER_MOTOR_SPEED));
