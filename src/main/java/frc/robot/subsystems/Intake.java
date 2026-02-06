@@ -75,6 +75,13 @@ public class Intake extends SubsystemBase {
     anglePid = p;
   }
 
+  public Command setAngleUpDownCmd(){
+      if(getAngle() <= 90){
+        return this.run(() -> setAnglePid(90));
+      }
+      return this.run(() -> setAnglePid(0));
+  }
+
   public Command setAnglePidCmd(double setpoint){
     return this.run(() -> setAnglePid(setpoint));
   }

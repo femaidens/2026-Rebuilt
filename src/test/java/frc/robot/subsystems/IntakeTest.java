@@ -102,4 +102,22 @@ public class IntakeTest {
     verify(anglePid).calculate(90,90);
 
   }
+    @Test
+    void setIntakePos() {
+    StatusSignal<Angle> fakeData = mock(StatusSignal.class);
+    when(encoder.getAbsolutePosition()).thenReturn(fakeData);
+    when(fakeData.getValueAsDouble()).thenReturn(0.20);
+    when(anglePid.atSetpoint()).thenReturn(true);
+
+    Command setAngle = intake.setAngleUpDownCmd();
+    setAngle.initialize();
+    setAngle.execute(); 
+
+    assertEquals(72.0, intake.getAngle(), 0.001);
+    assertTrue(intake.atAngle(), "Angle should be at setpoint");
+    
+    verify(angleMotor).setVoltage(anyDouble());
+    verify(anglePid).calculate(72,90);
+
+  }
 }
