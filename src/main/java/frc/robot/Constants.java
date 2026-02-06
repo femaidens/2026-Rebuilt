@@ -25,7 +25,7 @@ public final class Constants {
     public static final double SHOOTER_CRUISE_SPEED = 0.05;
     public static final double ANGLE_MOTOR_SPEED = 0.5;
 
-    public static CANBus CANBUS = new CANBus("rio");
+    public static final CANBus CANBUS = new CANBus("rio");
       
     public static class PIDConstants {
       public static final double kP = 0.01;

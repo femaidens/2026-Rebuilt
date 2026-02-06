@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.Drive;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -29,11 +30,13 @@ import edu.wpi.first.epilogue.Logged;
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
       private final Drive drive;
+      private final Pose2d kClimbPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
         drive = new Drive();
+        kClimbPose = new Pose2d(null, null, null);
         configureBindings();
 
         configureDefaultCmds();
@@ -67,6 +70,13 @@ import edu.wpi.first.epilogue.Logged;
         )
       )
     );
+
+    driveJoy.b().onTrue(
+      drive.run( () ->
+        drive.driveToPose(kClimbPose)
+      )
+    );
+ 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));

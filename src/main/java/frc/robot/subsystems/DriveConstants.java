@@ -56,12 +56,27 @@ public class DriveConstants {
         public static final LinearVelocity MAX_TRANSLATION_VELOCITY = MetersPerSecond.of(1);
         public static final LinearAcceleration MAX_TRANSLATION_ACCELERATION = MetersPerSecondPerSecond.of(1.0);
         
-        
         public class PID {
-            public static final double P = .01;
+            public static final double P = 0.01;
             public static final double I = 0;
             public static final double D = 0.00005;
         }
+        public class rotPID {
+            public static final double P = 0.05;
+            public static final double I = 0;
+            public static final double D = 0.00005;
+        }
+         public class xPID {
+            public static final double P = 2;
+            public static final double I = 0;
+            public static final double D = 0.00005;
+        }
+         public class yPID {
+            public static final double P = 2;
+            public static final double I = 0;
+            public static final double D = 0.00005;
+        }
+
 
         public class autoPID {
             public static final double P = .001;
