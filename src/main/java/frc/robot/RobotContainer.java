@@ -89,6 +89,7 @@ public class RobotContainer {
          operJoy.leftBumper().onTrue(kasey.breatheEffect());
          operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
          operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
+         operJoy.start().onTrue(kasey.progressMaskEffectGreenPurple());
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

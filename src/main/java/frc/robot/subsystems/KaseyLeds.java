@@ -24,6 +24,7 @@ public class KaseyLeds extends SubsystemBase {
     private final AddressableLEDBuffer buffer; //led buffer
     private boolean movingForward;
     private double currentProgress; // [0,1]
+    private static final double progressPerTick = 0.01;
     
     
         // private final Color red, blue, green, purple, pink
@@ -37,33 +38,33 @@ public class KaseyLeds extends SubsystemBase {
             leds.start();
     
             movingForward = true;
-            currentProgress = 0;
+            currentProgress = 0.0;
         }
         
         public void setLEDPurple() {
             for (var i = 0; i < buffer.getLength(); i++) {
-                buffer.setRGB (i, 165, 92, 255);
+                buffer.setRGB (i, 92, 165, 255);
             }
             leds.setData(buffer);
         }
         
         public void setLEDGreen() {
             for (var i = 0; i < buffer.getLength(); i++) {
-                buffer.setRGB(i, 104, 255, 84);
+                buffer.setRGB(i, 255, 104, 84);
             }
             leds.setData(buffer);
         }
     
       public void setLEDRed() {
             for (var i = 0; i < buffer.getLength(); i++) {
-                buffer.setRGB (i, 255, 0, 0);
+                buffer.setRGB (i, 0, 255, 0);
             }
             leds.setData(buffer);
         }
     
         public void setLEDBlue() {
             for (var i = 0; i < buffer.getLength(); i++) {
-                buffer.setRGB (i, 0, 221, 255);
+                buffer.setRGB (i, 221, 0, 255);
             }
             leds.setData(buffer);
         }
@@ -71,7 +72,7 @@ public class KaseyLeds extends SubsystemBase {
         
         public void setLEDPink() {
             for (var i = 0; i < buffer.getLength(); i++) {
-                buffer.setRGB (i, 255, 74, 158);
+                buffer.setRGB (i, 74, 255, 158);
             }
             leds.setData(buffer);
         }
@@ -109,7 +110,7 @@ public class KaseyLeds extends SubsystemBase {
         //beautiful transitions
         public Command breatheEffect() {
             return this.run(() -> {
-                LEDPattern base = LEDPattern.gradient(GradientType.kDiscontinuous, Color.kRed, Color.kBlue);
+                LEDPattern base = LEDPattern.gradient(GradientType.kDiscontinuous, new Color (0, 255, 0), new Color(221, 0, 255));
                 LEDPattern pattern = base.breathe(Seconds.of(2));
     
     
@@ -124,28 +125,40 @@ public class KaseyLeds extends SubsystemBase {
     
         public Command progressMaskEffect() {
             return this.run(() -> {
-            LEDPattern base = LEDPattern.gradient(LEDPattern.GradientType.kDiscontinuous, Color.kRed, Color.kBlue);
+            LEDPattern base = LEDPattern.gradient(LEDPattern.GradientType.kDiscontinuous, new Color (0, 255, 0), new Color (0, 0, 255));
             LEDPattern mask = LEDPattern.progressMaskLayer(this::getLedProgress);
             LEDPattern heightDisplay = base.mask(mask);
     
             heightDisplay.applyTo(buffer);
     
             leds.setData(buffer);
-    
+          System.out.println(this.getLedProgress());
         });
     }
     
+    public Command progressMaskEffectGreenPurple() {
+        return this.run(() -> {
+        LEDPattern base = LEDPattern.gradient(LEDPattern.GradientType.kDiscontinuous, new Color (92, 165, 255), new Color (255, 104, 84));
+        LEDPattern mask = LEDPattern.progressMaskLayer(this::getLedProgress);
+        LEDPattern heightDisplay = base.mask(mask);
+
+        heightDisplay.applyTo(buffer);
+
+        leds.setData(buffer);
+    });
+}
+
         @Override
         public void periodic() {
             leds.setData(buffer);
-            breatheEffect().schedule();
+          //  breatheEffect().schedule();
     
             if(movingForward) {
-                currentProgress += 0.1;
+                currentProgress += progressPerTick;
             } else {
-                currentProgress -= 0.1;
+                currentProgress -= progressPerTick;
             }
-            if (currentProgress==1 || currentProgress==0) {
+            if (currentProgress>=1.0 || currentProgress<=0.0) {
                 movingForward = !movingForward;
             }
     
