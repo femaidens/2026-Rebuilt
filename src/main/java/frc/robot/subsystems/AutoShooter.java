@@ -81,6 +81,7 @@ public class AutoShooter extends SubsystemBase {
     shooterFF = new SimpleMotorFeedforward(ShooterConstants.FFConstants.kS, ShooterConstants.FFConstants.kV);
 
     shooterPID = new PIDController(ShooterConstants.PIDConstants.kP, ShooterConstants.PIDConstants.kI, ShooterConstants.PIDConstants.kD);
+    shooterPID.setTolerance(24.855);
 
     // angleConfig = new TalonFXConfiguration();
     // angleConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
@@ -194,5 +195,6 @@ public class AutoShooter extends SubsystemBase {
   @Override
   public void periodic() {
     // SmartDashboard.putBoolean(()); for once we get the angle 
+    // SmartDashboard.getNumber();
   }
 }

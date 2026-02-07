@@ -38,6 +38,8 @@ import edu.wpi.first.wpilibj.DataLogManager;
     // frontLeftCam = new PhotonCamera("2265-ironfish");
     DataLogManager.start();
     Epilogue.bind(this);
+
+    enableLiveWindowInTest(true);
   }
 
   /**

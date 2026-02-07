@@ -84,13 +84,17 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     //   )
     // );
 
+    // driveJoy.x().whileTrue(
+    //   autoshooter.run( () -> 
+    //     autoshooter.autoShoot()
+    //   )
+    //   ).onFalse(
+    //     autoshooter.stopShooterMotorCmd()
+    // );
+
     driveJoy.x().whileTrue(
-      autoshooter.run( () -> 
-        autoshooter.autoShoot()
-      )
-      ).onFalse(
-        autoshooter.stopShooterMotorCmd()
-    );
+      autoshooter.runShooterMotorCmd()
+    ).onFalse(autoshooter.stopShooterMotorCmd());
 
     driveJoy.rightBumper().whileTrue(
       autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
