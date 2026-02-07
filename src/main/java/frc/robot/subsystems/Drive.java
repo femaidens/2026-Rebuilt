@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.Volts;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
@@ -25,6 +26,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -60,10 +62,17 @@ public class Drive extends SubsystemBase {
   private final ModuleKraken frontRight;
   private final ModuleKraken rearLeft;
   private final ModuleKraken rearRight;
+  // private double xSpeed;
+  // private double ySpeed;
+  //private double rotSpeed;
+
+  private DoubleSupplier xSpeed;
+  private DoubleSupplier ySpeed;
+  private DoubleSupplier rotSpeed;
 
   private final List<ModuleKraken> modules;
 
-  //private final AHRS gyro;
+  // private final AHRS gyro;
 
   private final Pigeon2 gyro;
 
@@ -77,10 +86,12 @@ public class Drive extends SubsystemBase {
   public Drive() {
     vision = new Vision();
 
-    rotPidController = new PIDController(DriveConstants.Translation.rotPID.P, DriveConstants.Translation.rotPID.I, DriveConstants.Translation.rotPID.D);
-    xPidController = new PIDController(DriveConstants.Translation.xPID.P, DriveConstants.Translation.xPID.I, DriveConstants.Translation.xPID.D);
-    yPidController = new PIDController(DriveConstants.Translation.yPID.P, DriveConstants.Translation.yPID.I, DriveConstants.Translation.yPID.D);
-
+    rotPidController = new PIDController(DriveConstants.Translation.rotPID.P, DriveConstants.Translation.rotPID.I,
+        DriveConstants.Translation.rotPID.D);
+    xPidController = new PIDController(DriveConstants.Translation.xPID.P, DriveConstants.Translation.xPID.I,
+        DriveConstants.Translation.xPID.D);
+    yPidController = new PIDController(DriveConstants.Translation.yPID.P, DriveConstants.Translation.yPID.I,
+        DriveConstants.Translation.yPID.D);
 
     rotPidController.enableContinuousInput(-180, 180);
     xPidController.enableContinuousInput(-180, 180);
@@ -90,126 +101,137 @@ public class Drive extends SubsystemBase {
     xPidController.setTolerance(0.05);
     yPidController.setTolerance(0.05);
 
-    // frontLeft = new ModuleSpark(DrivetrainPorts.FRONT_LEFT_DRIVE, DrivetrainPorts.FRONT_LEFT_TURN, Translation.FRONT_LEFT_ANGOFFSET);
-    // frontRight = new ModuleSpark(DrivetrainPorts.FRONT_RIGHT_DRIVE, DrivetrainPorts.FRONT_RIGHT_TURN, Translation.FRONT_RIGHT_ANGOFFSET);
-    // rearLeft = new ModuleSpark(DrivetrainPorts.REAR_LEFT_DRIVE, DrivetrainPorts.REAR_LEFT_TURN, Translation.REAR_LEFT_ANGOFFSET);
-    // rearRight = new ModuleSpark(DrivetrainPorts.REAR_RIGHT_DRIVE, DrivetrainPorts.REAR_RIGHT_TURN, Translation.REAR_RIGHT_ANGOFFSET);
-    frontLeft = new ModuleKraken(DrivetrainPorts.FRONT_LEFT_DRIVE, DrivetrainPorts.FRONT_LEFT_TURN, DrivetrainPorts.FRONT_LEFT_CANCODER, Translation.FRONT_LEFT_MAG_OFFSET, Translation.FRONT_LEFT_ANGOFFSET, false);
-    frontRight = new ModuleKraken(DrivetrainPorts.FRONT_RIGHT_DRIVE, DrivetrainPorts.FRONT_RIGHT_TURN, DrivetrainPorts.FRONT_RIGHT_CANCODER, Translation.FRONT_RIGHT_MAG_OFFSET, Translation.FRONT_RIGHT_ANGOFFSET, false);
-    rearLeft = new ModuleKraken(DrivetrainPorts.REAR_LEFT_DRIVE, DrivetrainPorts.REAR_LEFT_TURN, DrivetrainPorts.REAR_LEFT_CANCODER, Translation.REAR_LEFT_MAG_OFFSET, Translation.REAR_LEFT_ANGOFFSET, false);
-    rearRight = new ModuleKraken(DrivetrainPorts.REAR_RIGHT_DRIVE, DrivetrainPorts.REAR_RIGHT_TURN, DrivetrainPorts.REAR_RIGHT_CANCODER, Translation.REAR_RIGHT_MAG_OFFSET, Translation.REAR_RIGHT_ANGOFFSET, false);
+    // frontLeft = new ModuleSpark(DrivetrainPorts.FRONT_LEFT_DRIVE,
+    // DrivetrainPorts.FRONT_LEFT_TURN, Translation.FRONT_LEFT_ANGOFFSET);
+    // frontRight = new ModuleSpark(DrivetrainPorts.FRONT_RIGHT_DRIVE,
+    // DrivetrainPorts.FRONT_RIGHT_TURN, Translation.FRONT_RIGHT_ANGOFFSET);
+    // rearLeft = new ModuleSpark(DrivetrainPorts.REAR_LEFT_DRIVE,
+    // DrivetrainPorts.REAR_LEFT_TURN, Translation.REAR_LEFT_ANGOFFSET);
+    // rearRight = new ModuleSpark(DrivetrainPorts.REAR_RIGHT_DRIVE,
+    // DrivetrainPorts.REAR_RIGHT_TURN, Translation.REAR_RIGHT_ANGOFFSET);
+    frontLeft = new ModuleKraken(DrivetrainPorts.FRONT_LEFT_DRIVE, DrivetrainPorts.FRONT_LEFT_TURN,
+        DrivetrainPorts.FRONT_LEFT_CANCODER, Translation.FRONT_LEFT_MAG_OFFSET, Translation.FRONT_LEFT_ANGOFFSET,
+        false);
+    frontRight = new ModuleKraken(DrivetrainPorts.FRONT_RIGHT_DRIVE, DrivetrainPorts.FRONT_RIGHT_TURN,
+        DrivetrainPorts.FRONT_RIGHT_CANCODER, Translation.FRONT_RIGHT_MAG_OFFSET, Translation.FRONT_RIGHT_ANGOFFSET,
+        false);
+    rearLeft = new ModuleKraken(DrivetrainPorts.REAR_LEFT_DRIVE, DrivetrainPorts.REAR_LEFT_TURN,
+        DrivetrainPorts.REAR_LEFT_CANCODER, Translation.REAR_LEFT_MAG_OFFSET, Translation.REAR_LEFT_ANGOFFSET, false);
+    rearRight = new ModuleKraken(DrivetrainPorts.REAR_RIGHT_DRIVE, DrivetrainPorts.REAR_RIGHT_TURN,
+        DrivetrainPorts.REAR_RIGHT_CANCODER, Translation.REAR_RIGHT_MAG_OFFSET, Translation.REAR_RIGHT_ANGOFFSET,
+        false);
 
     modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
 
     // totally not sure, would need to check
-    
-    //gyro = new AHRS(NavXComType.kMXP_SPI);
+
+    // gyro = new AHRS(NavXComType.kMXP_SPI);
     gyro = new Pigeon2(DrivetrainPorts.GYRO_ID, Translation.CAN_BUS);
     odometry = new SwerveDriveOdometry(
-      Drivetrain.kDriveKinematics, 
-      gyro.getRotation2d(), 
-      new SwerveModulePosition[] {
-        frontLeft.getSwerveModulePosition(),
-        frontRight.getSwerveModulePosition(),
-        rearLeft.getSwerveModulePosition(),
-        rearRight.getSwerveModulePosition()
-      });
-      zeroHeading();
+        Drivetrain.kDriveKinematics,
+        gyro.getRotation2d(),
+        new SwerveModulePosition[] {
+            frontLeft.getSwerveModulePosition(),
+            frontRight.getSwerveModulePosition(),
+            rearLeft.getSwerveModulePosition(),
+            rearRight.getSwerveModulePosition()
+        });
+    zeroHeading();
 
-      swerveEstimator = new SwerveDrivePoseEstimator(
+    swerveEstimator = new SwerveDrivePoseEstimator(
         DriveConstants.Drivetrain.kDriveKinematics,
         gyro.getRotation2d(),
         getSwerveModulePosition(),
         new Pose2d(),
         DriveConstants.Drivetrain.STATE_STD_DEV,
-        DriveConstants.Drivetrain.VISION_STD_DEV
-    );
+        DriveConstants.Drivetrain.VISION_STD_DEV);
 
-      driveRoutine = new SysIdRoutine(
+    driveRoutine = new SysIdRoutine(
         new SysIdRoutine.Config(null, null,
-        //  Volts.of(2).per(Seconds.of(1)),
-        //  Volts.of(9),
-         null,
-         (state) -> SignalLogger.writeString("state", state.toString())),
+            // Volts.of(2).per(Seconds.of(1)),
+            // Volts.of(9),
+            null,
+            (state) -> SignalLogger.writeString("state", state.toString())),
         new SysIdRoutine.Mechanism(
-          volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
-          null,
-          this));
-    }
+            volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
+            null,
+            this));
+  }
 
-        public Pose2d getPose2d(){
-        return swerveEstimator.getEstimatedPosition();
-    }
-  
+  public Pose2d getPose2d() {
+    return swerveEstimator.getEstimatedPosition();
+  }
 
-    public void driveToPose(Pose2d targetPose){
-      Pose2d currentPose = this.getPose2d();
-      double xSpeed = xPidController.calculate(currentPose.getX(), targetPose.getX());
-      double ySpeed = yPidController.calculate(currentPose.getY(), targetPose.getY());
-      double rotSpeed = rotPidController.calculate(
-        currentPose.getRotation().getDegrees(), 
-        90 //double check where climb is
+  public void driveToPose(double x, double y, double r) {
+    Pose2d currentPose = this.getPose2d();
+   double xSpeed = xPidController.calculate(currentPose.getX(), x);
+   double ySpeed = yPidController.calculate(currentPose.getY(), y);
+   double rotSpeed = rotPidController.calculate(
+        currentPose.getRotation().getDegrees(),
+        r // double check where climb is
     );
-      xSpeed = MathUtil.clamp(xSpeed, -2.0, 2.0); 
-      ySpeed = MathUtil.clamp(ySpeed, -2.0, 2.0);
-      rotSpeed = MathUtil.clamp(rotSpeed, -3.0, 3.0);
-      
-      this.driveRaw(xSpeed, ySpeed, rotSpeed);
+    xSpeed = MathUtil.clamp(xSpeed, -2.0, 2.0);
+    ySpeed = MathUtil.clamp(ySpeed, -2.0, 2.0);
+    rotSpeed = MathUtil.clamp(rotSpeed, -3.0, 3.0);
+
+    this.driveRaw(xSpeed, ySpeed, rotSpeed);
+
+  }
+
+  public Command driveToPoseCommand(double x, double y, double r) {
+    return this.run(() -> driveToPose(x, y, r));
+  }
+
+  public double distanceFromTarget() {
+    Pose2d currentPose = this.getPose2d();
+    var alliance = DriverStation.getAlliance();
+    Translation2d difference = new Translation2d(.343, 0);
+    Translation2d targetLocation;
+
+    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+      targetLocation = vision.getTargetTranslation(10).minus(difference);
+    } else {
+      targetLocation = vision.getTargetTranslation(26).plus(difference);
     }
 
-    public double distanceFromTarget(){
-      Pose2d currentPose = this.getPose2d();
-      var alliance = DriverStation.getAlliance();
-      Translation2d difference = new Translation2d(.343, 0);
-      Translation2d targetLocation;
+    return currentPose.getTranslation().getDistance(targetLocation);
 
-      if(alliance.isPresent() && alliance.get() == Alliance.Red){
-        targetLocation = vision.getTargetTranslation(10).minus(difference);
-      } else{
-        targetLocation = vision.getTargetTranslation(26).plus(difference);
-      }
+  }
 
-      return currentPose.getTranslation().getDistance(targetLocation);
+  public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed) {
+    Pose2d currentPose = this.getPose2d();
+    var alliance = DriverStation.getAlliance();
+    Translation2d targetLocation;
+    Translation2d difference = new Translation2d(.343, 0);
+    double angularOffset;
 
+    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+      targetLocation = vision.getTargetTranslation(10).minus(difference);
+      angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180 / Math.PI);
+    } else {
+      targetLocation = vision.getTargetTranslation(26).plus(difference);
+      angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180 / Math.PI);
     }
 
-    public Rotation2d getPigeon() {
-        // Pigeon2 Yaw is CCW-Positive by default in Phoenix 6, 
-        // which matches WPILib's coordinate system!
-        return Rotation2d.fromDegrees(gyro.getYaw().getValueAsDouble());
-    }
+    Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
 
-    public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed){
-      Pose2d currentPose = this.getPose2d();
-      var alliance = DriverStation.getAlliance();
-      Translation2d targetLocation;
-      Translation2d difference = new Translation2d(.343, 0);
-      double angularOffset;
+    double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(),
+        targetAngle.getDegrees() + 90 + angularOffset);
+    // for rotOutput, +90 bc shooter is 90 deg away from front of robot and
+    // +angularOffset cuz shooter isn't centered
 
-      if(alliance.isPresent() && alliance.get() == Alliance.Red){
-        targetLocation = vision.getTargetTranslation(10).minus(difference);
-        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180/Math.PI);
-      } else{
-        targetLocation = vision.getTargetTranslation(26).plus(difference);
-        angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180/Math.PI);
-      }
-
-      Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
-
-      double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(), targetAngle.getDegrees() + 90 + angularOffset); 
-      // for rotOutput, +90 bc shooter is 90 deg away from front of robot and +angularOffset cuz shooter isn't centered
-
-      double clampedrotOutput = MathUtil.clamp(rotOutput, -0.5, 0.5);
+    double clampedrotOutput = MathUtil.clamp(rotOutput, -0.5, 0.5);
 
     this.drive(xSpeed, ySpeed, () -> clampedrotOutput);
 
-    }
+  }
 
-    public void driveRaw(double xVolts, double yVolts, double rotVolts) {
-        speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVolts, yVolts, rotVolts, gyro.getRotation2d());
-        SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
-        setModuleStates(moduleStates);
-    }
+  public void driveRaw(double xVolts, double yVolts, double rotVolts) {
+    speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVolts, yVolts, rotVolts, gyro.getRotation2d());
+    SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
+    setModuleStates(moduleStates);
+  }
+
   // consider changing to profiledpid control
   /**
    * drivin
@@ -219,7 +241,10 @@ public class Drive extends SubsystemBase {
    * @param rotSpeed
    * @return
    */
-  public void drive(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed){
+  public void drive(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed) {
+    this.xSpeed = xSpeed;
+    this.ySpeed = ySpeed;
+    this.rotSpeed = rotSpeed;
     double xVel = xSpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
     double yVel = ySpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
     double rotVel = rotSpeed.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
@@ -228,16 +253,16 @@ public class Drive extends SubsystemBase {
     SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
 
     // return this.run(
-    //   () -> {
-    //     for(int i = 0; i < modules.size(); i++){
-    //       modules.get(i).setDesiredState(moduleStates[i]);
-    //     }
-    //   }
+    // () -> {
+    // for(int i = 0; i < modules.size(); i++){
+    // modules.get(i).setDesiredState(moduleStates[i]);
+    // }
+    // }
     // );
     setModuleStates(moduleStates);
   }
 
-  public void driveRobotRelative(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed){
+  public void driveRobotRelative(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed) {
     double xVel = xSpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
     double yVel = ySpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
     double rotVel = rotSpeed.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
@@ -246,28 +271,28 @@ public class Drive extends SubsystemBase {
     SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
 
     // return this.run(
-    //   () -> {
-    //     for(int i = 0; i < modules.size(); i++){
-    //       modules.get(i).setDesiredState(moduleStates[i]);
-    //     }
-    //   }
+    // () -> {
+    // for(int i = 0; i < modules.size(); i++){
+    // modules.get(i).setDesiredState(moduleStates[i]);
+    // }
+    // }
     // );
     setModuleStates(moduleStates);
   }
-  
+
   /**
    * sets the swerve ModuleStates
    */
-  public void setModuleStates(SwerveModuleState[] desiredStates){
+  public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-      desiredStates, Drivetrain.MAX_SPEED);
-    frontLeft.setDesiredStateNoPID(desiredStates[0]); //frontLeft.setDesiredStateNoPID(desiredStates[1]);
-    frontRight.setDesiredStateNoPID(desiredStates[1]); //frontRight.setDesiredStateNoPID(desiredStates[0]);
-    rearLeft.setDesiredStateNoPID(desiredStates[2]); //rearLeft.setDesiredStateNoPID(desiredStates[3]);
-    rearRight.setDesiredStateNoPID(desiredStates[3]); //rearRight.setDesiredStateNoPID(desiredStates[2]);
+        desiredStates, Drivetrain.MAX_SPEED);
+    frontLeft.setDesiredStateNoPID(desiredStates[0]); // frontLeft.setDesiredStateNoPID(desiredStates[1]);
+    frontRight.setDesiredStateNoPID(desiredStates[1]); // frontRight.setDesiredStateNoPID(desiredStates[0]);
+    rearLeft.setDesiredStateNoPID(desiredStates[2]); // rearLeft.setDesiredStateNoPID(desiredStates[3]);
+    rearRight.setDesiredStateNoPID(desiredStates[3]); // rearRight.setDesiredStateNoPID(desiredStates[2]);
   }
 
-  public void setChassisSpeeds(ChassisSpeeds  speedd){
+  public void setChassisSpeeds(ChassisSpeeds speedd) {
     // ChassisSpeeds x = ChassisSpeeds.fromFieldRelativeSpeeds(speedd, getAngle());
     SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speedd);
     setModuleStates(moduleStates);
@@ -277,16 +302,16 @@ public class Drive extends SubsystemBase {
     return speeds;
   }
 
-  public ChassisSpeeds getCurrentChassisSpeeds(){
-    ChassisSpeeds spede= DriveConstants.Drivetrain.kDriveKinematics.toChassisSpeeds(
-      getSwerveModuleStates()[0],  getSwerveModuleStates()[1], getSwerveModuleStates()[2], getSwerveModuleStates()[3] 
-    );
+  public ChassisSpeeds getCurrentChassisSpeeds() {
+    ChassisSpeeds spede = DriveConstants.Drivetrain.kDriveKinematics.toChassisSpeeds(
+        getSwerveModuleStates()[0], getSwerveModuleStates()[1], getSwerveModuleStates()[2], getSwerveModuleStates()[3]);
     return spede;
   }
 
-  public SwerveModulePosition[] getSwerveModulePosition(){
-     SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[] {frontLeft.getSwerveModulePosition(), frontRight.getSwerveModulePosition(), rearLeft.getSwerveModulePosition(), rearRight.getSwerveModulePosition()};
-     return swerveModulePositions;
+  public SwerveModulePosition[] getSwerveModulePosition() {
+    SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[] { frontLeft.getSwerveModulePosition(),
+        frontRight.getSwerveModulePosition(), rearLeft.getSwerveModulePosition(), rearRight.getSwerveModulePosition() };
+    return swerveModulePositions;
   }
 
   /**
@@ -294,64 +319,62 @@ public class Drive extends SubsystemBase {
    */
   public Command setXCmd() {
     return this.run(
-      () -> {
-        frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(Math.PI/4)));
-        frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(Math.PI/4)));
-        rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(Math.PI/4)));
-        rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(Math.PI/4)));
-      }
-    );
+        () -> {
+          frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(Math.PI / 4)));
+          frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(Math.PI / 4)));
+          rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(Math.PI / 4)));
+          rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromRadians(Math.PI / 4)));
+        });
   }
-
 
   /**
    * Sets wheels straight for sysid
    */
-  public Command setStraightCmd(){
+  public Command setStraightCmd() {
     return this.run(
-      () -> {
-        frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-        frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-        rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-        //only rear right is acting up, consider changing it to 180 degrees
-        rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
-      }
-    );
+        () -> {
+          frontLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+          frontRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+          rearLeft.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+          // only rear right is acting up, consider changing it to 180 degrees
+          rearRight.setDesiredState(new SwerveModuleState(0, Rotation2d.fromDegrees(0)));
+        });
   }
 
-  public Command driveStraightCmd(){
+  public Command driveStraightCmd() {
     return this.run(
-      () -> {
-        frontLeft.setDesiredState(new SwerveModuleState(.2, Rotation2d.fromRadians(0)));
-        frontRight.setDesiredState(new SwerveModuleState(.2, Rotation2d.fromRadians(0)));
-        rearLeft.setDesiredState(new SwerveModuleState(.2, Rotation2d.fromRadians(0)));
-        rearRight.setDesiredState(new SwerveModuleState(.2, Rotation2d.fromRadians(0)));
-      }
-    );
+        () -> {
+          frontLeft.setDesiredState(new SwerveModuleState(.2, Rotation2d.fromRadians(0)));
+          frontRight.setDesiredState(new SwerveModuleState(.2, Rotation2d.fromRadians(0)));
+          rearLeft.setDesiredState(new SwerveModuleState(.2, Rotation2d.fromRadians(0)));
+          rearRight.setDesiredState(new SwerveModuleState(.2, Rotation2d.fromRadians(0)));
+        });
   }
 
   /**
    * @return currently-estimated pose of robot
    */
-  public Pose2d getPose(){
+  public Pose2d getPose() {
     return odometry.getPoseMeters();
   }
 
-  public SwerveModuleState[] getSwerveModuleStates(){
+  public SwerveModuleState[] getSwerveModuleStates() {
     return modules.stream().map(m -> m.getState()).toArray(SwerveModuleState[]::new);
   }
 
-  public SwerveModuleState[] getDesiredSwerveModuleStates(){
-    return modules.stream().map(m -> m.getDesiredState()).toArray(SwerveModuleState[] :: new);
+  public SwerveModuleState[] getDesiredSwerveModuleStates() {
+    return modules.stream().map(m -> m.getDesiredState()).toArray(SwerveModuleState[]::new);
   }
 
-  public double[] getVoltage(){
-    double[] voltages = {frontLeft.getVoltage(), frontRight.getVoltage(), rearLeft.getVoltage(), rearRight.getVoltage()};
+  public double[] getVoltage() {
+    double[] voltages = { frontLeft.getVoltage(), frontRight.getVoltage(), rearLeft.getVoltage(),
+        rearRight.getVoltage() };
     return voltages;
   }
 
-  public double[] getAbsolutes(){
-    double[] absolutes = {frontLeft.getAbsolute(), frontRight.getAbsolute(), rearLeft.getAbsolute(), rearRight.getAbsolute()};
+  public double[] getAbsolutes() {
+    double[] absolutes = { frontLeft.getAbsolute(), frontRight.getAbsolute(), rearLeft.getAbsolute(),
+        rearRight.getAbsolute() };
     return absolutes;
   }
 
@@ -360,26 +383,28 @@ public class Drive extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     // odometry.resetPosition(
-    //   Rotation2d.fromRadians(gyro.getYaw()),
-    //   new SwerveModulePosition[]{
-    //     frontLeft.getSwerveModulePosition(),
-    //     frontRight.getSwerveModulePosition(),
-    //     rearLeft.getSwerveModulePosition(),
-    //     rearRight.getSwerveModulePosition()}, pose);
+    // Rotation2d.fromRadians(gyro.getYaw()),
+    // new SwerveModulePosition[]{
+    // frontLeft.getSwerveModulePosition(),
+    // frontRight.getSwerveModulePosition(),
+    // rearLeft.getSwerveModulePosition(),
+    // rearRight.getSwerveModulePosition()}, pose);
     odometry.resetPosition(
-      gyro.getRotation2d(),
-      new SwerveModulePosition[]{
-        frontLeft.getSwerveModulePosition(),
-        frontRight.getSwerveModulePosition(),
-        rearLeft.getSwerveModulePosition(),
-        rearRight.getSwerveModulePosition()}, pose);
+        gyro.getRotation2d(),
+        new SwerveModulePosition[] {
+            frontLeft.getSwerveModulePosition(),
+            frontRight.getSwerveModulePosition(),
+            rearLeft.getSwerveModulePosition(),
+            rearRight.getSwerveModulePosition() },
+        pose);
   }
 
-   /**
+  /**
    * Gets the angle of the gyro in radians (ideally)
+   * 
    * @return in radians
    */
-  public double getAngle(){
+  public double getAngle() {
     // return -1 * gyro.getAngle();
     return gyro.getYaw().getValueAsDouble();
   }
@@ -390,12 +415,12 @@ public class Drive extends SubsystemBase {
    * @return new yaw angle in radians (ideally)
    */
   // public double setYawOffset() {
-  //   gyro.setAngleAdjustment(-Math.PI / 2); // need to double check!
-  //   return gyro.getYaw();
+  // gyro.setAngleAdjustment(-Math.PI / 2); // need to double check!
+  // return gyro.getYaw();
   // }
   // public double getYawOffset(){
-  //   gyro.setYaw(0);
-  //   return gyro.getRotation2d().getRadians();
+  // gyro.setYaw(0);
+  // return gyro.getRotation2d().getRadians();
   // }
   /**
    * Zero the gyro heading
@@ -404,14 +429,20 @@ public class Drive extends SubsystemBase {
     gyro.reset();
   }
 
-  public Command resetGyro(){
+  public Command resetGyro() {
     return this.runOnce(
-      () -> zeroHeading()
-    );
+        () -> zeroHeading());
   }
 
+  // public Pose2d getOdometry(){
+  // Pose2d odometry = swerveEstimator.update(gyro.getRotation2d(),
+  // getSwerveModulePosition());
+
+  // return odometry;
+  // }
+
   /* SYSID CMDS */
-  public Command driveQuasistatic(SysIdRoutine.Direction direction){
+  public Command driveQuasistatic(SysIdRoutine.Direction direction) {
     System.out.println("RUNNING");
     System.out.println("RUNNING");
     return driveRoutine.quasistatic(direction);
@@ -425,16 +456,15 @@ public class Drive extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // if gyro is inverted, getRotation2d() --- getAngle() can be negated
-  swerveEstimator.update(gyro.getRotation2d(), getSwerveModulePosition());
+    swerveEstimator.update(gyro.getRotation2d(), getSwerveModulePosition());
 
     List<EstimatedRobotPose> visionUpdates = vision.getVisionUpdates();
     for (EstimatedRobotPose update : visionUpdates) {
-        swerveEstimator.addVisionMeasurement(
-            update.estimatedPose.toPose2d(), 
-            update.timestampSeconds
-        );
+      swerveEstimator.addVisionMeasurement(
+          update.estimatedPose.toPose2d(),
+          update.timestampSeconds);
     }
-    //SmartDashboard.getNumber("Angle", getAngle());
+    // SmartDashboard.getNumber("Angle", getAngle());
     SmartDashboard.putNumber("Gyro Angle", getAngle());
     SmartDashboard.updateValues();
     SmartDashboard.putNumber("angle", getAngle());
