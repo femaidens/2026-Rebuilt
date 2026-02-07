@@ -77,12 +77,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
         )
       )
     );
+    driveJoy.y().onTrue(
+      drive.runOnce(() -> drive.zeroHeading())
+    );
 
-    // driveJoy.b().onTrue(
-    //   drive.run( () ->
-    //     drive.driveToPose(kClimbPose)
-    //   )
-    // );
+   
 
     driveJoy.x().whileTrue(
       autoshooter.run( () -> 
@@ -91,6 +90,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
       ).onFalse(
         autoshooter.stopShooterMotorCmd()
     );
+
 
     driveJoy.rightBumper().whileTrue(
       autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
@@ -106,6 +106,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
     driveJoy.leftTrigger().whileTrue(
       autoshooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
+    );
+
+    driveJoy.b().whileTrue(
+      drive.driveToPoseCommand(2.400, 4.00, 170.00)
     );
  
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

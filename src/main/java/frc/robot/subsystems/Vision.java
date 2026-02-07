@@ -13,6 +13,8 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -27,7 +29,7 @@ public class Vision {
         AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
     private PhotonCamera leftCam, rightCam;
-
+    private final List<Pose3d> logVision = new ArrayList<>();
 
     private final Translation3d RIGHT_ROBOT_TO_CAM_TRANS;
     private final Rotation3d RIGHT_ROBOT_TO_CAM_ROT;
@@ -74,6 +76,7 @@ public class Vision {
         leftEstimator = new PhotonPoseEstimator(TAG_LAYOUT, LEFT_ROBOT_TO_CAM); 
     }
 
+
     // public List<Transform3d> getVisionUpdates(){
     //     List<Transform3d> poses = new ArrayList<>();
     //     var rightResults = rightCam.getAllUnreadResults();
@@ -107,15 +110,20 @@ public class Vision {
 
     public List<EstimatedRobotPose> getVisionUpdates(){
         List<EstimatedRobotPose> results = new ArrayList<>();
+        logVision.clear();
             for(var result:rightCam.getAllUnreadResults()){
                 Optional<EstimatedRobotPose> rightPose = rightEstimator.estimateCoprocMultiTagPose(result);
                 if(rightPose.isPresent()) {
                     results.add(rightPose.get());
+                    logVision.add(rightPose.get().estimatedPose);
+
                 }
                 else {
                     rightPose = rightEstimator.estimateLowestAmbiguityPose(result);
                         if(rightPose.isPresent()){
                             results.add(rightPose.get());
+                            logVision.add(rightPose.get().estimatedPose);
+
                         }
                 }
             }
@@ -124,15 +132,18 @@ public class Vision {
                 Optional<EstimatedRobotPose> leftPose = leftEstimator.estimateCoprocMultiTagPose(result);
                 if(leftPose.isPresent()) {
                     results.add(leftPose.get());
+                    logVision.add(leftPose.get().estimatedPose);
                 }
                 else {
                     leftPose = leftEstimator.estimateLowestAmbiguityPose(result);
-                    System.out.println(leftPose);
                         if(leftPose.isPresent()){
                             results.add(leftPose.get());
+                            logVision.add(leftPose.get().estimatedPose);
+
                         }
                 }
             }
+            
     
         return results;
         
