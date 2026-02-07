@@ -254,7 +254,9 @@ public class DriveSim extends SubsystemBase {
   
   
   public void setChassisSpeeds(ChassisSpeeds speed){
-    angle1 +=  0.02 * Units.radiansToDegrees(speed.omegaRadiansPerSecond);
+    //angle1 +=  0.02 * Units.radiansToDegrees(speed.omegaRadiansPerSecond);
+    double newYaw = Units.radiansToDegrees(0.02 * speed.omegaRadiansPerSecond);
+    gyroSim.addYaw(newYaw);
       SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speed);
       moduleStates[0].optimize(moduleStates[0].angle);
       moduleStates[1].optimize(moduleStates[1].angle);
