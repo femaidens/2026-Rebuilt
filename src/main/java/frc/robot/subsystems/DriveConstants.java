@@ -62,7 +62,7 @@ public class DriveConstants {
             public static final double D = 0.00005;
         }
         public class rotPID {
-            public static final double P = 0.0005;
+            public static final double P = .01;
             public static final double I = 0;
             public static final double D = 0.0001;
         }

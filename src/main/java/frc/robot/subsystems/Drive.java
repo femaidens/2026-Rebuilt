@@ -164,17 +164,18 @@ public class Drive extends SubsystemBase {
 
   public void driveToPose(double x, double y, double r) {
     Pose2d currentPose = this.getPose2d();
-   double xSpeed = xPidController.calculate(currentPose.getX(), x);
-   double ySpeed = yPidController.calculate(currentPose.getY(), y);
-   double rotSpeed = rotPidController.calculate(
-        currentPose.getRotation().getDegrees(),
-        r // double check where climb is
+   double xVel = xPidController.calculate(currentPose.getX(), x);
+   double yVel = yPidController.calculate(currentPose.getY(), y);
+   double rad = r * (Math.PI/180);
+   double rotVel = rotPidController.calculate(
+        currentPose.getRotation().getRadians(),
+        rad // double check where climb is
     );
-    xSpeed = MathUtil.clamp(xSpeed, -2.0, 2.0);
-    ySpeed = MathUtil.clamp(ySpeed, -2.0, 2.0);
-    rotSpeed = MathUtil.clamp(rotSpeed, -3.0, 3.0);
+    xVel = MathUtil.clamp(xVel, -2.0, 2.0);
+    yVel = MathUtil.clamp(yVel, -2.0, 2.0);
+    rotVel = MathUtil.clamp(rotVel, -Math.PI, Math.PI);
 
-    this.driveRaw(xSpeed, ySpeed, rotSpeed);
+    this.driveRaw(xVel, yVel, rotVel);
 
   }
 
