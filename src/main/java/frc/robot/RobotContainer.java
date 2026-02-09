@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+import frc.robot.subsystems.Climb;
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -24,11 +25,15 @@ public class RobotContainer {
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController operJoy =
+      new CommandXboxController(OperatorConstants.OPERATOR_PORT);
+
+  private final Climb climb;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    climb = new Climb();
+
     // Configure the trigger bindings
     configureBindings();
   }
@@ -50,6 +55,12 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     // m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+      operJoy.a().whileTrue(climb.runMotorCmd()).onFalse(climb.stopMotorCmd());
+
+      operJoy.b().whileTrue(climb.reverseMotorCmd()).onFalse(climb.stopMotorCmd());
+
+
+
   }
 
   /**

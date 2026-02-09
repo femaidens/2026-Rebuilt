@@ -54,7 +54,7 @@ public class Climb extends SubsystemBase {
 
     }
 
-    public Command runMotor() {
+    public Command runMotorCmd() {
         return this.run(() -> leaderMotor.set(Constants.ClimbConstants.MOTOR_SPEED));
     }
     

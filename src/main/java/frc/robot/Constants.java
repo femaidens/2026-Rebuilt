@@ -16,7 +16,7 @@ import com.ctre.phoenix6.CANBus;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int OPERATOR_PORT = 1;
   }
 
   public static class ClimbConstants {
