@@ -124,7 +124,9 @@ public class ModuleSim {
         return driveMotorSim.getAngularVelocityRPM() * Translation.VEL_CONVERSION_FACTOR;
     }
 
-    
+    public void simulationPeriodic(){
+       
+    }
 
 //FAKE SIMULATION PERIODIC 
 

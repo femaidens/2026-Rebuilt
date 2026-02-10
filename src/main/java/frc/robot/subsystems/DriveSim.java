@@ -153,7 +153,7 @@ public class DriveSim extends SubsystemBase {
       //speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, new Rotation2d(angle1));
       //angle.set(angle.get() + 0.02 * Units.radiansToDegrees(speeds.omegaRadiansPerSecond));
       speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, new Rotation2d(Units.degreesToRadians(getGyroAngle())));
-      angle1 +=  0.02 * Units.radiansToDegrees(speeds.omegaRadiansPerSecond);
+      // angle1 +=  0.02 * Units.radiansToDegrees(speeds.omegaRadiansPerSecond);
       SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
       moduleStates[0].optimize(moduleStates[0].angle);
       moduleStates[1].optimize(moduleStates[1].angle);
