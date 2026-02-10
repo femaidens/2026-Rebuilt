@@ -227,8 +227,8 @@ public class Drive extends SubsystemBase {
 
   }
 
-  public void driveRaw(double xVolts, double yVolts, double rotVolts) {
-    speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVolts, yVolts, rotVolts, gyro.getRotation2d());
+  public void driveRaw(double xVel, double yVel, double rotVel) {
+    speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, gyro.getRotation2d());
     SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
     setModuleStates(moduleStates);
   }
