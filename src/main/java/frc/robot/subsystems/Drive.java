@@ -28,6 +28,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.Kinematics;
@@ -162,6 +163,35 @@ public class Drive extends SubsystemBase {
     return swerveEstimator.getEstimatedPosition();
   }
 
+  public Pose2d getShooterPose2d(){
+    Transform2d shooterOffset = new Transform2d(-0.254,0.2240026, new Rotation2d(-Math.PI/2));
+
+    return swerveEstimator.getEstimatedPosition().plus(shooterOffset);
+  }
+
+  public void alignRotation(){
+    var alliance = DriverStation.getAlliance();
+    Pose2d shooterPose = this.getShooterPose2d();
+    Translation2d targetLocation;
+    Translation2d difference = new Translation2d(.343, 0);
+
+     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+      targetLocation = vision.getTargetTranslation(10).minus(difference);
+    } else {
+      targetLocation = vision.getTargetTranslation(26).plus(difference);
+    }
+
+    Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
+
+    Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
+
+    double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
+
+    this.drive(() -> 0, () -> 0, () -> rotOutput);
+  }
+
+
+
   public void driveToPose(double x, double y, double r) {
     Pose2d currentPose = this.getPose2d();
    double xVel = xPidController.calculate(currentPose.getX(), x);
@@ -199,33 +229,35 @@ public class Drive extends SubsystemBase {
 
   }
 
-  public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed) {
-    Pose2d currentPose = this.getPose2d();
-    var alliance = DriverStation.getAlliance();
-    Translation2d targetLocation;
-    Translation2d difference = new Translation2d(.343, 0);
-    double angularOffset;
+  
 
-    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      targetLocation = vision.getTargetTranslation(10).minus(difference);
-      angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)+259715) * (180 / Math.PI);
-    } else {
-      targetLocation = vision.getTargetTranslation(26).plus(difference);
-      angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)+.259715) * (180 / Math.PI);
-    }
+  // public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed) {
+  //   Pose2d currentPose = this.getPose2d();
+  //   var alliance = DriverStation.getAlliance();
+  //   Translation2d targetLocation;
+  //   Translation2d difference = new Translation2d(.343, 0);
+  //   double angularOffset;
 
-    Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
+  //   if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+  //     targetLocation = vision.getTargetTranslation(10).minus(difference);
+  //     angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)+259715) * (180 / Math.PI);
+  //   } else {
+  //     targetLocation = vision.getTargetTranslation(26).plus(difference);
+  //     angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)+.259715) * (180 / Math.PI);
+  //   }
 
-    double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(),
-        targetAngle.getDegrees() + 90 + angularOffset);
-    // for rotOutput, +90 bc shooter is 90 deg away from front of robot and
-    // +angularOffset cuz shooter isn't centered
+  //   Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
 
-    double clampedrotOutput = MathUtil.clamp(rotOutput, -0.5, 0.5);
+  //   double rotOutput = rotPidController.calculate(currentPose.getRotation().getDegrees(),
+  //       targetAngle.getDegrees() + 90 + angularOffset);
+  //   // for rotOutput, +90 bc shooter is 90 deg away from front of robot and
+  //   // +angularOffset cuz shooter isn't centered
 
-    this.drive(xSpeed, ySpeed, () -> clampedrotOutput);
+  //   double clampedrotOutput = MathUtil.clamp(rotOutput, -0.5, 0.5);
 
-  }
+  //   this.drive(xSpeed, ySpeed, () -> clampedrotOutput);
+
+  // }
 
   public void driveRaw(double xVel, double yVel, double rotVel) {
     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, gyro.getRotation2d());
