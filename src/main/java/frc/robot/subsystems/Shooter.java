@@ -14,6 +14,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,16 +27,18 @@ public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
   private final TalonFX shooterMotor; // starting the rollers
   private final TalonFX angleMotor; // adjusting shooter to desired angle
-  private final TalonFX encoder;
+  private final CANcoder encoder;
   //private final TalonFXConfiguration angleConfig;
   private final TalonFXConfiguration motorConfig;
   private final PIDController shooterPID;
+  private final SimpleMotorFeedforward shooterFF;
 
-  public Shooter(TalonFX shooterMotor, TalonFX angleMotor, PIDController shooterPID, TalonFX encoder){
+  public Shooter(TalonFX shooterMotor, TalonFX angleMotor, PIDController shooterPID, CANcoder encoder, SimpleMotorFeedforward shooterFF){
     this.shooterMotor = shooterMotor;
     this.angleMotor = angleMotor;
     this.shooterPID = shooterPID;
     this.encoder = encoder;
+    this.shooterFF = shooterFF;
     motorConfig = new TalonFXConfiguration();
 
   }
@@ -43,7 +46,7 @@ public class Shooter extends SubsystemBase {
   public Shooter() {
     shooterMotor = new TalonFX(ShooterPorts.SHOOTER_MOTOR, ShooterConstants.CANBUS);
     angleMotor = new TalonFX(ShooterPorts.ANGLE_MOTOR, ShooterConstants.CANBUS);
-    encoder = new TalonFX(ShooterPorts.CANCODER_ID, ShooterConstants.CANBUS);
+    encoder = new CANcoder(ShooterPorts.CANCODER_ID, ShooterConstants.CANBUS);
   
       // angleConfig = new TalonFXConfiguration();
       // angleConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
@@ -58,12 +61,19 @@ public class Shooter extends SubsystemBase {
         Constants.ShooterConstants.PIDConstants.kI,
         Constants.ShooterConstants.PIDConstants.kD
       );
+      shooterFF = new SimpleMotorFeedforward (
+        Constants.ShooterConstants.FFConstants.kS,
+        Constants.ShooterConstants.FFConstants.kV,
+        Constants.ShooterConstants.FFConstants.kA);
   
     }
 
   public void shooterPID(double setpoint){
     angleMotor.setVoltage(shooterPID.calculate(setpoint, getCurrentPosition()));
+
   }
+
+  
 
   public double getCurrentPosition(){
     return encoder.getPosition().getValueAsDouble()*360;

@@ -45,7 +45,7 @@ public class ShooterTest {
 
  @BeforeEach
   void setUp() {
-    shooter = new Shooter(shooterMotor, angleMotor, anglePID, encoder);
+    shooter = new Shooter();
   }
 
   @Test
