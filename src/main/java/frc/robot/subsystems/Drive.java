@@ -208,10 +208,10 @@ public class Drive extends SubsystemBase {
 
     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
       targetLocation = vision.getTargetTranslation(10).minus(difference);
-      angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180 / Math.PI);
+      angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)+259715) * (180 / Math.PI);
     } else {
       targetLocation = vision.getTargetTranslation(26).plus(difference);
-      angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)) * (180 / Math.PI);
+      angularOffset = Math.atan2(0.259715, currentPose.getTranslation().getDistance(targetLocation)+.259715) * (180 / Math.PI);
     }
 
     Rotation2d targetAngle = targetLocation.minus(currentPose.getTranslation()).getAngle();
