@@ -56,11 +56,32 @@ public class DriveConstants {
         public static final LinearVelocity MAX_TRANSLATION_VELOCITY = MetersPerSecond.of(1);
         public static final LinearAcceleration MAX_TRANSLATION_ACCELERATION = MetersPerSecondPerSecond.of(1.0);
         
-        
         public class PID {
-            public static final double P = .01;
+            public static final double P = 0.001;
             public static final double I = 0;
             public static final double D = 0.00005;
+        }
+        public class rotPID {
+            public static final double P = .01;
+            public static final double I = 0;
+            public static final double D = 0.0001;
+        }
+         public class xPID {
+            public static final double P = 1;
+            public static final double I = 0;
+            public static final double D = 0.00005;
+        }
+         public class yPID {
+            public static final double P = 1;
+            public static final double I = 0;
+            public static final double D = 0.00005;
+        }
+
+
+        public class autoPID {
+            public static final double P = .001;
+            public static final double I = 0;
+            public static final double D = .00005;
         }
 
 
@@ -116,8 +137,8 @@ public class DriveConstants {
         public static final double SPEED_FACTOR = 1.0;
         public static final double WHEEL_COF = 1; // not true
 
-         public static final Matrix<N3, N1> STATE_STD_DEV = VecBuilder.fill(0.9, 0.9, 0.9);
-        public static final Matrix<N3, N1> VISION_STD_DEV = VecBuilder.fill(0.1, 0.1, 0.1);
+         public static final Matrix<N3, N1> STATE_STD_DEV = VecBuilder.fill(0.5, 0.5, 0.5);
+        public static final Matrix<N3, N1> VISION_STD_DEV = VecBuilder.fill(1, 1, 1);
     }
     public static final class NeoMotorConstants {
         public static final double FREE_SPEED_RPM = 5676;
