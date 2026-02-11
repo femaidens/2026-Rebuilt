@@ -59,6 +59,7 @@ public class DriveSim extends SubsystemBase {
   public PPHolonomicDriveController holonomicDriveController;
   private PIDConstants translationPID;
   private PIDConstants rotationPID;
+  private SendableChooser<Command> autoChooser;
   // private Pose2d poseA;
   // private Pose2d poseB;
   // private Pose3d poseA3d;
@@ -84,7 +85,8 @@ public class DriveSim extends SubsystemBase {
     rearLeft = new ModuleSim();
 
     modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
-
+    autoChooser = AutoBuilder.buildAutoChooser();
+    SmartDashboard.putData("Auto Chooser", autoChooser);
     publisher = NetworkTableInstance.getDefault()
         .getStructArrayTopic("My States", SwerveModuleState.struct).publish();
 
@@ -110,39 +112,40 @@ public class DriveSim extends SubsystemBase {
         });
 
         
-    //     try{
-    //       config = RobotConfig.fromGUISettings();
-    //     } catch (Exception e) {
-    //       // Handle exception as needed
-    //       e.printStackTrace();
-    //     }
+        try{
+          config = RobotConfig.fromGUISettings();
+        } catch (Exception e) {
+          // Handle exception as needed
+          e.printStackTrace();
+        }
 
-    //       AutoBuilder.configure(
-    //         this::getPose, // Robot pose supplier
-    //         this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
-    //         this::getRobotRelativeChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-    //         (speeds, feedforwards) -> setChassisSpeeds(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
-    //         new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
-    //                 new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-    //                 new PIDConstants(5.0, 0.0, 0.0) // Rotation PID constants
-    //         ),
-    //         config, // The robot configuration
-    //         () -> {
-    //           // Boolean supplier that controls when the path will be mirrored for the red alliance
-    //           // This will flip the path being followed to the red side of the field.
-    //           // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+          AutoBuilder.configure(
+            this::getPose, // Robot pose supplier
+            this::resetOdometry, // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getRobotRelativeChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            (speeds, feedforwards) -> setChassisSpeeds(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            holonomicDriveController
+            ,
+            config, // The robot configuration
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-    //           var alliance = DriverStation.getAlliance();
-    //           if (alliance.isPresent()) {
-    //             return alliance.get() == DriverStation.Alliance.Red;
-    //           }
-    //           return false;
-    //         },
-    //         this // Reference to this subsystem to set requirements
-    // );
+              var alliance = DriverStation.getAlliance();
+              if (alliance.isPresent()) {
+                return alliance.get() == DriverStation.Alliance.Red;
+              }
+              return false;
+            },
+            this // Reference to this subsystem to set requirements
+    );
   }
 
   
+  public Command getAutonomousCommand(){
+    return autoChooser.getSelected();
+  }
 
   public Command drive(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed) {
     return this.run(() -> {
@@ -255,8 +258,8 @@ public class DriveSim extends SubsystemBase {
   
   public void setChassisSpeeds(ChassisSpeeds speed){
     //angle1 +=  0.02 * Units.radiansToDegrees(speed.omegaRadiansPerSecond);
-    double newYaw = 0.02 * Units.radiansToDegrees(speed.omegaRadiansPerSecond);
-    gyroSim.addYaw(newYaw);
+    // double newYaw = 0.02 * Units.radiansToDegrees(speed.omegaRadiansPerSecond);
+    // gyroSim.addYaw(newYaw);
       SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speed);
       moduleStates[0].optimize(moduleStates[0].angle);
       moduleStates[1].optimize(moduleStates[1].angle);

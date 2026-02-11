@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.DriveSim;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -30,11 +31,13 @@ import edu.wpi.first.epilogue.Logged;
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
       private final Drive drive;
+      private final DriveSim driveSim;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
         drive = new Drive();
+        driveSim = new DriveSim();
         configureBindings();
 
         configureDefaultCmds();
@@ -73,8 +76,7 @@ import edu.wpi.first.epilogue.Logged;
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An example command will be run in autonomous
-  //   //return Autos.exampleAuto(m_exampleSubsystem);
-  // }
+  public Command getAutonomousCommand() {
+    return driveSim.getAutonomousCommand();
+  }
 }
