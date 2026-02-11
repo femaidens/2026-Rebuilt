@@ -40,8 +40,8 @@ public class ModuleKraken {
 
     private final double chassisAngularOffset;
 
-    private SwerveModuleState desiredState = null; 
-    double angleSetpoint = 0;
+    private SwerveModuleState desiredState; 
+    double angleSetpoint;
     
     private double voltage; 
 

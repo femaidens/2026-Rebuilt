@@ -39,8 +39,8 @@ public class Vision {
     private final Rotation3d LEFT_ROBOT_TO_CAM_ROT;
     private final Transform3d LEFT_ROBOT_TO_CAM;
 
-    private static PhotonPoseEstimator rightEstimator;
-    private static PhotonPoseEstimator leftEstimator;
+    private final PhotonPoseEstimator rightEstimator;
+    private final PhotonPoseEstimator leftEstimator;
    
     public Vision(){
         leftCam = new PhotonCamera("2265-ironfish");
