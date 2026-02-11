@@ -46,6 +46,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Ports.DrivetrainPorts;
 import frc.robot.subsystems.DriveConstants.Drivetrain;
 import frc.robot.subsystems.DriveConstants.Translation;
+import edu.wpi.first.epilogue.Epilogue;
 import edu.wpi.first.epilogue.Logged;
 
 @Logged
@@ -192,7 +193,9 @@ public class Drive extends SubsystemBase {
   }
 
   public Pose2d getPose2d() {
-    return swerveEstimator.getEstimatedPosition();
+    Pose2d pose = swerveEstimator.getEstimatedPosition();
+    System.out.println(pose);
+    return pose;
   }
 
   public Pose2d getShooterPose2d(){
@@ -215,9 +218,9 @@ public class Drive extends SubsystemBase {
 
     Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
 
-    Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
+    Rotation2d targetAngle = displacement.getAngle();
 
-    double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
+    double rotOutput = rotPidController.calculate(shooterPose.getRotation().getDegrees(), targetAngle.getDegrees());
 
     this.drive(() -> 0, () -> 0, () -> rotOutput);
   }
@@ -346,13 +349,13 @@ public class Drive extends SubsystemBase {
     setModuleStates(moduleStates);
   }
 
-  public void driveRobotRelative(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed) {
-    double xVel = xSpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
-    double yVel = ySpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
-    double rotVel = rotSpeed.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
+  // public void driveRobotRelative(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed) {
+  //   double xVel = xSpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
+  //   double yVel = ySpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
+  //   double rotVel = rotSpeed.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
 
-    speeds = new ChassisSpeeds(xVel, yVel, rotVel);
-    SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
+  //   speeds = new ChassisSpeeds(xVel, yVel, rotVel);
+  //   SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
 
     // return this.run(
     // () -> {
@@ -361,8 +364,8 @@ public class Drive extends SubsystemBase {
     // }
     // }
     // );
-    setModuleStates(moduleStates);
-  }
+  //   setModuleStates(moduleStates);
+  // }
 
   /**
    * sets the swerve ModuleStates
@@ -542,12 +545,17 @@ public class Drive extends SubsystemBase {
     // if gyro is inverted, getRotation2d() --- getAngle() can be negated
     swerveEstimator.update(gyro.getRotation2d(), getSwerveModulePosition());
 
+    Epilogue.getConfig().backend.log("pose", getPose2d(), Pose2d.struct);
+
+
     List<EstimatedRobotPose> visionUpdates = vision.getVisionUpdates();
     for (EstimatedRobotPose update : visionUpdates) {
       swerveEstimator.addVisionMeasurement(
           update.estimatedPose.toPose2d(),
           update.timestampSeconds);
     }
+
+
     // SmartDashboard.getNumber("Angle", getAngle());
     SmartDashboard.putNumber("Gyro Angle", getAngle());
     SmartDashboard.updateValues();

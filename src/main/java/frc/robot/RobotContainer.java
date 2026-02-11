@@ -69,38 +69,36 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
    */
   private void configureBindings() {
 
-    // driveJoy.a().whileTrue(
-    //   drive.run( () -> 
-    //     drive.alignRotation(
-    //       () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1),
-    //       () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1)
-    //     )
-    //   )
-    // );
-
-    // driveJoy.y().onTrue(
-    //   drive.runOnce(() -> drive.zeroHeading())
-    // );
-
     driveJoy.a().whileTrue(
-      drive.run( () ->
-        drive.driveRaw(0, 0,0))
+      drive.run( () -> 
+        drive.alignRotation(
+        )
+      )
     );
 
-    driveJoy.b().whileTrue(
-      drive.run( () ->
-        drive.driveRaw(0.2, 0.2,0.2))
+    driveJoy.y().onTrue(
+      drive.runOnce(() -> drive.zeroHeading())
     );
 
-    driveJoy.x().whileTrue(
-      drive.run( () ->
-        drive.driveRaw(0.5, 0.5,0.5))
-    );
+    // driveJoy.a().whileTrue(
+    //   drive.run( () ->
+    //     drive.driveRaw(0.0, 0.0,0.0))
+    // );
 
-    driveJoy.y().whileTrue(
-      drive.run( () ->
-        drive.driveRaw(0.8, 0.8,0.8))
-    );
+    // driveJoy.b().whileTrue(
+    //   drive.run( () ->
+    //     drive.driveRaw(0.2, 0.2,0.2))
+    // );
+
+    // driveJoy.x().whileTrue(
+    //   drive.run( () ->
+    //     drive.driveRaw(0.5, 0.5,0.5))
+    // );
+
+    // driveJoy.y().whileTrue(
+    //   drive.run( () ->
+    //     drive.driveRaw(0.8, 0.8,0.8))
+    // );
 
     // driveJoy.x().whileTrue(
     //   autoshooter.run( () -> 
