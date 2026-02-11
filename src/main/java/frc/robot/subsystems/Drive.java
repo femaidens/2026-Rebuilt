@@ -239,7 +239,7 @@ public class Drive extends SubsystemBase {
 
     Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
 
-    Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
+    Rotation2d targetAngle = displacement.getAngle(); //.plus(Rotation2d.kCCW_90deg);
 
     return targetAngle;
   }
