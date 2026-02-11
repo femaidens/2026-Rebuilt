@@ -79,7 +79,7 @@ public class Drive extends SubsystemBase {
 
   public final SwerveDriveOdometry odometry;
 
-  private final SysIdRoutine driveRoutine;
+ // private final SysIdRoutine driveRoutine;
 
   private ChassisSpeeds speeds = new ChassisSpeeds();
 
@@ -147,16 +147,48 @@ public class Drive extends SubsystemBase {
         DriveConstants.Drivetrain.STATE_STD_DEV,
         DriveConstants.Drivetrain.VISION_STD_DEV);
 
-    driveRoutine = new SysIdRoutine(
-        new SysIdRoutine.Config(null, null,
-            // Volts.of(2).per(Seconds.of(1)),
-            // Volts.of(9),
-            null,
-            (state) -> SignalLogger.writeString("state", state.toString())),
-        new SysIdRoutine.Mechanism(
-            volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
-            null,
-            this));
+    // driveRoutine = new SysIdRoutine(
+    //     new SysIdRoutine.Config(null, null,
+    //         // Volts.of(2).per(Seconds.of(1)),
+    //         // Volts.of(9),
+    //         null,
+    //         (state) -> SignalLogger.writeString("state", state.toString())),
+    //     new SysIdRoutine.Mechanism(
+    //         volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
+    //         null,
+    //         this));
+  }
+
+  public Drive(ModuleKraken fl, ModuleKraken fr, ModuleKraken rl, ModuleKraken rr, 
+               Pigeon2 gyro, Vision vision, 
+               PIDController rotPid, PIDController xPid, PIDController yPid) {
+    this.frontLeft = fl;
+    this.frontRight = fr;
+    this.rearLeft = rl;
+    this.rearRight = rr;
+    this.modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
+    this.gyro = gyro;
+    this.vision = vision;
+    this.rotPidController = rotPid;
+    this.xPidController = xPid;
+    this.yPidController = yPid;
+
+    // Configure PIDs
+    rotPidController.enableContinuousInput(-Math.PI, Math.PI); 
+    rotPidController.setTolerance(0.05);
+
+    this.odometry = new SwerveDriveOdometry(
+        Drivetrain.kDriveKinematics,
+        gyro.getRotation2d(),
+        getSwerveModulePosition());
+
+    this.swerveEstimator = new SwerveDrivePoseEstimator(
+        DriveConstants.Drivetrain.kDriveKinematics,
+        gyro.getRotation2d(),
+        getSwerveModulePosition(),
+        new Pose2d(),
+        DriveConstants.Drivetrain.STATE_STD_DEV,
+        DriveConstants.Drivetrain.VISION_STD_DEV);
   }
 
   public Pose2d getPose2d() {
@@ -188,6 +220,25 @@ public class Drive extends SubsystemBase {
     double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
 
     this.drive(() -> 0, () -> 0, () -> rotOutput);
+  }
+
+  public Rotation2d unitTestRotation(){
+     var alliance = DriverStation.getAlliance();
+    Pose2d shooterPose = this.getShooterPose2d();
+    Translation2d targetLocation;
+    Translation2d difference = new Translation2d(.343, 0);
+
+     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+      targetLocation = vision.getTargetTranslation(10).minus(difference);
+    } else {
+      targetLocation = vision.getTargetTranslation(26).plus(difference);
+    }
+
+    Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
+
+    Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
+
+    return targetAngle;
   }
 
 
@@ -475,15 +526,15 @@ public class Drive extends SubsystemBase {
   // }
 
   /* SYSID CMDS */
-  public Command driveQuasistatic(SysIdRoutine.Direction direction) {
-    System.out.println("RUNNING");
-    System.out.println("RUNNING");
-    return driveRoutine.quasistatic(direction);
-  }
+  // public Command driveQuasistatic(SysIdRoutine.Direction direction) {
+  //   System.out.println("RUNNING");
+  //   System.out.println("RUNNING");
+  //   return driveRoutine.quasistatic(direction);
+  // }
 
-  public Command driveDynamic(SysIdRoutine.Direction direction) {
-    return driveRoutine.dynamic(direction);
-  }
+  // public Command driveDynamic(SysIdRoutine.Direction direction) {
+  //   return driveRoutine.dynamic(direction);
+  // }
 
   @Override
   public void periodic() {
