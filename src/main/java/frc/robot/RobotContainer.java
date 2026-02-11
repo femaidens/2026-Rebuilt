@@ -43,10 +43,11 @@ import edu.wpi.first.epilogue.Logged;
         configureDefaultCmds();
 
   }
+  //check this later
  private void configureDefaultCmds() {
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.drive(
+                        () -> driveSim.drive(
                                 () -> MathUtil.applyDeadband(driveJoy.getLeftY(), 0.1),
                                 () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1),
                                 () -> MathUtil.applyDeadband(driveJoy.getRightX(), 0.1)),
@@ -76,7 +77,7 @@ import edu.wpi.first.epilogue.Logged;
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand() {
-    return driveSim.getAutonomousCommand();
-  }
+  // public Command getAutonomousCommand() {
+  //   return driveSim.getAutonomousCommand();
+  // }
 }
