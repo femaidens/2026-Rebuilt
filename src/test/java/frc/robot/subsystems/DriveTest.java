@@ -74,7 +74,7 @@ void testRotationMath() {
     expectedRadians = MathUtil.angleModulus(expectedRadians);
     double resultRadians = MathUtil.angleModulus(calculatedAngle.getRadians());
     
-    assertEquals(expectedRadians, resultRadians, 0.001, 
+    assertEquals(expectedRadians, resultRadians, 0.0001, 
         "tsk tsk tsk");
 }
 }
