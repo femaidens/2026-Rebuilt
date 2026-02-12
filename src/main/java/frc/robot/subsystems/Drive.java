@@ -193,9 +193,7 @@ public class Drive extends SubsystemBase {
   }
 
   public Pose2d getPose2d() {
-    Pose2d pose = swerveEstimator.getEstimatedPosition();
-    System.out.println(pose);
-    return pose;
+    return swerveEstimator.getEstimatedPosition();
   }
 
   public Pose2d getShooterPose2d(){
