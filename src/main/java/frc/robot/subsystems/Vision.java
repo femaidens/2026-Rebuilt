@@ -24,7 +24,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.epilogue.Logged;
 
 @Logged
-public class Vision {
+public class Vision  {
     private final AprilTagFieldLayout TAG_LAYOUT = 
         AprilTagFieldLayout.loadField(AprilTagFields.k2026RebuiltWelded);
 
