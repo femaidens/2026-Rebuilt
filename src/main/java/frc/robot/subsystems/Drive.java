@@ -176,7 +176,7 @@ public class Drive extends SubsystemBase {
 
     // Configure PIDs
     rotPidController.enableContinuousInput(-Math.PI, Math.PI); 
-    rotPidController.setTolerance(0.05);
+    rotPidController.setTolerance(2);
 
     this.odometry = new SwerveDriveOdometry(
         Drivetrain.kDriveKinematics,
@@ -216,31 +216,31 @@ public class Drive extends SubsystemBase {
 
     Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
 
-    Rotation2d targetAngle = displacement.getAngle();
+    Rotation2d targetAngle = displacement.getAngle().plus(new Rotation2d((Math.PI)));
 
     double rotOutput = rotPidController.calculate(shooterPose.getRotation().getDegrees(), targetAngle.getDegrees());
 
     this.drive(() -> 0, () -> 0, () -> rotOutput);
   }
 
-  public Rotation2d unitTestRotation(){
-     var alliance = DriverStation.getAlliance();
-    Pose2d shooterPose = this.getShooterPose2d();
-    Translation2d targetLocation;
-    Translation2d difference = new Translation2d(.343, 0);
+  // public Rotation2d unitTestRotation(){
+  //    var alliance = DriverStation.getAlliance();
+  //   Pose2d shooterPose = this.getShooter2d();
+  //   Translation2d targetLocation;
+  //   Translation2d difference = new Translation2d(.343, 0);
 
-     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      targetLocation = vision.getTargetTranslation(10).minus(difference);
-    } else {
-      targetLocation = vision.getTargetTranslation(26).plus(difference);
-    }
+  //    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+  //     targetLocation = vision.getTargetTranslation(10).minus(difference);
+  //   } else {
+  //     targetLocation = vision.getTargetTranslation(26).plus(difference);
+  //   }
 
-    Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
+  //   Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
 
-    Rotation2d targetAngle = displacement.getAngle(); //.plus(Rotation2d.kCCW_90deg);
+  //   Rotation2d targetAngle = displacement.getAngle(); //.plus(Rotation2d.kCCW_90deg);
 
-    return targetAngle;
-  }
+  //   return targetAngle;
+  // }
 
 
 
