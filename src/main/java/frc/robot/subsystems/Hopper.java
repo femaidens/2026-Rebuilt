@@ -43,7 +43,7 @@ public class Hopper extends SubsystemBase {
     return this.runOnce(() -> indexMotor.set(0));
   }
 
-  //Wheels between shooter and hopper
+  
   public Command runSpindexer(){
     return this.run(() -> spindexerMotor.set(HopperConstants.MOTORSPEED));
   }
