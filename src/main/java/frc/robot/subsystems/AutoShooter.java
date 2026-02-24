@@ -16,9 +16,9 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Port.ShooterPorts;
-import frc.robot.Constants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Ports;
+import frc.robot.ShooterConstants;
+import frc.robot.ShooterConstants.shootConstants;
 
 public class AutoShooter extends SubsystemBase {
   // One motor is for starting the rollers, the other is for angling the shooter
@@ -36,24 +36,24 @@ public class AutoShooter extends SubsystemBase {
 //   private final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
 
   public AutoShooter() {
-    shooterMotor = new TalonFX(ShooterPorts.SHOOTER_MOTOR, ShooterConstants.CANBUS);
-    angleMotor = new TalonFX(ShooterPorts.ANGLE_MOTOR, ShooterConstants.CANBUS);
+    shooterMotor = new TalonFX(Ports.SHOOTER_MOTOR, ShooterConstants.CANBUS);
+    angleMotor = new TalonFX(Ports.ANGLE_MOTOR, ShooterConstants.CANBUS);
     //encoder = new CANcoder(ShooterPorts.CANCODER_ID, ShooterConstants.CANBUS);
 
-    shooterPID = new PIDController(ShooterConstants.PIDConstants.kP, ShooterConstants.PIDConstants.kI, ShooterConstants.PIDConstants.kD);
+    shooterPID = new PIDController(shootConstants.PIDConstants.kP, shootConstants.PIDConstants.kI, shootConstants.PIDConstants.kD);
 
     angleConfig = new TalonFXConfiguration();
-    angleConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
+    angleConfig.CurrentLimits.SupplyCurrentLimit = shootConstants.CURRENT_LIMIT;
     angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig = new TalonFXConfiguration();
-    motorConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = shootConstants.CURRENT_LIMIT;
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     shooterMotor.getConfigurator().apply(motorConfig);
     angleMotor.getConfigurator().apply(angleConfig);
   }
 
   public Command runShooterMotorCmd(){
-    return this.run(() -> shooterMotor.set(Constants.ShooterConstants.SHOOTER_MOTOR_SPEED));
+    return this.run(() -> shooterMotor.set(ShooterConstants.shootConstants.SHOOTER_MOTOR_SPEED));
   }
 
   public Command stopShooterMotorCmd() {

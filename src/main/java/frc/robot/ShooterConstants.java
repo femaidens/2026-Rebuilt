@@ -14,19 +14,31 @@ import com.ctre.phoenix6.CANBus;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class ShooterConstants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
-  public static class ShooterConstants{
+  public static class shootConstants{
     public static final int CURRENT_LIMIT = 0;
     public static final double SHOOTER_MOTOR_SPEED = 0;
-    public static CANBus CANBUS = new CANBus("rio");
+    public static final double ANGLE_MOTOR_SPEED = 0.7;
+    public static final CANBus CANBUS = new CANBus("rio");
       
     public static class PIDConstants {
-      public static final double kP = 0;
-      public static final double kI = 0;
-      public static final double kD = 0;
+        public static final double kP = 2;
+        public static final double kI = 0;
+        public static final double kD = 0;
+     }
+     public static class FFConstants {
+      public static final double kS = 0;
+      public static final double kV = 0;
+      public static final double kA = 0;
+     }
+      public static class SetpointConstants {
+        public static final double SMALL_ANGLE = 0;
+        public static final double MIDDLE_ANGLE = 0;
+        public static final double LARGE_ANGLE = 0;
+      }
     }
-  }
+  public static final String CANBUS = null;
 }

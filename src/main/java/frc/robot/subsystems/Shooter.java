@@ -12,9 +12,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Port.ShooterPorts;
-import frc.robot.Constants;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.Ports.ShooterPorts;
+import frc.robot.ShooterConstants;
+import frc.robot.ShooterConstants.shootConstants;
 
 public class Shooter extends SubsystemBase {
   // One motor is for starting the rollers, the other is for angling the shooter
@@ -31,17 +31,17 @@ public class Shooter extends SubsystemBase {
     //encoder = new CANcoder(ShooterPorts.CANCODER_ID, ShooterConstants.CANBUS);
 
     angleConfig = new TalonFXConfiguration();
-    angleConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
+    angleConfig.CurrentLimits.SupplyCurrentLimit = shootConstants.CURRENT_LIMIT;
     angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     motorConfig = new TalonFXConfiguration();
-    motorConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
+    motorConfig.CurrentLimits.SupplyCurrentLimit = shootConstants.CURRENT_LIMIT;
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     shooterMotor.getConfigurator().apply(motorConfig);
     angleMotor.getConfigurator().apply(angleConfig);
   }
 
   public Command runShooterMotorCmd(){
-    return this.run(() -> shooterMotor.set(Constants.ShooterConstants.SHOOTER_MOTOR_SPEED));
+    return this.run(() -> shooterMotor.set(ShooterConstants.shootConstants.SHOOTER_MOTOR_SPEED));
   }
 
   public Command stopShooterMotorCmd() {
@@ -55,5 +55,10 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // SmartDashboard.putBoolean(()); for once we get the angle 
+  }
+
+  public Command setAngle(double smallAngle) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setAngle'");
   }
 }
