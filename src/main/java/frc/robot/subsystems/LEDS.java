@@ -21,7 +21,7 @@ public class LEDS extends SubsystemBase {
     private final AddressableLED strip;
     private final AddressableLEDBuffer buffer;
     private int count = 0;
-    private final Color firstRed, firstBlue, bumperRed, bumperBlue, green, purple, black;
+    private final Color firstRed, firstBlue, green, purple, black;
 
     public LEDS() {
         strip = new AddressableLED(Ports.LedPorts.LED_PORT);
@@ -29,8 +29,6 @@ public class LEDS extends SubsystemBase {
 
         firstRed = Color.kGreen; //deep red (first)
         firstBlue = Color.kDarkViolet; //navy blue (first)
-        bumperRed = Color.kDarkGreen; //red - not as bright
-        bumperBlue = Color.kMediumBlue; //deep blue
         green = Color.kFirstRed; //bright green
         purple = Color.kFirstBlue; //shows purple
         black = Color.kBlack; //off
@@ -230,21 +228,7 @@ public class LEDS extends SubsystemBase {
         });
     }
 
-    public Command setFemaidensBlink() {
-        return this.run(() -> {
-            LEDPattern solidPurple = LEDPattern.solid(purple);
-            LEDPattern solidGreen = LEDPattern.solid(green);
-            LEDPattern off = LEDPattern.solid(black);
-
-            while (true) {
-                solidPurple.applyTo(buffer);
-                off.applyTo(buffer);
-                solidGreen.applyTo(buffer);
-            }
-            // System.out.println("LED Femaidens Blink");
-        });
-    }
-
+    
     @Override
     public void periodic() {
         strip.setData(buffer);
