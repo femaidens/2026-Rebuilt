@@ -39,4 +39,23 @@ public final class Constants {
     }
   }
 
+  public static class ClimbL1Constants {
+    public static final double MOTOR_SPEED = 0.1;
+    public static final CANBus CAN_BUS = new CANBus("rio");
+
+    public static class PIDConstants {
+		  public static final double kP_EXTEND = 6.7;
+		  public static final double kI_EXTEND = 6.7;
+		  public static final double kD_EXTEND = 6.7;
+		  public static final double kP_RETRACT = 2.1;
+		  public static final double kI_RETRACT = 2.1;
+		  public static final double kD_RETRACT = 2.1;
+    }
+
+    public static class SetpointConstants {
+      public static final double MINIMUM = 0;
+      public static final double LEVEL_ONE = 27;
+    }
+  }
+
 }
