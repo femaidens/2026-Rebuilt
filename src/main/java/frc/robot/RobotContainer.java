@@ -56,14 +56,9 @@ import edu.wpi.first.epilogue.Logged;
 
 
   private void configureDefaultCmds(){
-    // drivetrain.setDefaultCommand(
-    //   drivetrain.drive(
-    //     () -> MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
-    //     () -> MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
-    //     () -> MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1))
-    //   );
+
     driveSim.setDefaultCommand(
-      driveSim.drive(()-> -driveJoy.getLeftY(), ()-> -driveJoy.getLeftX(), () ->-driveJoy.getRightX()));
+      driveSim.drive(()-> driveJoy.getLeftX(), ()-> driveJoy.getLeftY(), () ->driveJoy.getRightX()));
     
   }
   /**
