@@ -42,10 +42,12 @@ public class ClimbL1 extends SubsystemBase {
                 (Constants.ClimbL1Constants.PIDConstants.kP_EXTEND,
                 Constants.ClimbL1Constants.PIDConstants.kI_EXTEND,
                 Constants.ClimbL1Constants.PIDConstants.kD_EXTEND);
+        climbPIDExtend.setTolerance(0.21);
         climbPIDRetract = new PIDController
                 (Constants.ClimbL1Constants.PIDConstants.kP_RETRACT,
                 Constants.ClimbL1Constants.PIDConstants.kI_RETRACT,
                 Constants.ClimbL1Constants.PIDConstants.kD_RETRACT);
+        climbPIDRetract.setTolerance(0.21);
 
         Follower follower = new Follower(Ports.ClimbPorts.LEADER_MOTOR, MotorAlignmentValue.Aligned);
 
@@ -106,13 +108,13 @@ public class ClimbL1 extends SubsystemBase {
 
     public Command setLevelCmd(double setpoint) {
         return this.run(() -> {
-            climbPIDControllerExtend(getEncoderPosition(), setpoint);
+            climbPIDControllerExtend(setpoint);
         });
     }
 
     public Command retractLevelCmd(double setpoint) {
         return this.run(() -> {
-            climbPIDControllerRetract(getEncoderPosition(), setpoint);
+            climbPIDControllerRetract(setpoint);
         });
     }
 
