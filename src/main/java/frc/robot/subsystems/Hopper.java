@@ -23,9 +23,9 @@ public class Hopper extends SubsystemBase {
   
   public Hopper() {
     indexMotor = new TalonFX(HopperPorts.INDEX_MOTOR, HopperConstants.canbus);
-    configureTalonMotor(indexMotor, HopperConstants.INDEXER_CURRENT_LIMIT, NeutralModeValue.Brake);
+    configureTalonMotor(indexMotor, HopperConstants.INDEXER_CURRENT_LIMIT, NeutralModeValue.Coast);
     spindexerMotor = new TalonFX(HopperPorts.HOPPER_MOTOR, HopperConstants.canbus);
-    configureTalonMotor(spindexerMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Coast);
+    configureTalonMotor(spindexerMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Brake);
     // beambreak = new DigitalInput(HopperPorts.BEAM_BREAK);
   }
 
@@ -55,7 +55,7 @@ public class Hopper extends SubsystemBase {
     return !beambreak.get();
   }
   */
-  //Chat idk...configuring Talon
+  
   public static void configureTalonMotor(TalonFX motor, double currentlimit, NeutralModeValue mode){
     TalonFXConfiguration config = new TalonFXConfiguration();
     config.CurrentLimits.SupplyCurrentLimit = currentlimit;
