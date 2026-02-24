@@ -44,15 +44,28 @@ import edu.wpi.first.epilogue.Logged;
 
   }
   //check this later
- private void configureDefaultCmds() {
-        drive.setDefaultCommand(
-                new RunCommand(
-                        () -> driveSim.drive(
-                                () -> MathUtil.applyDeadband(driveJoy.getLeftY(), 0.1),
-                                () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1),
-                                () -> MathUtil.applyDeadband(driveJoy.getRightX(), 0.1)),
-                        drive));
- }
+//  private void configureDefaultCmds() {
+//         driveSim.setDefaultCommand(
+//                 new RunCommand(
+//                         () -> driveSim.drive(
+//                                 () -> MathUtil.applyDeadband(driveJoy.getLeftY(), 0.1),
+//                                 () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1),
+//                                 () -> MathUtil.applyDeadband(driveJoy.getRightX(), 0.1)),
+//                         driveSim));
+//  }
+
+
+  private void configureDefaultCmds(){
+    // drivetrain.setDefaultCommand(
+    //   drivetrain.drive(
+    //     () -> MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+    //     () -> MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+    //     () -> MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1))
+    //   );
+    driveSim.setDefaultCommand(
+      driveSim.drive(()-> -driveJoy.getLeftY(), ()-> -driveJoy.getLeftX(), () ->-driveJoy.getRightX()));
+    
+  }
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
    * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
