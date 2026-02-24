@@ -197,7 +197,7 @@ public class Drive extends SubsystemBase {
   }
 
   public Pose2d getShooterPose2d(){
-    Transform2d shooterOffset = new Transform2d(-0.254,0.2240026, new Rotation2d(-Math.PI/2));
+    Transform2d shooterOffset = new Transform2d(-0.254,0.2240026, new Rotation2d());
 
     return swerveEstimator.getEstimatedPosition().plus(shooterOffset);
   }
@@ -216,7 +216,7 @@ public class Drive extends SubsystemBase {
 
     Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
 
-    Rotation2d targetAngle = displacement.getAngle().plus(new Rotation2d((Math.PI)));
+    Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
 
     double rotOutput = rotPidController.calculate(shooterPose.getRotation().getDegrees(), targetAngle.getDegrees());
 
