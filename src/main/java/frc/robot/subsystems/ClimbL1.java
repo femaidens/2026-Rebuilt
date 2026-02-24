@@ -96,11 +96,11 @@ public class ClimbL1 extends SubsystemBase {
 	//     }
     // }
 
-    public void climbPIDControllerExtend(double current, double setpoint) {
+    public void climbPIDControllerExtend(double setpoint) {
 	    leaderMotor.setVoltage(climbPIDExtend.calculate(leaderMotor.getPosition().getValueAsDouble(), setpoint));
     }
 
-    public void climbPIDControllerRetract(double current, double setpoint) {
+    public void climbPIDControllerRetract(double setpoint) {
 	    leaderMotor.setVoltage(climbPIDRetract.calculate(leaderMotor.getPosition().getValueAsDouble(), setpoint));
     }
 
