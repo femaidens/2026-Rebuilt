@@ -41,7 +41,6 @@ public class Climb extends SubsystemBase {
         climbPID = new PIDController(0,0,0);
 
         Follower follower = new Follower(Ports.ClimbPorts.LEADER_MOTOR, MotorAlignmentValue.Aligned);
-        //Leader ID does not equal leader motor port. have to assign leader id by checking pheonix tuner
 
         TalonFXConfiguration configs = new TalonFXConfiguration();
         //configs not finalized - subject to change

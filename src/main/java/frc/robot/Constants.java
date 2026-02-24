@@ -20,7 +20,7 @@ public final class Constants {
   }
 
   public static class ClimbConstants {
-    public static final double MOTOR_SPEED = 1;
+    public static final double MOTOR_SPEED = 0.1;
     public static final CANBus CAN_BUS = new CANBus("rio");
 
     public static class PIDConstants {
