@@ -4,18 +4,18 @@ import frc.robot.subsystems.Climb;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class ClimbingL1 {
-    private Climb climb;
+    private ClimbL1 climbL1;
 
-    public Climbing(Climb climb) {
-        this.climb = climb;
+    public Climbing(ClimbL1 climbL1) {
+        this.climbL1 = climbL1;
     }
 
     public Command levelOneExtend() {
-        return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.LEVEL_ONE, true);
+        return climbL1.setLevelCmd(Constants.ClimbL1Constants.SetpointConstants.LEVEL_ONE, true);
     }
 
     public Command levelOneRetract() {
-        return climb.setLevelCmd(Constants.ClimbConstants.SetpointConstants.MINIMUM, false);
+        return climbL1.setLevelCmd(Constants.ClimbL1Constants.SetpointConstants.MINIMUM, false);
     }
 
     public Command climbOneCmd() {
