@@ -6,6 +6,10 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+
+import frc.robot.subsystems.KaileyLeds;
+import frc.robot.subsystems.KaseyLeds;
+import frc.robot.subsystems.LydiaLeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -18,11 +22,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  
+  //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+
+  // private final KaileyLeds kailey = new KaileyLeds();
+  //private final LydiaLeds lydia = new LydiaLeds();
+  private final KaseyLeds kasey = new KaseyLeds();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
+    private final CommandXboxController driveJoy = new CommandXboxController(OperatorConstants.DRIVER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -41,12 +49,52 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-   
-    // .onTrue(new ExampleCommand(m_exampleSubsystem));
+    // new Trigger(m_exampleSubsystem::exampleCondition)
+    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
+
+        //operJoy.leftTrigger().onTrue(lydia.setDefault());
+        
+        /* 
+        operJoy.a().onTrue(lydia.setBumperBlueSolid());
+        operJoy.x().onTrue(lydia.setBumperRedSolid());
+        operJoy.b().onTrue(lydia.setPurpleSolid());
+        operJoy.y().onTrue(lydia.setGreenSolid());
+        operJoy.leftBumper().onTrue(lydia.setFemaidensSplit());
+        operJoy.rightBumper().onTrue(lydia.setFirstRedSolid());
+        operJoy.rightTrigger().onTrue(lydia.setFemaidensPan());
+        operJoy.start().onTrue(lydia.setFemaidensStaticGrad());
+        operJoy.back().onTrue(lydia.setFemaidensScrollGrad());
+        */
+
+
+        // operJoy.rightTrigger().onTrue(kailey.clear());
+
+        // operJoy.a().onTrue(kailey.solidPurple());
+        // operJoy.x().onTrue(kailey.solidGreen());
+        // operJoy.y().onTrue(kailey.pulseEffect());
+        // operJoy.b().onTrue(kailey.sparkleEffect());
+        // operJoy.leftBumper().onTrue(kailey.progressMask());
+        // operJoy.rightBumper().onTrue(kailey.offsetGradient());
+        // operJoy.leftTrigger().onTrue(kailey.greenGradient());
+        // operJoy.start().onTrue(kailey.purpleGradient());
+
+
+
+         operJoy.leftTrigger().onTrue(kasey.setDefault());
+
+        operJoy.a().onTrue(kasey.setPurpleCommand());
+         operJoy.x().onTrue(kasey.setGreenCommand());
+         operJoy.y().onTrue(kasey.setRedCommand());
+         operJoy.b().onTrue(kasey.setBlueCommand());
+         operJoy.leftBumper().onTrue(kasey.breatheEffect());
+         operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
+         operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
+         operJoy.start().onTrue(kasey.progressMaskEffectGreenPurple());
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-   
+    
+    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -54,8 +102,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  //public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    //return Autos.exampleAuto(m_exampleSubsystem);
-  //}
+  // public Command getAutonomousCommand() {
+  //   // An example command will be run in autonomous
+  //   //return Autos.exampleAuto(m_exampleSubsystem);
+  // }
 }
