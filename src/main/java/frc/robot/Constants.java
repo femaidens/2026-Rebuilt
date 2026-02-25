@@ -18,6 +18,14 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  */
 public final class Constants {
   public static class OperatorConstants {
+    public static final int OPERATOR_PORT = 0;
+  }
+
+  public static class LedConstants {
+    public static final int LYDIA_LED_LENGTH = 177;
+    public static final int KASEY_LED_LENGTH = 177;
+    public static final int KAILEY_LED_LENGTH = 177;
+    public static final int LED_LENGTH = 177;
     public static final int DRIVER_PORT = 0;
   }
 
