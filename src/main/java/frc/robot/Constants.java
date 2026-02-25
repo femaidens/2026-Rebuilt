@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.CANBus;
+
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -14,6 +18,22 @@ package frc.robot;
  */
 public final class Constants {
   public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static final int DRIVER_PORT = 0;
+  }
+
+  public static class IntakeConstants {
+    public static final int CURRENT_LIMIT = 30;
+    public static final double INTAKE_MOTOR_SPEED = 0.5;
+    public static final CANBus CANBUS= new CANBus("rio");
+    public static final double PIVOT_SPEED = 0.5;
+    public static final double ANGLE_UP = 90; // random values for now until testing
+    public static final double ANGLE_DOWN = 0; // same as above
+
+      public static class PIDConstants {
+      public static final double kP = 2;
+      public static final double kI = 0;
+      public static final double kD = 0;
+    }
+
   }
 }
