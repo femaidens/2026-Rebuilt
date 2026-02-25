@@ -19,6 +19,8 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public final class Constants {
   public static class OperatorConstants {
     public static final int OPERATOR_PORT = 0;
+        public static final int DRIVER_PORT = 1;
+
   }
 
   public static class LedConstants {
