@@ -86,6 +86,7 @@ public class Drive extends SubsystemBase {
 
   /** Creates a new Drive. */
   public Drive() {
+    
     vision = new Vision();
 
     rotPidController = new PIDController(DriveConstants.Translation.rotPID.P, DriveConstants.Translation.rotPID.I,
@@ -95,7 +96,7 @@ public class Drive extends SubsystemBase {
     yPidController = new PIDController(DriveConstants.Translation.yPID.P, DriveConstants.Translation.yPID.I,
         DriveConstants.Translation.yPID.D);
 
-    rotPidController.enableContinuousInput(-180, 180);
+    rotPidController.enableContinuousInput(-Math.PI, Math.PI);
     xPidController.enableContinuousInput(-180, 180);
     yPidController.enableContinuousInput(-180, 180);
 
@@ -191,6 +192,7 @@ public class Drive extends SubsystemBase {
         DriveConstants.Drivetrain.STATE_STD_DEV,
         DriveConstants.Drivetrain.VISION_STD_DEV);
   }
+  
 
   public Pose2d getPose2d() {
     return swerveEstimator.getEstimatedPosition();
@@ -218,7 +220,7 @@ public class Drive extends SubsystemBase {
 
     Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
 
-    double rotOutput = rotPidController.calculate(shooterPose.getRotation().getDegrees(), targetAngle.getDegrees());
+    double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
 
     this.drive(() -> 0, () -> 0, () -> rotOutput);
   }
@@ -244,22 +246,7 @@ public class Drive extends SubsystemBase {
 
 
 
-  public void driveToPose(double x, double y, double r) {
-    Pose2d currentPose = this.getPose2d();
-   double xVel = xPidController.calculate(currentPose.getX(), x);
-   double yVel = yPidController.calculate(currentPose.getY(), y);
-   double rad = r * (Math.PI/180);
-   double rotVel = rotPidController.calculate(
-        currentPose.getRotation().getRadians(),
-        rad // double check where climb is
-    );
-    xVel = MathUtil.clamp(xVel, -2.0, 2.0);
-    yVel = MathUtil.clamp(yVel, -2.0, 2.0);
-    rotVel = MathUtil.clamp(rotVel, -Math.PI, Math.PI);
-
-    this.driveRaw(xVel, yVel, rotVel);
-
-  }
+ 
 
   public Command driveToPoseCommand(double x, double y, double r) {
     return this.run(() -> driveToPose(x, y, r));
@@ -310,6 +297,22 @@ public class Drive extends SubsystemBase {
   //   this.drive(xSpeed, ySpeed, () -> clampedrotOutput);
 
   // }
+   public void driveToPose(double x, double y, double r) {
+    Pose2d currentPose = this.getPose2d();
+   double xVel = xPidController.calculate(currentPose.getX(), x);
+   double yVel = yPidController.calculate(currentPose.getY(), y);
+   double rad = r * (Math.PI/180);
+   double rotVel = rotPidController.calculate(
+        currentPose.getRotation().getRadians(),
+        rad // double check where climb is
+    );
+    xVel = MathUtil.clamp(xVel, -2.0, 2.0);
+    yVel = MathUtil.clamp(yVel, -2.0, 2.0);
+    rotVel = MathUtil.clamp(rotVel, -Math.PI, Math.PI);
+
+    this.driveRaw(xVel, yVel, rotVel);
+
+  }
 
   public void driveRaw(double xVel, double yVel, double rotVel) {
     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, gyro.getRotation2d());

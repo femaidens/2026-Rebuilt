@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 //import java.util.logging.Handler;
@@ -10,6 +11,7 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -21,6 +23,7 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.epilogue.Logged;
 
 @Logged
@@ -41,8 +44,10 @@ public class Vision  {
 
     private final PhotonPoseEstimator rightEstimator;
     private final PhotonPoseEstimator leftEstimator;
+
+    private final Drive drive;
    
-    public Vision(){
+    public Vision(){        
         leftCam = new PhotonCamera("2265-ironfish");
         rightCam = new PhotonCamera("2265-greenfish");
 
@@ -74,35 +79,13 @@ public class Vision  {
 
         rightEstimator = new PhotonPoseEstimator(TAG_LAYOUT, RIGHT_ROBOT_TO_CAM);
         leftEstimator = new PhotonPoseEstimator(TAG_LAYOUT, LEFT_ROBOT_TO_CAM); 
+
+                drive = new Drive();
+
     }
 
 
-    // public List<Transform3d> getVisionUpdates(){
-    //     List<Transform3d> poses = new ArrayList<>();
-    //     var rightResults = rightCam.getAllUnreadResults();
-    //     for (var result : rightResults){
-    //         var multitagResult = result.getMultiTagResult();
-    //             System.out.println(multitagResult);
-
-    //         if(multitagResult.isPresent()){
-    //             var fieldToCam = multitagResult.get().estimatedPose.best;
-    //             poses.add(fieldToCam);
-    //         }
-    //     }
-
-    //       var leftResults = leftCam.getAllUnreadResults();
-    //     for (var result : leftResults){
-    //         var multitagResult = result.get();
-    //                         System.out.println(multitagResult);
-
-    //         if(multitagResult.isPresent()){
-    //             var fieldToCam = multitagResult.get().estimatedPose.best;
-    //             poses.add(fieldToCam);
-    //         }
-    //     }
-    //     return poses;
-    // }
-
+ 
     public Translation2d getTargetTranslation(int tagID){
         var tagPose = TAG_LAYOUT.getTagPose(tagID);
         return tagPose.get().toPose2d().getTranslation();
