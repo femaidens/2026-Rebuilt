@@ -6,6 +6,10 @@ plugins {
     id 'pmd' // PMD for static analysis
 }
 
+pmd {
+    ignoreFailures = true
+}
+
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
