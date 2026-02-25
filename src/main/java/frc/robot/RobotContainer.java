@@ -6,7 +6,14 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
+<<<<<<< HEAD
 import frc.robot.subsystems.Intake;
+=======
+
+import frc.robot.subsystems.KaileyLeds;
+import frc.robot.subsystems.KaseyLeds;
+import frc.robot.subsystems.LydiaLeds;
+>>>>>>> dbcb22421a6a95cbfc9055041ec97bc324d21363
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -21,7 +28,12 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
+  // private final KaileyLeds kailey = new KaileyLeds();
+  //private final LydiaLeds lydia = new LydiaLeds();
+  private final KaseyLeds kasey = new KaseyLeds();
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
     private final CommandXboxController driveJoy = new CommandXboxController(OperatorConstants.DRIVER_PORT);
     private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
@@ -48,8 +60,48 @@ public class RobotContainer {
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));
 
+        //operJoy.leftTrigger().onTrue(lydia.setDefault());
+        
+        /* 
+        operJoy.a().onTrue(lydia.setBumperBlueSolid());
+        operJoy.x().onTrue(lydia.setBumperRedSolid());
+        operJoy.b().onTrue(lydia.setPurpleSolid());
+        operJoy.y().onTrue(lydia.setGreenSolid());
+        operJoy.leftBumper().onTrue(lydia.setFemaidensSplit());
+        operJoy.rightBumper().onTrue(lydia.setFirstRedSolid());
+        operJoy.rightTrigger().onTrue(lydia.setFemaidensPan());
+        operJoy.start().onTrue(lydia.setFemaidensStaticGrad());
+        operJoy.back().onTrue(lydia.setFemaidensScrollGrad());
+        */
+
+
+        // operJoy.rightTrigger().onTrue(kailey.clear());
+
+        // operJoy.a().onTrue(kailey.solidPurple());
+        // operJoy.x().onTrue(kailey.solidGreen());
+        // operJoy.y().onTrue(kailey.pulseEffect());
+        // operJoy.b().onTrue(kailey.sparkleEffect());
+        // operJoy.leftBumper().onTrue(kailey.progressMask());
+        // operJoy.rightBumper().onTrue(kailey.offsetGradient());
+        // operJoy.leftTrigger().onTrue(kailey.greenGradient());
+        // operJoy.start().onTrue(kailey.purpleGradient());
+
+
+
+         operJoy.leftTrigger().onTrue(kasey.setDefault());
+
+        operJoy.a().onTrue(kasey.setPurpleCommand());
+         operJoy.x().onTrue(kasey.setGreenCommand());
+         operJoy.y().onTrue(kasey.setRedCommand());
+         operJoy.b().onTrue(kasey.setBlueCommand());
+         operJoy.leftBumper().onTrue(kasey.breatheEffect());
+         operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
+         operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
+         operJoy.start().onTrue(kasey.progressMaskEffectGreenPurple());
+
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+    
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
     operJoy.a().whileTrue(intake.setAngleDownCmd());
