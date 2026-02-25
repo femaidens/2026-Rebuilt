@@ -62,6 +62,7 @@ public class Intake extends SubsystemBase {
     encoder.getConfigurator().apply(encoderConfig.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
 
     anglePid = new PIDController(IntakeConstants.PIDConstants.kP, IntakeConstants.PIDConstants.kI, IntakeConstants.PIDConstants.kD);
+    anglePid.setTolerance(0.05);
   }
 
   public Intake(TalonFX iM, TalonFX fM, TalonFX aM, CANcoder e, PIDController p ){
@@ -76,18 +77,30 @@ public class Intake extends SubsystemBase {
   }
 
   public Command setAngleUpDownCmd(){
-      if(getAngle() <= 90){
-        return this.run(() -> setAnglePid(90));
+      if(getAngle() <= IntakeConstants.ANGLE_UP - 10){
+        return this.run(() -> setAnglePid(IntakeConstants.ANGLE_UP));
       }
-      return this.run(() -> setAnglePid(0));
+      return this.run(() -> setAnglePid(IntakeConstants.ANGLE_DOWN));
   }
 
   public Command setAnglePidCmd(double setpoint){
     return this.run(() -> setAnglePid(setpoint));
   }
 
+  public Command setAngleUpCmd(){
+    return this.run(() -> intakeMotor.set(IntakeConstants.PIVOT_SPEED));
+  }
+
+  public Command setAngleDownCmd(){
+    return this.run(() -> intakeMotor.set(-IntakeConstants.PIVOT_SPEED));
+  }
+
   public Command setIntakeMotorCmd(){
     return this.run(() -> intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED));
+  }
+
+  public Command reverseIntakeMotorCmd(){
+    return this.run(() -> intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED));
   }
 
   public Command stopIntakeMotorCmd(){

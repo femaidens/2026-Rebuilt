@@ -25,6 +25,10 @@ public final class Constants {
     public static final int CURRENT_LIMIT = 30;
     public static final double INTAKE_MOTOR_SPEED = 0.5;
     public static final CANBus CANBUS= new CANBus("rio");
+    public static final double PIVOT_SPEED = 0.5;
+    public static final double ANGLE_UP = 90; // random values for now until testing
+    public static final double ANGLE_DOWN = 0; // same as above
+
       public static class PIDConstants {
       public static final double kP = 2;
       public static final double kI = 0;
