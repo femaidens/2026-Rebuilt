@@ -28,7 +28,7 @@ public class Shooter extends SubsystemBase {
   private final TalonFX shooterMotor; // starting the rollers
   private final TalonFX angleMotor; // adjusting shooter to desired angle
   private final CANcoder encoder;
-  //private final TalonFXConfiguration angleConfig;
+  private final TalonFXConfiguration angleConfig;
   private final TalonFXConfiguration motorConfig;
   private final PIDController shooterPID;
   private final SimpleMotorFeedforward shooterFF;
@@ -40,6 +40,7 @@ public class Shooter extends SubsystemBase {
     this.encoder = encoder;
     this.shooterFF = shooterFF;
     motorConfig = new TalonFXConfiguration();
+    angleConfig = new TalonFXConfiguration();
 
   }
 
@@ -55,16 +56,22 @@ public class Shooter extends SubsystemBase {
       motorConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
       motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
       shooterMotor.getConfigurator().apply(motorConfig);
-      // angleMotor.getConfigurator().apply(angleConfig);
+      angleConfig = new TalonFXConfiguration();
+      angleConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
+      angleConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+      shooterMotor.getConfigurator().apply(motorConfig);
+      angleMotor.getConfigurator().apply(angleConfig);
+
       shooterPID = new PIDController(
         Constants.ShooterConstants.PIDConstants.kP,
         Constants.ShooterConstants.PIDConstants.kI,
         Constants.ShooterConstants.PIDConstants.kD
       );
+      shooterPID.setTolerance(24.855);
       shooterFF = new SimpleMotorFeedforward (
         Constants.ShooterConstants.FFConstants.kS,
-        Constants.ShooterConstants.FFConstants.kV,
-        Constants.ShooterConstants.FFConstants.kA);
+        Constants.ShooterConstants.FFConstants.kV);
+        //Constants.ShooterConstants.FFConstants.kA);
   
     }
 
@@ -82,15 +89,15 @@ public class Shooter extends SubsystemBase {
   public Command runShooterMotorCmd(){
     return this.run(() -> shooterMotor.set(Constants.ShooterConstants.SHOOTER_MOTOR_SPEED));
   }
-
   public Command stopShooterMotorCmd() {
     return this.runOnce(() -> shooterMotor.set(0));
   }
-
-   public Command setAngle(double setpoint) {
+  public Command setAngle(double setpoint) {
       return this.run(() -> shooterPID(setpoint));
-    }
-
+  }
+  public Command cruiseShooterMotorCmd(){
+       return this.run(() -> shooterMotor.set(Constants.ShooterConstants.SHOOTER_CRUISE_SPEED));
+  }
 
   @Override
   public void periodic() {
