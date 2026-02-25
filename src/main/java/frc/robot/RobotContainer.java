@@ -6,14 +6,11 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-<<<<<<< HEAD
 import frc.robot.subsystems.Intake;
-=======
 
 import frc.robot.subsystems.KaileyLeds;
 import frc.robot.subsystems.KaseyLeds;
 import frc.robot.subsystems.LydiaLeds;
->>>>>>> dbcb22421a6a95cbfc9055041ec97bc324d21363
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -33,7 +30,6 @@ public class RobotContainer {
   private final KaseyLeds kasey = new KaseyLeds();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
     private final CommandXboxController driveJoy = new CommandXboxController(OperatorConstants.DRIVER_PORT);
     private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
