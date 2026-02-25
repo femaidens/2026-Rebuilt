@@ -10,6 +10,9 @@ import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import monologue.Monologue;
+import monologue.Logged;
+
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -33,6 +36,7 @@ public class Robot extends TimedRobot {
 
     DataLogManager.start();
     Epilogue.bind(this);
+
   }
 
   /**
@@ -62,6 +66,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {

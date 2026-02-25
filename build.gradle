@@ -13,6 +13,10 @@ java {
 
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
+repositories {
+  maven { url 'https://jitpack.io' }
+}
+
 // Define my targets (RoboRIO) and artifacts (deployable files)
 // This is added by GradleRIO's backing project DeployUtils.
 deploy {
@@ -60,6 +64,8 @@ dependencies {
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
 
+    implementation 'com.github.shueja:Monologue:v1.0.0-beta6'
+
     roborioDebug wpi.java.deps.wpilibJniDebug(wpi.platforms.roborio)
     roborioDebug wpi.java.vendor.jniDebug(wpi.platforms.roborio)
 
@@ -94,7 +100,7 @@ test {
 // Static analysis
 
 pmd {
-    toolVersion = "7.20.0"
+    toolVersion = "7.21.0"
     consoleOutput = true
     ruleSetFiles = files("femaidens2265-pmd-ruleset.xml")
     ruleSets = [] // Explicitly set so we don't use the default ruleset
