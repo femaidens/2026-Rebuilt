@@ -11,6 +11,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.KaileyLeds;
 import frc.robot.subsystems.KaseyLeds;
 import frc.robot.subsystems.LydiaLeds;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 
 @Logged
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
@@ -54,7 +56,7 @@ public class RobotContainer {
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-        //operJoy.leftTrigger().onTrue(lydia.setDefault());
+        // operJoy.leftTrigger().onTrue(lydia.setDefault());
         
   //       /* 
   //       operJoy.a().onTrue(lydia.setBumperBlueSolid());

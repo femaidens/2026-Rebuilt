@@ -39,14 +39,14 @@ public class ClimbL1 extends SubsystemBase {
 		followerMotor = new TalonFX(Ports.ClimbPorts.FOLLOWER_MOTOR, Constants.ClimbConstants.CAN_BUS);
         bottomLimitSwitch = new DigitalInput(Ports.ClimbPorts.BOTTOM_LIMIT_SWITCH);
         climbPIDExtend = new PIDController
-                (Constants.ClimbL1Constants.PIDConstants.kP_EXTEND,
-                Constants.ClimbL1Constants.PIDConstants.kI_EXTEND,
-                Constants.ClimbL1Constants.PIDConstants.kD_EXTEND);
+                (Constants.ClimbConstants.PIDConstants.kP_EXTEND,
+                Constants.ClimbConstants.PIDConstants.kI_EXTEND,
+                Constants.ClimbConstants.PIDConstants.kD_EXTEND);
         climbPIDExtend.setTolerance(0.21);
         climbPIDRetract = new PIDController
-                (Constants.ClimbL1Constants.PIDConstants.kP_RETRACT,
-                Constants.ClimbL1Constants.PIDConstants.kI_RETRACT,
-                Constants.ClimbL1Constants.PIDConstants.kD_RETRACT);
+                (Constants.ClimbConstants.PIDConstants.kP_RETRACT,
+                Constants.ClimbConstants.PIDConstants.kI_RETRACT,
+                Constants.ClimbConstants.PIDConstants.kD_RETRACT);
         climbPIDRetract.setTolerance(0.21);
 
         Follower follower = new Follower(Ports.ClimbPorts.LEADER_MOTOR, MotorAlignmentValue.Aligned);
@@ -63,7 +63,7 @@ public class ClimbL1 extends SubsystemBase {
     }
 
     public Command runMotorCmd() {
-        return this.run(() -> leaderMotor.set(Constants.ClimbL1Constants.MOTOR_SPEED));
+        return this.run(() -> leaderMotor.set(Constants.ClimbConstants.MOTOR_SPEED));
     }
     
     public Command reverseMotorCmd() {
@@ -72,7 +72,7 @@ public class ClimbL1 extends SubsystemBase {
                 leaderMotor.set(0);
                 leaderMotor.setPosition(0);
             } else {
-                leaderMotor.set(-Constants.ClimbL1Constants.MOTOR_SPEED);
+                leaderMotor.set(-Constants.ClimbConstants.MOTOR_SPEED);
             }
 
         });

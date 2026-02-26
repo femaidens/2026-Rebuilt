@@ -11,11 +11,11 @@ public class ClimbingL1 {
     }
 
     public Command levelOneExtend() {
-        return climbL1.setLevelCmd(Constants.ClimbL1Constants.SetpointConstants.LEVEL_ONE);
+        return climbL1.setLevelCmd(Constants.ClimbConstants.SetpointConstants.LEVEL_ONE);
     }
 
     public Command levelOneRetract() {
-        return climbL1.retractLevelCmd(Constants.ClimbL1Constants.SetpointConstants.MINIMUM);
+        return climbL1.retractLevelCmd(Constants.ClimbConstants.SetpointConstants.MINIMUM);
     }
 
     public Command climbOneCmd() {
