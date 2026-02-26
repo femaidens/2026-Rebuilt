@@ -15,7 +15,7 @@ public class Shooting{
 
   private Shooter shooter;
 
-  public Shooting(){
+  public Shooting(Shooter shooter){
     this.shooter = new Shooter();
   }
 
@@ -31,5 +31,10 @@ public class Shooting{
     return shooter.setAngle(Constants.ShooterConstants.SetpointConstants.LARGE_ANGLE);
   }
 
+  public Command resetDefault(){
+     return 
+            shooter.setAngle(Constants.ShooterConstants.SetpointConstants.SMALL_ANGLE)
+            .andThen(shooter.stopShooterMotorCmd());
+  }
 
 }

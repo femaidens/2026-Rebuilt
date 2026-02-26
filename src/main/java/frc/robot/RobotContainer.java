@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 
 import frc.robot.subsystems.KaileyLeds;
 import frc.robot.subsystems.KaseyLeds;
@@ -15,6 +16,7 @@ import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.Shooting;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -34,6 +36,9 @@ public class RobotContainer {
     private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
     private Intake intake = new Intake();
+    private Shooter shooter = new Shooter();
+    private Shooting shooting = new Shooting(shooter);
+    private KaseyLeds kasey = new KaseyLeds();
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -52,23 +57,19 @@ public class RobotContainer {
    */
   private void configureBindings() {
 
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    // new Trigger(m_exampleSubsystem::exampleCondition)
-    //     .onTrue(new ExampleCommand(m_exampleSubsystem));
-
         // operJoy.leftTrigger().onTrue(lydia.setDefault());
         
-  //       /* 
-  //       operJoy.a().onTrue(lydia.setBumperBlueSolid());
-  //       operJoy.x().onTrue(lydia.setBumperRedSolid());
-  //       operJoy.b().onTrue(lydia.setPurpleSolid());
-  //       operJoy.y().onTrue(lydia.setGreenSolid());
-  //       operJoy.leftBumper().onTrue(lydia.setFemaidensSplit());
-  //       operJoy.rightBumper().onTrue(lydia.setFirstRedSolid());
-  //       operJoy.rightTrigger().onTrue(lydia.setFemaidensPan());
-  //       operJoy.start().onTrue(lydia.setFemaidensStaticGrad());
-  //       operJoy.back().onTrue(lydia.setFemaidensScrollGrad());
-  //       */
+        // /* 
+        // operJoy.a().onTrue(lydia.setBumperBlueSolid());
+        // operJoy.x().onTrue(lydia.setBumperRedSolid());
+        // operJoy.b().onTrue(lydia.setPurpleSolid());
+        // operJoy.y().onTrue(lydia.setGreenSolid());
+        // operJoy.leftBumper().onTrue(lydia.setFemaidensSplit());
+        // operJoy.rightBumper().onTrue(lydia.setFirstRedSolid());
+        // operJoy.rightTrigger().onTrue(lydia.setFemaidensPan());
+        // operJoy.start().onTrue(lydia.setFemaidensStaticGrad());
+        // operJoy.back().onTrue(lydia.setFemaidensScrollGrad());
+        // */
 
 
   //       // operJoy.rightTrigger().onTrue(kailey.clear());
@@ -84,25 +85,24 @@ public class RobotContainer {
 
 
 
-  //        operJoy.leftTrigger().onTrue(kasey.setDefault());
-
-  //       operJoy.a().onTrue(kasey.setPurpleCommand());
-  //        operJoy.x().onTrue(kasey.setGreenCommand());
-  //        operJoy.y().onTrue(kasey.setRedCommand());
-  //        operJoy.b().onTrue(kasey.setBlueCommand());
-  //        operJoy.leftBumper().onTrue(kasey.breatheEffect());
-  //        operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
-  //        operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
-  //        operJoy.start().onTrue(kasey.progressMaskEffectGreenPurple());
+        operJoy.leftTrigger().onTrue(kasey.setDefault());
+        // operJoy.a().onTrue(kasey.setPurpleCommand());
+        // operJoy.x().onTrue(kasey.setGreenCommand());
+        operJoy.y().onTrue(kasey.setRedCommand());
+        // operJoy.b().onTrue(kasey.setBlueCommand());
+        operJoy.leftBumper().onTrue(kasey.breatheEffect());
+        operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
+        operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
+        operJoy.start().onTrue(kasey.progressMaskEffectGreenPurple());
 
   //   // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
   //   // cancelling on release.
     
-    //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
+//intake
     operJoy.a().whileTrue(intake.setAngleDownCmd());
     operJoy.b().whileTrue(intake.setAngleUpCmd());
     operJoy.x().onTrue(intake.setAngleUpDownCmd());
+
   }
 
   /**
