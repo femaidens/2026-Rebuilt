@@ -11,6 +11,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.KaileyLeds;
 import frc.robot.subsystems.KaseyLeds;
 import frc.robot.subsystems.LydiaLeds;
+import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -21,13 +22,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
  * subsystems, commands, and trigger mappings) should be declared here.
  */
+
+@Logged
+
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
-  //private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-
-  // private final KaileyLeds kailey = new KaileyLeds();
-  //private final LydiaLeds lydia = new LydiaLeds();
-  private final KaseyLeds kasey = new KaseyLeds();
+  // private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
     private final CommandXboxController driveJoy = new CommandXboxController(OperatorConstants.DRIVER_PORT);
@@ -56,47 +56,47 @@ public class RobotContainer {
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-        //operJoy.leftTrigger().onTrue(lydia.setDefault());
+        // operJoy.leftTrigger().onTrue(lydia.setDefault());
         
-        /* 
-        operJoy.a().onTrue(lydia.setBumperBlueSolid());
-        operJoy.x().onTrue(lydia.setBumperRedSolid());
-        operJoy.b().onTrue(lydia.setPurpleSolid());
-        operJoy.y().onTrue(lydia.setGreenSolid());
-        operJoy.leftBumper().onTrue(lydia.setFemaidensSplit());
-        operJoy.rightBumper().onTrue(lydia.setFirstRedSolid());
-        operJoy.rightTrigger().onTrue(lydia.setFemaidensPan());
-        operJoy.start().onTrue(lydia.setFemaidensStaticGrad());
-        operJoy.back().onTrue(lydia.setFemaidensScrollGrad());
-        */
+  //       /* 
+  //       operJoy.a().onTrue(lydia.setBumperBlueSolid());
+  //       operJoy.x().onTrue(lydia.setBumperRedSolid());
+  //       operJoy.b().onTrue(lydia.setPurpleSolid());
+  //       operJoy.y().onTrue(lydia.setGreenSolid());
+  //       operJoy.leftBumper().onTrue(lydia.setFemaidensSplit());
+  //       operJoy.rightBumper().onTrue(lydia.setFirstRedSolid());
+  //       operJoy.rightTrigger().onTrue(lydia.setFemaidensPan());
+  //       operJoy.start().onTrue(lydia.setFemaidensStaticGrad());
+  //       operJoy.back().onTrue(lydia.setFemaidensScrollGrad());
+  //       */
 
 
-        // operJoy.rightTrigger().onTrue(kailey.clear());
+  //       // operJoy.rightTrigger().onTrue(kailey.clear());
 
-        // operJoy.a().onTrue(kailey.solidPurple());
-        // operJoy.x().onTrue(kailey.solidGreen());
-        // operJoy.y().onTrue(kailey.pulseEffect());
-        // operJoy.b().onTrue(kailey.sparkleEffect());
-        // operJoy.leftBumper().onTrue(kailey.progressMask());
-        // operJoy.rightBumper().onTrue(kailey.offsetGradient());
-        // operJoy.leftTrigger().onTrue(kailey.greenGradient());
-        // operJoy.start().onTrue(kailey.purpleGradient());
+  //       // operJoy.a().onTrue(kailey.solidPurple());
+  //       // operJoy.x().onTrue(kailey.solidGreen());
+  //       // operJoy.y().onTrue(kailey.pulseEffect());
+  //       // operJoy.b().onTrue(kailey.sparkleEffect());
+  //       // operJoy.leftBumper().onTrue(kailey.progressMask());
+  //       // operJoy.rightBumper().onTrue(kailey.offsetGradient());
+  //       // operJoy.leftTrigger().onTrue(kailey.greenGradient());
+  //       // operJoy.start().onTrue(kailey.purpleGradient());
 
 
 
-         operJoy.leftTrigger().onTrue(kasey.setDefault());
+  //        operJoy.leftTrigger().onTrue(kasey.setDefault());
 
-        operJoy.a().onTrue(kasey.setPurpleCommand());
-         operJoy.x().onTrue(kasey.setGreenCommand());
-         operJoy.y().onTrue(kasey.setRedCommand());
-         operJoy.b().onTrue(kasey.setBlueCommand());
-         operJoy.leftBumper().onTrue(kasey.breatheEffect());
-         operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
-         operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
-         operJoy.start().onTrue(kasey.progressMaskEffectGreenPurple());
+  //       operJoy.a().onTrue(kasey.setPurpleCommand());
+  //        operJoy.x().onTrue(kasey.setGreenCommand());
+  //        operJoy.y().onTrue(kasey.setRedCommand());
+  //        operJoy.b().onTrue(kasey.setBlueCommand());
+  //        operJoy.leftBumper().onTrue(kasey.breatheEffect());
+  //        operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
+  //        operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
+  //        operJoy.start().onTrue(kasey.progressMaskEffectGreenPurple());
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
+  //   // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+  //   // cancelling on release.
     
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
 
@@ -114,4 +114,15 @@ public class RobotContainer {
   //   // An example command will be run in autonomous
   //   //return Autos.exampleAuto(m_exampleSubsystem);
   // }
+
+  // /**
+  //  * Use this to pass the autonomous command to the main {@link Robot} class.
+  //  *
+  //  * @return the command to run in autonomous
+  //  */
+  // // public Command getAutonomousCommand() {
+  // //   // An example command will be run in autonomous
+  // //   // return Autos.exampleAuto(m_exampleSubsystem);
+  // //   //return Autos.exampleAuto(m_exampleSubsystem);
+  // // }
 }

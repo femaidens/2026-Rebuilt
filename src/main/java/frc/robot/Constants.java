@@ -18,6 +18,28 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
  */
 public final class Constants {
   public static class OperatorConstants {
+    public static final int OPERATOR_PORT = 1;
+    public static final int DRIVER_PORT = 2;
+  }
+
+  public static class ClimbConstants {
+    public static final double MOTOR_SPEED = 0.1;
+    public static final CANBus CAN_BUS = new CANBus("rio");
+
+    public static class PIDConstants {
+		  public static final double kP_EXTEND = 6.7;
+		  public static final double kI_EXTEND = 6.7;
+		  public static final double kD_EXTEND = 6.7;
+		  public static final double kP_RETRACT = 2.1;
+		  public static final double kI_RETRACT = 2.1;
+		  public static final double kD_RETRACT = 2.1;
+    }
+
+    public static class SetpointConstants {
+      public static final double MINIMUM = 0;
+      public static final double LEVEL_ONE = 27;
+      public static final double LEVEL_TWO_THREE = 18;
+    }
     public static final int OPERATOR_PORT = 0;
         public static final int DRIVER_PORT = 1;
 
