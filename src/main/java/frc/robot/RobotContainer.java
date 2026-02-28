@@ -98,11 +98,18 @@ public class RobotContainer {
   //   // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
   //   // cancelling on release.
     
-//intake
-    operJoy.a().whileTrue(intake.setAngleDownCmd());
-    operJoy.b().whileTrue(intake.setAngleUpCmd());
-    operJoy.x().onTrue(intake.setAngleUpDownCmd());
+// intake
+//     operJoy.a().whileTrue(intake.setAngleDownCmd());
+//     operJoy.b().whileTrue(intake.setAngleUpCmd());
+//     operJoy.x().onTrue(intake.setAngleUpDownCmd());
+//shotoer
+    operJoy.a().whileTrue(shooting.smallAngleCmd());
+    operJoy.b().whileTrue(shooting.middleAngleCmd());
+    operJoy.x().onTrue(shooting.largeAngleCmd());
 
+    operJoy.rightBumper()
+                .whileTrue(shooter.runShooterMotorCmd())
+                .onFalse(shooter.stopShooterMotorCmd());
   }
 
   /**
