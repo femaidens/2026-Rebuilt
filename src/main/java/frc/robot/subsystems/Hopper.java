@@ -25,7 +25,7 @@ public class Hopper extends SubsystemBase {
     indexMotor = new TalonFX(HopperPorts.INDEX_MOTOR, HopperConstants.canbus);
     configureTalonMotor(indexMotor, HopperConstants.INDEXER_CURRENT_LIMIT, NeutralModeValue.Brake);
     spindexerMotor = new TalonFX(HopperPorts.HOPPER_MOTOR, HopperConstants.canbus);
-    configureTalonMotor(spindexerMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Coast);
+    configureTalonMotor(spindexerMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Brake);
     // beambreak = new DigitalInput(HopperPorts.BEAM_BREAK);
   }
 
@@ -43,7 +43,7 @@ public class Hopper extends SubsystemBase {
     return this.runOnce(() -> indexMotor.set(0));
   }
 
-  //Wheels between shooter and hopper
+  
   public Command runSpindexer(){
     return this.run(() -> spindexerMotor.set(HopperConstants.MOTORSPEED));
   }
