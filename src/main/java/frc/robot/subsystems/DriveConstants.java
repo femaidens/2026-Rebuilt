@@ -4,6 +4,9 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.*;
+
+
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
@@ -20,6 +23,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearAcceleration;
@@ -100,6 +104,9 @@ public class DriveConstants {
 
     }
     public class Turn {
+        public static final Angle radianPoseRed = Degrees.of(2265);
+        public static final Angle radianPoseBlue = Degrees.of(2266);
+
         public static final int CURRENT_LIMIT = 35;
         public static final double POS_CONVERSION_FACTOR = 1.0 / (Math.PI * 2); //(2*Math.PI)/(150/7);
         public static final double VEL_CONVERSION_FACTOR = (2*Math.PI)/(150/7);

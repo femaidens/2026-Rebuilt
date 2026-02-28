@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.AutoShooter;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.DriveConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,7 +53,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
  private void configureDefaultCmds() {
         drive.setDefaultCommand(
                 new RunCommand(
-                        () -> drive.drive(
+                        () -> drive.driveRatio(
                                 () -> MathUtil.applyDeadband(driveJoy.getLeftY(), 0.1),
                                 () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1),
                                 () -> MathUtil.applyDeadband(driveJoy.getRightX(), 0.1)),
@@ -112,24 +113,24 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
       autoshooter.runShooterMotorCmd()
     ).onFalse(autoshooter.stopShooterMotorCmd());
 
-    driveJoy.rightBumper().whileTrue(
-      autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-    );
+    // driveJoy.rightBumper().whileTrue(
+    //   autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
+    // );
 
-    driveJoy.leftBumper().whileTrue(
-      autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
-    );
+    // driveJoy.leftBumper().whileTrue(
+    //   autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
+    // );
 
-    driveJoy.rightTrigger().whileTrue(
-      autoshooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
-    );
+    // driveJoy.rightTrigger().whileTrue(
+    //   autoshooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
+    // );
 
-    driveJoy.leftTrigger().whileTrue(
-      autoshooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
-    );
+    // driveJoy.leftTrigger().whileTrue(
+    //   autoshooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
+    // );
 
     driveJoy.b().whileTrue(
-      drive.driveToPoseCommand(2.400, 4.00, 170.00)
+      drive.driveToPoseCommand(2.400, 4.00, DriveConstants.Turn.radianPoseRed)
     );
  
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`

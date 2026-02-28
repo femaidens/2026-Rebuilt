@@ -4,15 +4,23 @@
 
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
 
+
+
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
+
+import edu.wpi.first.units.Units.*;
+import edu.wpi.first.units.measure.Angle;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
+
+import javax.crypto.spec.DHGenParameterSpec;
 
 import org.photonvision.EstimatedRobotPose;
 
@@ -36,7 +44,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -64,13 +71,14 @@ public class Drive extends SubsystemBase {
   private final ModuleKraken frontRight;
   private final ModuleKraken rearLeft;
   private final ModuleKraken rearRight;
-  // private double xSpeed;
-  // private double ySpeed;
-  //private double rotSpeed;
 
-  private DoubleSupplier xSpeed;
-  private DoubleSupplier ySpeed;
-  private DoubleSupplier rotSpeed;
+  // private double xSpeedRatio;
+  // private double ySpeedRatio;
+  //private double rotSpeedRatio;
+
+  private DoubleSupplier xSpeedRatio;
+  private DoubleSupplier ySpeedRatio;
+  private DoubleSupplier rotSpeedRatio;
 
   private final List<ModuleKraken> modules;
 
@@ -222,7 +230,7 @@ public class Drive extends SubsystemBase {
 
     double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
 
-    this.drive(() -> 0, () -> 0, () -> rotOutput);
+    this.driveRaw( 0, 0,rotOutput);
   }
 
   // public Rotation2d unitTestRotation(){
@@ -248,7 +256,7 @@ public class Drive extends SubsystemBase {
 
  
 
-  public Command driveToPoseCommand(double x, double y, double r) {
+  public Command driveToPoseCommand(double x, double y, Angle r) {
     return this.run(() -> driveToPose(x, y, r));
   }
 
@@ -270,7 +278,7 @@ public class Drive extends SubsystemBase {
 
   
 
-  // public void alignRotation(DoubleSupplier xSpeed, DoubleSupplier ySpeed) {
+  // public void alignRotation(DoubleSupplier xSpeedRatio, DoubleSupplier ySpeedRatio) {
   //   Pose2d currentPose = this.getPose2d();
   //   var alliance = DriverStation.getAlliance();
   //   Translation2d targetLocation;
@@ -294,17 +302,17 @@ public class Drive extends SubsystemBase {
 
   //   double clampedrotOutput = MathUtil.clamp(rotOutput, -0.5, 0.5);
 
-  //   this.drive(xSpeed, ySpeed, () -> clampedrotOutput);
+  //   this.driveRatio(xSpeedRatio, ySpeedRatio, () -> clampedrotOutput);
 
   // }
-   public void driveToPose(double x, double y, double r) {
-    Pose2d currentPose = this.getPose2d();
+   public void driveToPose(double x, double y, Angle r) {
+   Pose2d currentPose = this.getPose2d();
    double xVel = xPidController.calculate(currentPose.getX(), x);
    double yVel = yPidController.calculate(currentPose.getY(), y);
-   double rad = r * (Math.PI/180);
+   
    double rotVel = rotPidController.calculate(
         currentPose.getRotation().getRadians(),
-        rad // double check where climb is
+        r.in(Radians) // double check where climb is
     );
     xVel = MathUtil.clamp(xVel, -2.0, 2.0);
     yVel = MathUtil.clamp(yVel, -2.0, 2.0);
@@ -324,18 +332,18 @@ public class Drive extends SubsystemBase {
   /**
    * drivin
    * 
-   * @param xSpeed   x direction (front and back)
-   * @param ySpeed   y direction (right is positive, left is negative)
-   * @param rotSpeed
+   * @param xSpeedRatio   x direction (front and back)
+   * @param ySpeedRatio   y direction (right is positive, left is negative)
+   * @param rotSpeedRatio
    * @return
    */
-  public void drive(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed) {
-    this.xSpeed = xSpeed;
-    this.ySpeed = ySpeed;
-    this.rotSpeed = rotSpeed;
-    double xVel = xSpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
-    double yVel = ySpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
-    double rotVel = rotSpeed.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
+  public void driveRatio(DoubleSupplier xSpeedRatio, DoubleSupplier ySpeedRatio, DoubleSupplier rotSpeedRatio) {
+    this.xSpeedRatio = xSpeedRatio;
+    this.ySpeedRatio = ySpeedRatio;
+    this.rotSpeedRatio = rotSpeedRatio;
+    double xVel = xSpeedRatio.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
+    double yVel = ySpeedRatio.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
+    double rotVel = rotSpeedRatio.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
 
     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, gyro.getRotation2d());
     SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
@@ -350,10 +358,10 @@ public class Drive extends SubsystemBase {
     setModuleStates(moduleStates);
   }
 
-  // public void driveRobotRelative(DoubleSupplier xSpeed, DoubleSupplier ySpeed, DoubleSupplier rotSpeed) {
-  //   double xVel = xSpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
-  //   double yVel = ySpeed.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
-  //   double rotVel = rotSpeed.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
+  // public void driveRobotRelative(DoubleSupplier xSpeedRatio, DoubleSupplier ySpeedRatio, DoubleSupplier rotSpeedRatio) {
+  //   double xVel = xSpeedRatio.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
+  //   double yVel = ySpeedRatio.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
+  //   double rotVel = rotSpeedRatio.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
 
   //   speeds = new ChassisSpeeds(xVel, yVel, rotVel);
   //   SwerveModuleState[] moduleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(speeds);
