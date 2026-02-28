@@ -14,7 +14,7 @@ import frc.robot.Ports.HopperPorts;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
+//adding
 public class Hopper extends SubsystemBase {
   /** Creates a new Hopper. */
   private TalonFX indexMotor;
