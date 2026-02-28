@@ -5,14 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix6.CANBus;
-<<<<<<< HEAD
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-=======
-//adding
-/** Add your docs here. */
-public class Constants {
->>>>>>> hopper
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean

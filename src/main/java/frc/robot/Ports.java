@@ -1,10 +1,5 @@
 package frc.robot;
-<<<<<<< HEAD
 
-=======
-//adding
-/** Add your docs here. */
->>>>>>> hopper
 public class Ports {
     public static final class ClimbPorts {
         public static final int LEADER_MOTOR = 15;
@@ -31,6 +26,7 @@ public class Ports {
         public static final int REAR_LEFT_CANCODER = 3;
         public static final int REAR_RIGHT_CANCODER = 1;
     }
+    
     public class HopperPorts{
         public static final int INDEX_MOTOR = 0; 
         public static final int BEAM_BREAK = 1;

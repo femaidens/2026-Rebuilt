@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Shooting;
+import frc.robot.commands.FuelTransition;
+import frc.robot.subsystems.Hopper;
 //Adding
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -39,10 +41,14 @@ public class RobotContainer {
     private Shooter shooter = new Shooter();
     private Shooting shooting = new Shooting(shooter);
     private KaseyLeds kasey = new KaseyLeds();
+    private final Hopper hopper;
+    private final FuelTransition fuelTransition;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    hopper = new Hopper();
+    fuelTransition = new FuelTransition(hopper);
     configureBindings();
   }
 
@@ -110,6 +116,12 @@ public class RobotContainer {
     operJoy.rightBumper()
                 .whileTrue(shooter.runShooterMotorCmd())
                 .onFalse(shooter.stopShooterMotorCmd());
+  
+  /** Hopper
+    operJoy.rightBumper()
+      .whileTrue(fuelTransition.indexToTransition())
+      .onFalse(fuelTransition.stopTransitioning());
+    */
   }
 
   /**
