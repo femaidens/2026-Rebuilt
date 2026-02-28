@@ -26,6 +26,20 @@ public class Ports {
         public static final int FRONT_RIGHT_CANCODER = 2;
         public static final int REAR_LEFT_CANCODER = 3;
         public static final int REAR_RIGHT_CANCODER = 1;
+
+          public static final int GYRO_ID = 8; 
+    }
+
+    public class ShooterPorts {
+        public static final int SHOOTER_MOTOR  = 0;
+        public static final int ANGLE_MOTOR = 0;
+        public static final int CANCODER_ID = 0;
+    }
+     
+    public class HopperPorts{
+        public static final int INDEX_MOTOR = 0; 
+        public static final int BEAM_BREAK = 1;
+        public static final int HOPPER_MOTOR = 2;
     }
 
     public class IntakePorts {

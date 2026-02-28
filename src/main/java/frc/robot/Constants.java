@@ -31,6 +31,13 @@ public final class Constants {
     public static final int DRIVER_PORT = 0;
   }
 
+  public static class HopperConstants{
+        public static final double MOTORSPEED = 0.5;
+        public static final double INDEXER_CURRENT_LIMIT = 30; 
+        public static final double HOPPER_CURRENT_LIMIT = 40;
+        public static final CANBus canbus = new CANBus("rio");
+    }
+
   public static class IntakeConstants {
     public static final int CURRENT_LIMIT = 30;
     public static final double INTAKE_MOTOR_SPEED = 0.5;

@@ -5,7 +5,6 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.Autos;
 
 import frc.robot.subsystems.KaileyLeds;
 import frc.robot.subsystems.KaseyLeds;

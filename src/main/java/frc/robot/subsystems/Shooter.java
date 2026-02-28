@@ -18,7 +18,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Port.ShooterPorts;
+import frc.robot.Ports.ShooterPorts;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
 
