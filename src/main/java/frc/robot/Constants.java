@@ -45,6 +45,13 @@ public final class Constants {
 
   }
 
+  public static class HopperConstants{
+        public static final double MOTORSPEED = 0.5;
+        public static final double INDEXER_CURRENT_LIMIT = 30; 
+        public static final double HOPPER_CURRENT_LIMIT = 40;
+        public static final CANBus canbus = new CANBus("rio");
+    }
+
   public static class LedConstants {
     public static final int LYDIA_LED_LENGTH = 177;
     public static final int KASEY_LED_LENGTH = 177;
@@ -93,3 +100,4 @@ public final class Constants {
       }
 }
 }
+//pls let me merge

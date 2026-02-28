@@ -26,6 +26,11 @@ public class Ports {
         public static final int REAR_LEFT_CANCODER = 3;
         public static final int REAR_RIGHT_CANCODER = 1;
     }
+    public class HopperPorts{
+        public static final int INDEX_MOTOR = 0; 
+        public static final int BEAM_BREAK = 1;
+        public static final int HOPPER_MOTOR = 2;
+    }
 
     public class IntakePorts {
         public static final int INTAKE_MOTOR = 0;
