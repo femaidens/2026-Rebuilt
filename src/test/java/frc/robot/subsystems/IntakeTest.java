@@ -27,6 +27,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DutyCycle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
@@ -46,7 +48,7 @@ public class IntakeTest {
   private TalonFX angleMotor;
 
   @Mock
-  private CANcoder encoder;
+  private DutyCycleEncoder encoder;
 
   @Mock
   private PIDController anglePid;
@@ -69,8 +71,7 @@ public class IntakeTest {
   @Test
   void notAtCorrectPos(){
     StatusSignal<Angle> fakeData = mock(StatusSignal.class);
-    when(encoder.getAbsolutePosition()).thenReturn(fakeData);
-    when(fakeData.getValueAsDouble()).thenReturn(0.0);
+    when(encoder.get()).thenReturn(0.0);
     when(anglePid.atSetpoint()).thenReturn(false);
 
     Command setAnglePid = intake.setAnglePidCmd(20);
@@ -86,9 +87,7 @@ public class IntakeTest {
 
   @Test
   void setIntakeInitialPos() {
-    StatusSignal<Angle> fakeData = mock(StatusSignal.class);
-    when(encoder.getAbsolutePosition()).thenReturn(fakeData);
-    when(fakeData.getValueAsDouble()).thenReturn(0.25);
+    when(encoder.get()).thenReturn(0.25);
     when(anglePid.atSetpoint()).thenReturn(true);
 
     Command setAnglePid = intake.setAnglePidCmd(90);
@@ -104,9 +103,7 @@ public class IntakeTest {
   }
     @Test
     void setIntakePos() {
-    StatusSignal<Angle> fakeData = mock(StatusSignal.class);
-    when(encoder.getAbsolutePosition()).thenReturn(fakeData);
-    when(fakeData.getValueAsDouble()).thenReturn(0.20);
+    when(encoder.get()).thenReturn(0.20);
     when(anglePid.atSetpoint()).thenReturn(true);
 
     Command setAngle = intake.setAngleUpDownCmd();

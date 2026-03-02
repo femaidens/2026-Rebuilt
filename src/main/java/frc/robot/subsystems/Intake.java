@@ -13,13 +13,16 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.sim.TalonFXSimState.MotorType;
-
+import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Ports.*;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,8 +34,7 @@ public class Intake extends SubsystemBase {
   private final TalonFX angleMotor;
   private final TalonFXConfiguration angleConfig;
   private final TalonFXConfiguration motorConfig;
-  private final CANcoder encoder;
-  private final MagnetSensorConfigs encoderConfig;
+  private final DutyCycleEncoder encoder;
   private final PIDController anglePid; 
 
   public Intake() {
@@ -40,7 +42,7 @@ public class Intake extends SubsystemBase {
     followerIntakeMotor = new TalonFX(IntakePorts.FOLLOWER_INTAKE_MOTOR, IntakeConstants.CANBUS);
     angleMotor = new TalonFX(IntakePorts.ANGLE_MOTOR, IntakeConstants.CANBUS);
 
-    encoder = new CANcoder(IntakePorts.CANCODER_ID, IntakeConstants.CANBUS);
+    encoder = new DutyCycleEncoder(IntakePorts.ENCODER);
 
     angleConfig = new TalonFXConfiguration();
     angleConfig.CurrentLimits.SupplyCurrentLimit = IntakeConstants.CURRENT_LIMIT;
@@ -57,22 +59,18 @@ public class Intake extends SubsystemBase {
 
     followerIntakeMotor.setControl(new Follower(intakeMotor.getDeviceID(), MotorAlignmentValue.Aligned)); 
 
-    encoderConfig = new MagnetSensorConfigs();
-    encoderConfig.withAbsoluteSensorDiscontinuityPoint(0.625); //225 degrees 
-    encoder.getConfigurator().apply(encoderConfig.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
-
     anglePid = new PIDController(IntakeConstants.PIDConstants.kP, IntakeConstants.PIDConstants.kI, IntakeConstants.PIDConstants.kD);
     anglePid.setTolerance(0.05);
+
   }
 
-  public Intake(TalonFX iM, TalonFX fM, TalonFX aM, CANcoder e, PIDController p ){
+  public Intake(TalonFX iM, TalonFX fM, TalonFX aM, DutyCycleEncoder e, PIDController p ){
     intakeMotor = iM;
     followerIntakeMotor = fM;
     angleMotor = aM;
     encoder = e;
     motorConfig = new TalonFXConfiguration();
     angleConfig = new TalonFXConfiguration();
-    encoderConfig = new MagnetSensorConfigs();
     anglePid = p;
   }
 
@@ -112,11 +110,12 @@ public class Intake extends SubsystemBase {
   }
 
   public double getAngle(){
-    return encoder.getAbsolutePosition().getValueAsDouble() * 360.0;
+    return encoder.get() * 360.0;
   }
 
   public void setAnglePid(double setpoint){
-    angleMotor.setVoltage(anglePid.calculate(getAngle(), setpoint));
+    double voltage = anglePid.calculate(getAngle(), setpoint);
+    angleMotor.setVoltage(MathUtil.clamp(voltage, -12.0, 12.0));
   }
 
   public boolean atAngle(){
