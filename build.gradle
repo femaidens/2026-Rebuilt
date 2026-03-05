@@ -104,7 +104,7 @@ test {
 // Static analysis
 
 pmd {
-    toolVersion = "7.21.0"
+    toolVersion = "7.22.0"
     consoleOutput = true
     ruleSetFiles = files("femaidens2265-pmd-ruleset.xml")
     ruleSets = [] // Explicitly set so we don't use the default ruleset
