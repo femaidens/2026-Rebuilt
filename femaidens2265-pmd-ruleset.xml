@@ -68,4 +68,6 @@
 
   <rule ref="category/java/performance.xml/AddEmptyString" />
 
+  <rule ref="category/java/codestyle.xml/UnnecessaryImport" />
+
 </ruleset>

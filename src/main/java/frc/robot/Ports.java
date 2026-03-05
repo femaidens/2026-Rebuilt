@@ -1,7 +1,5 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DutyCycle;
-
 public class Ports {
     public static final class ClimbPorts {
         public static final int LEADER_MOTOR = 15;
