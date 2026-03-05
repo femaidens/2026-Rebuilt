@@ -104,7 +104,6 @@ pmd {
     consoleOutput = true
     ruleSetFiles = files("femaidens2265-pmd-ruleset.xml")
     ruleSets = [] // Explicitly set so we don't use the default ruleset
-    ignoreFailures = false
 }
 
 // Simulation configuration (e.g. environment variables).
