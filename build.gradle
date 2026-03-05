@@ -7,7 +7,7 @@ plugins {
 }
 
 pmd {
-    ignoreFailures = true
+    ignoreFailures = false
 }
 
 java {
