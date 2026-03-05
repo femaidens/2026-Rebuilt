@@ -36,6 +36,8 @@
 
   <rule ref="category/java/codestyle.xml/UnnecessaryReturn" />
 
+  <rule ref="category/java/codestyle.xml/UselessParentheses" />
+
   <rule ref="category/java/errorprone.xml/BrokenNullCheck" />
 
   <rule ref="category/java/errorprone.xml/OverrideBothEqualsAndHashCodeOnComparable" />
