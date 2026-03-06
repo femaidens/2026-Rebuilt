@@ -41,6 +41,7 @@ public class AutoShooter extends SubsystemBase {
   /** Creates a new Shooter. */
   private final TalonFX shooterMotor; // starting the rollers
   private final TalonFX angleMotor; // adjusting shooter to desired angle
+  private final TalonFX indexerMotor;
 
   private final CANcoder encoder;
 
@@ -67,6 +68,7 @@ public class AutoShooter extends SubsystemBase {
   public AutoShooter() {
     shooterMotor = new TalonFX(ShooterPorts.SHOOTER_MOTOR, ShooterConstants.CANBUS);
     angleMotor = new TalonFX(ShooterPorts.ANGLE_MOTOR, ShooterConstants.CANBUS);
+    indexerMotor = new TalonFX(ShooterPorts.INDEXER_MOTOR, ShooterConstants.CANBUS);
     
     velocityTable = new InterpolatingDoubleTreeMap();
     angleTable = new InterpolatingDoubleTreeMap();
@@ -113,6 +115,8 @@ public class AutoShooter extends SubsystemBase {
     angleMotor.getPosition().setUpdateFrequency(100);
 
     shooterMotor.getConfigurator().apply(motorConfig);
+    indexerMotor.getConfigurator().apply(motorConfig);
+
     angleMotor.getConfigurator().apply(angleConfig);
 
     setUpTables();
@@ -163,9 +167,17 @@ public class AutoShooter extends SubsystemBase {
   public Command runShooterMotorCmd(){
     return this.run(() -> shooterMotor.set(ShooterConstants.SHOOTER_MOTOR_SPEED));
   }
+  
+  public Command runIndexerMotorCmd(){
+    return this.run(() -> indexerMotor.set(ShooterConstants.INDEXER_MOTOR_SPEED));
+  }
 
   public Command runAngleMotorCmd(){
     return this.run(() -> angleMotor.set(ShooterConstants.ANGLE_MOTOR_SPEED));
+  }
+
+  public Command reverseAngleMotorCmd(){
+    return this.run(() -> angleMotor.set(-ShooterConstants.ANGLE_MOTOR_SPEED));
   }
 
   //so we don't need to ramp up from rest every time
@@ -179,6 +191,9 @@ public class AutoShooter extends SubsystemBase {
 
    public Command stopAngleMotorCmd() {
     return this.runOnce(() -> angleMotor.set(0));
+  }
+   public Command stopIndexerMotorCmd() {
+    return this.runOnce(() -> indexerMotor.set(0));
   }
 
 

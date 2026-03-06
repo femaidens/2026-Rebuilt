@@ -33,6 +33,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
   private final CommandXboxController driveJoy =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+       private final CommandXboxController operJoy =
+      new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+
       private final Drive drive;
       private final AutoShooter autoshooter;
       //private final Pose2d kClimbPose;
@@ -109,9 +112,21 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     //     autoshooter.stopShooterMotorCmd()
     // );
 
-    driveJoy.x().whileTrue(
+    operJoy.x().whileTrue(
       autoshooter.runShooterMotorCmd()
     ).onFalse(autoshooter.stopShooterMotorCmd());
+    
+    operJoy.povUp().whileTrue(
+      autoshooter.runAngleMotorCmd()
+    ).onFalse(autoshooter.stopAngleMotorCmd());
+
+    operJoy.povDown().whileTrue(
+      autoshooter.reverseAngleMotorCmd()
+    ).onFalse(autoshooter.stopAngleMotorCmd());
+    
+    operJoy.y().whileTrue(
+      autoshooter.runIndexerMotorCmd()
+    ).onFalse(autoshooter.stopIndexerMotorCmd());
 
     // driveJoy.rightBumper().whileTrue(
     //   autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
@@ -129,9 +144,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     //   autoshooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
     // );
 
-    driveJoy.b().whileTrue(
-      drive.driveToPoseCommand(2.400, 4.00, DriveConstants.Turn.radianPoseRed)
-    );
+    // driveJoy.b().whileTrue(
+    //   drive.driveToPoseCommand(2.400, 4.00, DriveConstants.Turn.radianPoseRed)
+    // );
  
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)

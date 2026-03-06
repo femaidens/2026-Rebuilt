@@ -8,6 +8,7 @@ package frc.robot;
 public class Ports {
     public class ShooterPorts {
         public static final int SHOOTER_MOTOR  = 6;
+        public static final int INDEXER_MOTOR = 14;
         public static final int ANGLE_MOTOR = 19;
         public static final int CANCODER_ID = 5;
     }
