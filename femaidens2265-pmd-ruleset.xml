@@ -50,25 +50,16 @@
 
   <rule ref="category/java/errorprone.xml/UnusedNullCheckInEquals" />
 
-  <rule ref="category/java/performance.xml/UseIndexOfChar" />
+  <rule ref="category/java/multithreading.xml">
+    <exclude name="AvoidSynchronizedAtMethodLevel" /> <!-- Leads to complicated locking -->
+    <exclude name="DoNotUseThreads" /> <!-- Need to use threads -->
+  </rule>
 
-  <rule ref="category/java/performance.xml/UselessStringValueOf" />
+  <rule ref="category/java/performance.xml">
+    <exclude name="AvoidInstantiatingObjectsInLoops" /> <!-- We do this a lot and I think this is fine. Minimal performance effect. -->
+  </rule>
 
-  <rule ref="category/java/performance.xml/InefficientEmptyStringCheck" />
-
-  <rule ref="category/java/performance.xml/OptimizableToArrayCall" />
-
-  <rule ref="category/java/performance.xml/RedundantFieldInitializer" />
-
-  <rule ref="category/java/performance.xml/StringInstantiation" />
-
-  <rule ref="category/java/performance.xml/StringToString" />
-
-  <rule ref="category/java/performance.xml/TooFewBranchesForSwitch" />
-
-  <rule ref="category/java/performance.xml/UseArraysAsList" />
-
-  <rule ref="category/java/performance.xml/AddEmptyString" />
+  <rule ref="category/java/security.xml" />
 
   <rule ref="category/java/codestyle.xml/UnnecessaryImport" />
 
