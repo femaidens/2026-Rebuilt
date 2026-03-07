@@ -66,7 +66,7 @@ public class AutoShooter extends SubsystemBase {
 //   private final InterpolatingDoubleTreeMap velocityMap = new InterpolatingDoubleTreeMap();
 //   private final InterpolatingDoubleTreeMap angleMap = new InterpolatingDoubleTreeMap();
 
-  public AutoShooter() {
+  public AutoShooter(Drive drive) {
     shooterMotor = new TalonFX(ShooterPorts.SHOOTER_MOTOR, ShooterConstants.CANBUS);
     angleMotor = new TalonFX(ShooterPorts.ANGLE_MOTOR, ShooterConstants.CANBUS);
     indexerMotor = new TalonFX(ShooterPorts.INDEXER_MOTOR, ShooterConstants.CANBUS);
@@ -74,8 +74,7 @@ public class AutoShooter extends SubsystemBase {
     velocityTable = new InterpolatingDoubleTreeMap();
     angleTable = new InterpolatingDoubleTreeMap();
 
-    drive = new Drive();
-
+    this.drive = drive;
     encoder = new CANcoder(ShooterPorts.CANCODER_ID);
 
     shooterVoltage = new VoltageOut(0);
@@ -84,7 +83,7 @@ public class AutoShooter extends SubsystemBase {
     shooterFF = new SimpleMotorFeedforward(ShooterConstants.FFConstants.kS, ShooterConstants.FFConstants.kV);
 
     shooterPID = new PIDController(ShooterConstants.PIDConstants.kP, ShooterConstants.PIDConstants.kI, ShooterConstants.PIDConstants.kD);
-    shooterPID.setTolerance(24.855);
+    shooterPID.setTolerance(2.0);
 
     // angleConfig = new TalonFXConfiguration();
     // angleConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
@@ -144,20 +143,41 @@ public class AutoShooter extends SubsystemBase {
     angleTable.put(0.0, 0.0);
   }
 
-  public void autoShoot(){
-    double distanceFromTarget = drive.distanceFromTarget();
-    double targetVelocity = velocityTable.get(distanceFromTarget);
-    double currentVelocity = shooterMotor.getVelocity().getValueAsDouble();
-    double targetAngle = angleTable.get(distanceFromTarget);
+  public void autoShoot(double targetRPS, double targetRotations) {
+      double currentRPS = shooterMotor.getVelocity().getValueAsDouble();
 
-    double ff = shooterFF.calculate(targetVelocity);
-    double pid = shooterPID.calculate(currentVelocity, targetVelocity);
+      double ff = shooterFF.calculate(targetRPS);
+      double pid = shooterPID.calculate(currentRPS, targetRPS);
 
-    shooterMotor.setControl(shooterVoltage.withOutput(ff + pid));
-    angleMotor.setControl(angleVoltage.withPosition(targetAngle));
+      shooterMotor.setControl(shooterVoltage.withOutput(ff + pid));
+      angleMotor.setControl(angleVoltage.withPosition(targetRotations));
   }
 
-  public double getShooterVelocity(){
+  public boolean isReadyToShoot(double targetRPS) {
+      return Math.abs(getShooterVeloctiy() - targetRPS) < 1.5;
+  }
+
+public Command autoShootSequence() {
+    return this.run(() -> {
+        double distance = drive.distanceFromTarget();
+        double targetRPS = velocityTable.get(distance);
+        double targetAngle = angleTable.get(distance);
+
+        autoShoot(targetRPS, targetAngle);
+
+        if (isReadyToShoot(targetRPS)) {
+            indexerMotor.set(ShooterConstants.INDEXER_MOTOR_SPEED);
+        } else {
+            indexerMotor.set(0);
+        }
+    })
+    .finallyDo(() -> {
+        indexerMotor.set(0);
+        shooterMotor.set(ShooterConstants.SHOOTER_CRUISE_SPEED);
+    });
+}
+
+  public double getShooterVeloctiy(){
     return shooterMotor.getVelocity().getValueAsDouble();
   }
 
@@ -212,7 +232,12 @@ public class AutoShooter extends SubsystemBase {
   public void periodic() {
     // SmartDashboard.putBoolean(()); for once we get the angle 
     // SmartDashboard.getNumber();
-    SmartDashboard.getNumber("shooter velocity: ", getShooterVelocity());
-    SmartDashboard.getNumber("shooter angle", getAngle());
+
+    double dist = drive.distanceFromTarget();
+    double target = velocityTable.get(dist);
+    
+    SmartDashboard.putBoolean("READY TO FIRE", isReadyToShoot(target));
+    SmartDashboard.putNumber("shooter velocity: ", getShooterVeloctiy());
+    SmartDashboard.putNumber("shooter angle", getAngle());
   }
 }

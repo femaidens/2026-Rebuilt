@@ -44,7 +44,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
   public RobotContainer() {
     // Configure the trigger bindings
         drive = new Drive();
-        autoshooter = new AutoShooter();
+        autoshooter = new AutoShooter(drive);
         // kClimbPose = new Pose2d(
 
         // );
