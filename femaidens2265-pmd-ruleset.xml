@@ -12,6 +12,8 @@
     probably remove it.
   </description>
 
+  <rule ref="category/java/design.xml/DataClass" />
+
   <rule ref="category/java/design.xml/MutableStaticState" />
 
   <rule ref="category/java/errorprone.xml/AssignmentToNonFinalStatic" />
