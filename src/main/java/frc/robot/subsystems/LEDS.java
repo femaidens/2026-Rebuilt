@@ -20,7 +20,7 @@ import frc.robot.Ports.LedPorts;
 public class LEDS extends SubsystemBase {
     private final AddressableLED strip;
     private final AddressableLEDBuffer buffer;
-    private int count = 0;
+    private int count;
     private final Color firstRed, firstBlue, green, purple, black;
 
     public LEDS() {
@@ -120,7 +120,7 @@ public class LEDS extends SubsystemBase {
 
     public Command progressMask() {
         return this.run(() -> {
-            double progress = (count % 100) / 100.0;
+            double progress = count % 100 / 100.0;
             for(int i = 0; i < buffer.getLength(); i++) {
                 if(i < progress * buffer.getLength()) {
                     buffer.setRGB(i, 66, 104, 152);
@@ -142,11 +142,11 @@ public class LEDS extends SubsystemBase {
                 int b = 0;
 
                 if (i < buffer.getLength() / 2) {
-                    r = (255 * i) / (buffer.getLength() / 2);
+                    r = 255 * i / (buffer.getLength() / 2);
                     b = 255;
                 }
                 else {
-                    b = (255 * (buffer.getLength() - i - 1)) / (buffer.getLength() / 2);
+                    b = 255 * (buffer.getLength() - i - 1) / (buffer.getLength() / 2);
                     r = 255;
                 }
                 buffer.setRGB(i, 0, r, b);
@@ -160,7 +160,7 @@ public class LEDS extends SubsystemBase {
             int index1 = count % buffer.getLength();
             for (int i = 0; i < buffer.getLength(); i++) {
                 int index2 = (i + index1) % buffer.getLength();
-                int g = (index2 * 255) / buffer.getLength();
+                int g = index2 * 255 / buffer.getLength();
                 buffer.setRGB(i, g / 2, 0, 0);
             }
             strip.setData(buffer);
@@ -175,8 +175,8 @@ public class LEDS extends SubsystemBase {
             int index1 = count % buffer.getLength();
             for (int i = 0; i < buffer.getLength(); i++) {
                 int index2 = (i + index1) % buffer.getLength();
-                int r = (index2 * 66) / buffer.getLength();
-                int b = (index2 * 152) / buffer.getLength();
+                int r = index2 * 66 / buffer.getLength();
+                int b = index2 * 152 / buffer.getLength();
                 buffer.setRGB(i, 0, r / 2, b / 2);
             }
             strip.setData(buffer);
