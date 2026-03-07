@@ -29,6 +29,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Ports.*;
@@ -211,5 +212,7 @@ public class AutoShooter extends SubsystemBase {
   public void periodic() {
     // SmartDashboard.putBoolean(()); for once we get the angle 
     // SmartDashboard.getNumber();
+    SmartDashboard.getNumber("shooter velocity: ", getShooterVelocity());
+    SmartDashboard.getNumber("shooter angle", getAngle());
   }
 }
