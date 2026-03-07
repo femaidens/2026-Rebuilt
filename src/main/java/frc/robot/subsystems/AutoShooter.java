@@ -16,7 +16,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
+// import com.ctre.phoenix6.hardware.CANcoder;
 //import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -29,6 +29,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Voltage;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,7 +45,7 @@ public class AutoShooter extends SubsystemBase {
   private final TalonFX angleMotor; // adjusting shooter to desired angle
   private final TalonFX indexerMotor;
 
-  private final CANcoder encoder;
+  private final DutyCycleEncoder encoder;
 
   private final TalonFXConfiguration angleConfig;
   private final TalonFXConfiguration motorConfig;
@@ -75,7 +76,7 @@ public class AutoShooter extends SubsystemBase {
     angleTable = new InterpolatingDoubleTreeMap();
 
     this.drive = drive;
-    encoder = new CANcoder(ShooterPorts.CANCODER_ID);
+    encoder = new DutyCycleEncoder(ShooterPorts.ENCODER);
 
     shooterVoltage = new VoltageOut(0);
     angleVoltage = new PositionVoltage(0);
@@ -102,8 +103,8 @@ public class AutoShooter extends SubsystemBase {
     angleConfig.Slot0.kP = 5.0; 
     angleConfig.Slot0.kD = 0.1;
 
-    angleConfig.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
-    angleConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+    // angleConfig.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
+    // angleConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
 
     motorConfig = new TalonFXConfiguration();
     motorConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
@@ -154,7 +155,7 @@ public class AutoShooter extends SubsystemBase {
   }
 
   public boolean isReadyToShoot(double targetRPS) {
-      return Math.abs(getShooterVeloctiy() - targetRPS) < 1.5;
+      return Math.abs(getShooterVelocity() - targetRPS) < 1.5;
   }
 
 public Command autoShootSequence() {
@@ -177,12 +178,12 @@ public Command autoShootSequence() {
     });
 }
 
-  public double getShooterVeloctiy(){
+  public double getShooterVelocity(){
     return shooterMotor.getVelocity().getValueAsDouble();
   }
 
   public double getAngle(){
-    return encoder.getAbsolutePosition().getValueAsDouble();
+    return encoder.get();
   }
 
   public Command runShooterMotorCmd(){
@@ -237,7 +238,8 @@ public Command autoShootSequence() {
     double target = velocityTable.get(dist);
     
     SmartDashboard.putBoolean("READY TO FIRE", isReadyToShoot(target));
-    SmartDashboard.putNumber("shooter velocity: ", getShooterVeloctiy());
+    SmartDashboard.putNumber("shooter velocity: ", getShooterVelocity());
     SmartDashboard.putNumber("shooter angle", getAngle());
+    SmartDashboard.putNumber("distance from target", drive.distanceFromTarget());
   }
 }
