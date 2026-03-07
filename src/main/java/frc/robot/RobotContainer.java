@@ -73,6 +73,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
    */
   private void configureBindings() {
 
+    // autoshooter.setDefaultCommand(autoshooter.cruiseShooterMotorCmd());
+
     driveJoy.a().whileTrue(
       drive.run( () -> 
         drive.alignRotation(
