@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems;
 
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -14,6 +16,7 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Ports.*;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -67,10 +70,13 @@ public class Intake extends SubsystemBase {
   }
 
   public Command setAngleUpDownCmd(){
-      if(getAngle() <= IntakeConstants.ANGLE_UP - 10){
-        return this.run(() -> setAnglePid(IntakeConstants.ANGLE_UP));
-      }
-      return this.run(() -> setAnglePid(IntakeConstants.ANGLE_DOWN));
+    return this.runOnce(() -> {
+        if (getAngle() <= IntakeConstants.ANGLE_UP - 10) {
+            setAnglePid(IntakeConstants.ANGLE_UP);
+        } else {
+            setAnglePid(IntakeConstants.ANGLE_DOWN);
+        }
+    });
   }
 
   public Command setAnglePidCmd(double setpoint){
@@ -94,11 +100,11 @@ public class Intake extends SubsystemBase {
   }
 
   public Command stopIntakeMotorCmd(){
-    return this.run(() -> intakeMotor.setVoltage(0));
+    return this.runOnce(() -> intakeMotor.set(0));
   }
 
   public Command stopAngleMotorCmd(){
-    return this.run(() -> angleMotor.setVoltage(0));
+    return this.runOnce(() -> angleMotor.set(0));
   }
 
   public double getAngle(){
