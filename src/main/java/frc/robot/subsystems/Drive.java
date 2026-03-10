@@ -384,8 +384,15 @@ public class Drive extends SubsystemBase {
     this.xSpeedRatio = xSpeedRatio;
     this.ySpeedRatio = ySpeedRatio;
     this.rotSpeedRatio = rotSpeedRatio;
-    double xVel = xSpeedRatio.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
-    double yVel = ySpeedRatio.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR;
+
+    double allianceMultiplier = 1.0;
+    var alliance = DriverStation.getAlliance();
+    if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red) {
+        allianceMultiplier = -1.0;
+    }
+
+    double xVel = xSpeedRatio.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR * allianceMultiplier;
+    double yVel = ySpeedRatio.getAsDouble() * Drivetrain.MAX_SPEED * Drivetrain.SPEED_FACTOR * allianceMultiplier;
     double rotVel = rotSpeedRatio.getAsDouble() * Drivetrain.MAX_ROT_SPEED * Drivetrain.SPEED_FACTOR;
 
     speeds = ChassisSpeeds.fromFieldRelativeSpeeds(xVel, yVel, rotVel, gyro.getRotation2d());
