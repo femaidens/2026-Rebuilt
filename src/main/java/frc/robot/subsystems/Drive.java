@@ -16,6 +16,10 @@ import java.util.function.DoubleSupplier;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -151,6 +155,8 @@ public class Drive extends SubsystemBase {
     //         volts -> modules.forEach(m -> m.setDriveVoltage(volts.in(Units.Volts))),
     //         null,
     //         this));
+
+    configurePathPlanner();
   }
 
   public Drive(ModuleKraken fl, ModuleKraken fr, ModuleKraken rl, ModuleKraken rr, 
@@ -184,7 +190,60 @@ public class Drive extends SubsystemBase {
         DriveConstants.Drivetrain.STATE_STD_DEV,
         DriveConstants.Drivetrain.VISION_STD_DEV);
   }
+
+  public void configurePathPlanner() {
+    try {
+      // 1. Load the RobotConfig from the GUI settings (ensure you set these up in the app!)
+      RobotConfig config = RobotConfig.fromGUISettings();
+
+      // 2. Configure the AutoBuilder
+      AutoBuilder.configure(
+          this::getPose,              // Robot pose supplier
+          this::resetPose,             // Method to reset odometry (will be called if your auto has a starting pose)
+          this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+          (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+          new PPHolonomicDriveController(
+              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+              new PIDConstants(5.0, 0.0, 0.0)  // Rotation PID constants
+          ),
+          config,
+          () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              var alliance = DriverStation.getAlliance();
+              return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
+          },
+          this // Reference to this subsystem to set requirements
+      );
+    } catch (Exception e) {
+      DriverStation.reportError("Failed to load PathPlanner config", e.getStackTrace());
+    }
+}
   
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return Drivetrain.kDriveKinematics.toChassisSpeeds(getSwerveModuleStates());
+  }
+
+  public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
+    //accounts for momentum(?)
+    ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
+
+    // convert those speeds into states for each individual wheel
+    var swerveModuleStates = Drivetrain.kDriveKinematics.toSwerveModuleStates(targetSpeeds);
+
+    // make sure the wheels don't try to spin faster than physically possible
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, Drivetrain.MAX_SPEED);
+
+    setModuleStates(swerveModuleStates);
+  }
+
+  public void resetPose(Pose2d pose) {
+    // This updates your Odometry/PoseEstimator and resets the Gyro if necessary
+    odometry.resetPosition(
+        Rotation2d.fromDegrees(getAngle()), 
+        getSwerveModulePosition(), 
+        pose
+    );
+}
 
   public Pose2d getPose2d() {
     return swerveEstimator.getEstimatedPosition();

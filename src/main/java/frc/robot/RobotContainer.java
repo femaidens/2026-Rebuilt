@@ -10,10 +10,16 @@ import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.DriveConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -38,6 +44,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
       private final Drive drive;
       private final AutoShooter autoshooter;
+
+      private final SendableChooser<Command> autoChooser;
       //private final Pose2d kClimbPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -48,7 +56,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
         // kClimbPose = new Pose2d(
 
         // );
-        
+
+        NamedCommands.registerCommand("shoot", autoshooter.runAutonShooterMotorCmd().withTimeout(2.0));
+        NamedCommands.registerCommand("index", autoshooter.runIndexerMotorCmd().withTimeout(3.0));
+        autoChooser = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("Auto Chooser", autoChooser);
         configureBindings();
         configureDefaultCmds();
 
@@ -168,4 +180,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
   //   // An example command will be run in autonomous
   //   //return Autos.exampleAuto(m_exampleSubsystem);
   // }
+
+  public Command getAutonomousCommand() {
+    return autoChooser.getSelected();
+}
 }

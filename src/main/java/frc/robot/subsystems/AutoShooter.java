@@ -12,20 +12,17 @@ import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Volts;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 // import com.ctre.phoenix6.hardware.CANcoder;
 //import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Voltage;
@@ -35,7 +32,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Ports.*;
 import frc.robot.Constants.*;
-import frc.robot.subsystems.*;
 
 @Logged
 public class AutoShooter extends SubsystemBase {
@@ -188,6 +184,10 @@ public Command autoShootSequence() {
 
   public Command runShooterMotorCmd(){
     return this.run(() -> shooterMotor.set(ShooterConstants.SHOOTER_MOTOR_SPEED));
+  }
+
+  public Command runAutonShooterMotorCmd(){
+    return this.run(() -> shooterMotor.set(ShooterConstants.AUTON_SHOOTER_MOTOR_SPEED));
   }
   
   public Command runIndexerMotorCmd(){

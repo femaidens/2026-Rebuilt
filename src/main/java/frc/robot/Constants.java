@@ -27,6 +27,7 @@ public final class Constants {
    public static class ShooterConstants{
     public static final int CURRENT_LIMIT = 30;
     public static final double INDEXER_MOTOR_SPEED = 0.3;
+    public static final double AUTON_SHOOTER_MOTOR_SPEED = -0.74;
     public static final double SHOOTER_MOTOR_SPEED = -0.74;
     public static final double SHOOTER_CRUISE_SPEED = -0.05;
     public static final double ANGLE_MOTOR_SPEED = 0.1;
