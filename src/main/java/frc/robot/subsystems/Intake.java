@@ -32,6 +32,8 @@ public class Intake extends SubsystemBase {
   private final DutyCycleEncoder encoder;
   private final PIDController anglePid; 
 
+  private final double errorMargin;
+
   public Intake() {
     intakeMotor = new TalonFX(IntakePorts.INTAKE_MOTOR, IntakeConstants.CANBUS);
     followerIntakeMotor = new TalonFX(IntakePorts.FOLLOWER_INTAKE_MOTOR, IntakeConstants.CANBUS);
@@ -50,6 +52,8 @@ public class Intake extends SubsystemBase {
     intakeMotor.getConfigurator().apply(motorConfig);
     followerIntakeMotor.getConfigurator().apply(motorConfig);
     angleMotor.getConfigurator().apply(angleConfig);
+
+    errorMargin = 45;
     
 
     followerIntakeMotor.setControl(new Follower(intakeMotor.getDeviceID(), MotorAlignmentValue.Aligned)); 
@@ -59,7 +63,7 @@ public class Intake extends SubsystemBase {
 
   }
 
-  public Intake(TalonFX iM, TalonFX fM, TalonFX aM, DutyCycleEncoder e, PIDController p ){
+  public Intake(TalonFX iM, TalonFX fM, TalonFX aM, DutyCycleEncoder e, PIDController p, double eM ){
     intakeMotor = iM;
     followerIntakeMotor = fM;
     angleMotor = aM;
@@ -67,11 +71,12 @@ public class Intake extends SubsystemBase {
     motorConfig = new TalonFXConfiguration();
     angleConfig = new TalonFXConfiguration();
     anglePid = p;
+    errorMargin = eM;
   }
 
   public Command setAngleUpDownCmd(){
     return this.runOnce(() -> {
-        if (getAngle() <= IntakeConstants.ANGLE_UP - 10) {
+        if (getAngle() <= IntakeConstants.ANGLE_UP - errorMargin) {
             setAnglePid(IntakeConstants.ANGLE_UP);
         } else {
             setAnglePid(IntakeConstants.ANGLE_DOWN);
