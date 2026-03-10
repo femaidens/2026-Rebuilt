@@ -34,7 +34,7 @@ public class ModuleKraken {
     private final PIDController turnPIDController; //log
     
     private final SimpleMotorFeedforward driveFF;
-    private final SimpleMotorFeedforward turnFF;
+    // private final SimpleMotorFeedforward turnFF;
 
     private final MagnetSensorConfigs directionConfig;
 
@@ -60,7 +60,7 @@ public class ModuleKraken {
         turnPIDController.enableContinuousInput(-Math.PI, Math.PI);
 
         driveFF = new SimpleMotorFeedforward(Translation.FF.S, Translation.FF.V);
-        turnFF = new SimpleMotorFeedforward(Turn.FF.S, Turn.FF.V);
+        // turnFF = new SimpleMotorFeedforward(Turn.FF.S, Turn.FF.V);
         // DEVICE IDS SHOULD BE CHANGED!! 
         driveMotor.setPosition(0);  
         
