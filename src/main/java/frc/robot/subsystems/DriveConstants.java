@@ -130,8 +130,8 @@ public class DriveConstants {
 
     // **************DRIVETRAIN CONSTANTS******************//
     public class Drivetrain {
-        public static final double TRACK_WIDTH = Units.inchesToMeters(28.9); // distance between right and left
-        public static final double WHEEL_BASE = Units.inchesToMeters(28.9); // distance between front and back
+        public static final double TRACK_WIDTH = Units.inchesToMeters(21.75); // distance between right and left
+        public static final double WHEEL_BASE = Units.inchesToMeters(21.75); // distance between front and back
         // VERIFY THIS IS IN THE CORRECT ORDER
         public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(WHEEL_BASE / 2, TRACK_WIDTH / 2), //fl
