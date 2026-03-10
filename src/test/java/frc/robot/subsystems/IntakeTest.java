@@ -53,9 +53,11 @@ public class IntakeTest {
   @Mock
   private PIDController anglePid;
 
+  private double errorMargin;
+
   @BeforeEach
   void setUp() {
-    intake = new Intake(intakeMotor, followerIntakeMotor, angleMotor, encoder, anglePid);
+    intake = new Intake(intakeMotor, followerIntakeMotor, angleMotor, encoder, anglePid, errorMargin);
   }
 
   @Test
