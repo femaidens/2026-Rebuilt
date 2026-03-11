@@ -39,4 +39,10 @@ public class Ports {
         public static final int FOLLOWER_INTAKE_MOTOR = 0;
         public static final int ENCODER = 0;
     }
+
+    public class HopperPorts{
+        public static final int INDEX_MOTOR = 0; 
+        public static final int BEAM_BREAK = 1;
+        public static final int HOPPER_MOTOR = 2;
+    }
 }
