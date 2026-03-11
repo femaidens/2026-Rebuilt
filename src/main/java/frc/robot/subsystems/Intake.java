@@ -76,7 +76,8 @@ public class Intake extends SubsystemBase {
 
   public Command setAngleUpDownCmd(){
     return this.runOnce(() -> {
-        if (getAngle() <= IntakeConstants.ANGLE_UP - errorMargin) {
+      double middle = (IntakeConstants.ANGLE_DOWN + IntakeConstants.ANGLE_DOWN)/2.0;
+        if (getAngle() < middle) {
             setAnglePid(IntakeConstants.ANGLE_UP);
         } else {
             setAnglePid(IntakeConstants.ANGLE_DOWN);
