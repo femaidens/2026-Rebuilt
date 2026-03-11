@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DutyCycle;
+
 /** Add your docs here. */
 public class Ports {
     public class ShooterPorts {
@@ -29,5 +31,12 @@ public class Ports {
         public static final int REAR_RIGHT_CANCODER = 1;
 
         public static final int GYRO_ID = 8; 
+    }
+
+    public class IntakePorts {
+        public static final int INTAKE_MOTOR = 0;
+        public static final int ANGLE_MOTOR = 0;
+        public static final int FOLLOWER_INTAKE_MOTOR = 0;
+        public static final int ENCODER = 0;
     }
 }

@@ -31,15 +31,6 @@ import edu.wpi.first.wpilibj.DataLogManager;
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-
-    boolean fileOnly = false;
-    boolean lazyLogging = false;
-    // SignalLogger.setPath("/logsNew/");
-    // frontLeftCam = new PhotonCamera("2265-ironfish");
-    DataLogManager.start();
-    Epilogue.bind(this);
-
-    enableLiveWindowInTest(true);
   }
 
   /**

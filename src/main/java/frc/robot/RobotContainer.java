@@ -31,10 +31,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController driveJoy =
-      new CommandXboxController(OperatorConstants.kDriverControllerPort);
+      new CommandXboxController(OperatorConstants.DRIVER_PORT);
 
        private final CommandXboxController operJoy =
-      new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+      new CommandXboxController(OperatorConstants.OPERATOR_PORT);
 
       private final Drive drive;
       private final AutoShooter autoshooter;
