@@ -158,6 +158,14 @@ public class AutoShooter extends SubsystemBase {
       return Math.abs(getShooterVelocity() - targetRPS) < 1.5;
   }
 
+  public double getTargetRPS(double distance){
+    return velocityTable.get(distance);
+  }
+
+  public double getTargetAngle(double distance){
+    return angleTable.get(distance);
+  }
+
 public Command autoShootSequence() {
     return this.run(() -> {
         double distance = drive.distanceFromTarget();

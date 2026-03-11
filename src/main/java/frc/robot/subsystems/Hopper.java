@@ -17,31 +17,31 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 //adding
 public class Hopper extends SubsystemBase {
   /** Creates a new Hopper. */
-  private TalonFX indexMotor;
+  // private TalonFX indexMotor;
   private TalonFX spindexerMotor;
   // private final DigitalInput beambreak;
   
   public Hopper() {
-    indexMotor = new TalonFX(HopperPorts.INDEX_MOTOR, HopperConstants.canbus);
-    configureTalonMotor(indexMotor, HopperConstants.INDEXER_CURRENT_LIMIT, NeutralModeValue.Brake);
+    // indexMotor = new TalonFX(HopperPorts.INDEX_MOTOR, HopperConstants.canbus);
+    // configureTalonMotor(indexMotor, HopperConstants.INDEXER_CURRENT_LIMIT, NeutralModeValue.Brake);
     spindexerMotor = new TalonFX(HopperPorts.HOPPER_MOTOR, HopperConstants.canbus);
     configureTalonMotor(spindexerMotor, HopperConstants.HOPPER_CURRENT_LIMIT, NeutralModeValue.Brake);
     // beambreak = new DigitalInput(HopperPorts.BEAM_BREAK);
   }
 
   //testing purposes
-  public Hopper(TalonFX indexMotor, TalonFX spindexerMotor){
-    this.indexMotor = indexMotor;
-    this.spindexerMotor = spindexerMotor;
-  }
+  // public Hopper(TalonFX indexMotor, TalonFX spindexerMotor){
+  //   this.indexMotor = indexMotor;
+  //   this.spindexerMotor = spindexerMotor;
+  // }
 
-  //Indexer motor
-  public Command runIndexer(){
-    return this.run(() -> indexMotor.set(HopperConstants.MOTORSPEED));
-  }
-  public Command stopIndexer(){
-    return this.runOnce(() -> indexMotor.set(0));
-  }
+  // //Indexer motor
+  // public Command runIndexer(){
+  //   return this.run(() -> indexMotor.set(HopperConstants.MOTORSPEED));
+  // }
+  // public Command stopIndexer(){
+  //   return this.runOnce(() -> indexMotor.set(0));
+  // }
 
   
   public Command runSpindexer(){

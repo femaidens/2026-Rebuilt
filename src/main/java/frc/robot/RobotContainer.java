@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Shooting;
 import frc.robot.subsystems.AutoShooter;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.DriveConstants;
@@ -14,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.FuelTransition;
 import frc.robot.subsystems.Hopper;
+import frc.robot.subsystems.Intake;
 //Adding
 import edu.wpi.first.epilogue.Logged;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -41,6 +42,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
       private final Drive drive;
       private final AutoShooter autoshooter;
+      private final Intake intake;
+      private final Hopper hopper;
+      private final Shooting shooting;
       //private final Pose2d kClimbPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -48,6 +52,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     // Configure the trigger bindings
         drive = new Drive();
         autoshooter = new AutoShooter(drive);
+        hopper = new Hopper();
+        intake = new Intake();
+        shooting = new Shooting();
         // kClimbPose = new Pose2d(
 
         // );
@@ -130,8 +137,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     ).onFalse(autoshooter.stopAngleMotorCmd());
     
     operJoy.y().whileTrue(
-      autoshooter.runIndexerMotorCmd()
-    ).onFalse(autoshooter.stopIndexerMotorCmd());
+      shooting.prepareShot(hopper, autoshooter)
+    );
 
     // driveJoy.rightBumper().whileTrue(
     //   autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
