@@ -19,7 +19,7 @@ public class Shooting {
         );
     }
     public Command shootSequence(AutoShooter shooter, Hopper hopper, Drive drive) {
-return Commands.deadline(
+        return Commands.deadline(
             Commands.sequence(
                 // wait for spin-up
                 Commands.waitUntil(() -> {

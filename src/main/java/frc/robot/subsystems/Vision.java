@@ -60,7 +60,7 @@ public class Vision  {
     public Vision(){        
         backSwerveCam = new PhotonCamera("back swerve");
         rightSwerveCam = new PhotonCamera("right swerve");
-        batteryCam = new PhotonCamera("battery cam");
+        batteryCam = new PhotonCamera("battery cam"); // BOTTOM PORT ON PI, diagonal from BLUE
         shooterCam = new PhotonCamera("shooter cam");
 
         RIGHT_ROBOT_TO_CAM_TRANS = new Translation3d(
@@ -69,47 +69,47 @@ public class Vision  {
             Units.inchesToMeters(9));
         RIGHT_ROBOT_TO_CAM_ROT = new Rotation3d(
             0,
-            0,
-            0);
+            15*Math.PI/180,
+            270*Math.PI/180);
         RIGHT_ROBOT_TO_CAM = new Transform3d(
             RIGHT_ROBOT_TO_CAM_TRANS,
             RIGHT_ROBOT_TO_CAM_ROT
         );
 
         BACK_ROBOT_TO_CAM_TRANS = new Translation3d(
-            Units.inchesToMeters(11.248), 
-            Units.inchesToMeters(8.818), 
-            Units.inchesToMeters(9));
+            Units.inchesToMeters(11.248), // center to edge FORWARD
+            Units.inchesToMeters(8.818), // center to edge SIDE
+            Units.inchesToMeters(9)); // HEIGHT
         BACK_ROBOT_TO_CAM_ROT = new Rotation3d(
             0, 
-            0, 
-            0);
+            15*Math.PI/180, 
+            213.806888*Math.PI/180);
         BACK_ROBOT_TO_CAM = new Transform3d(
             BACK_ROBOT_TO_CAM_TRANS,
             BACK_ROBOT_TO_CAM_ROT
         );
 
         BATTERY_ROBOT_TO_CAM_TRANS = new Translation3d(
-            Units.inchesToMeters(0), 
-            Units.inchesToMeters(0), 
-            Units.inchesToMeters(0));
+            Units.inchesToMeters(-4.1372), 
+            Units.inchesToMeters(13.54), 
+            Units.inchesToMeters(9.1984));
         BATTERY_ROBOT_TO_CAM_ROT = new Rotation3d(
             0, 
-            0, 
-            0);
+            15*Math.PI/180, 
+            90*Math.PI/180);
         BATTERY_ROBOT_TO_CAM = new Transform3d(
             BACK_ROBOT_TO_CAM_TRANS,
             BACK_ROBOT_TO_CAM_ROT
         );
 
         SHOOTER_ROBOT_TO_CAM_TRANS = new Translation3d(
-            Units.inchesToMeters(0), 
-            Units.inchesToMeters(0), 
-            Units.inchesToMeters(0));
+            Units.inchesToMeters(-12.553), 
+            Units.inchesToMeters(14.450), 
+            Units.inchesToMeters(10.73)); // add radius of camera lens
         SHOOTER_ROBOT_TO_CAM_ROT = new Rotation3d(
             0, 
-            0, 
-            0);
+            15*Math.PI/180, 
+            174.9165*Math.PI/180);
         SHOOTER_ROBOT_TO_CAM = new Transform3d(
             SHOOTER_ROBOT_TO_CAM_TRANS,
             SHOOTER_ROBOT_TO_CAM_ROT
