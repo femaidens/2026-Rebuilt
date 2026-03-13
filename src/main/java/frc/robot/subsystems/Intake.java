@@ -98,7 +98,7 @@ public class Intake extends SubsystemBase {
     return this.run(() -> intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED))
         .beforeStarting(() -> setIntakeNeutralMode(NeutralModeValue.Brake))
         .finallyDo((interrupted) -> {
-            intakeMotor.set(0);
+            angleMotor.set(0);
             setIntakeNeutralMode(NeutralModeValue.Coast);
         });
   }
@@ -107,7 +107,7 @@ public class Intake extends SubsystemBase {
     return this.run(() -> intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED))
         .beforeStarting(() -> setIntakeNeutralMode(NeutralModeValue.Brake))
         .finallyDo((interrupted) -> {
-            intakeMotor.set(0);
+            angleMotor.set(0);
             setIntakeNeutralMode(NeutralModeValue.Coast);
         });
   }
@@ -136,9 +136,8 @@ public class Intake extends SubsystemBase {
   private void setIntakeNeutralMode(NeutralModeValue mode) {
     var configs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
     configs.NeutralMode = mode;
-    intakeMotor.getConfigurator().apply(configs);
-    followerIntakeMotor.getConfigurator().apply(configs);
-}
+    angleMotor.getConfigurator().apply(configs);
+  }
 
   @Override
   public void periodic() {
