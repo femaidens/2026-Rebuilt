@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */  
   private final TalonFX intakeMotor;
-  private final TalonFX followerIntakeMotor;
+  // private final TalonFX followerIntakeMotor;
   private final TalonFX angleMotor;
   private final TalonFXConfiguration angleConfig;
   private final TalonFXConfiguration motorConfig;
@@ -36,7 +36,7 @@ public class Intake extends SubsystemBase {
 
   public Intake() {
     intakeMotor = new TalonFX(IntakePorts.INTAKE_MOTOR, IntakeConstants.CANBUS);
-    followerIntakeMotor = new TalonFX(IntakePorts.FOLLOWER_INTAKE_MOTOR, IntakeConstants.CANBUS);
+    // followerIntakeMotor = new TalonFX(IntakePorts.FOLLOWER_INTAKE_MOTOR, IntakeConstants.CANBUS);
     angleMotor = new TalonFX(IntakePorts.ANGLE_MOTOR, IntakeConstants.CANBUS);
 
     encoder = new DutyCycleEncoder(IntakePorts.ENCODER);
@@ -50,22 +50,22 @@ public class Intake extends SubsystemBase {
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
     
     intakeMotor.getConfigurator().apply(motorConfig);
-    followerIntakeMotor.getConfigurator().apply(motorConfig);
+    // followerIntakeMotor.getConfigurator().apply(motorConfig);
     angleMotor.getConfigurator().apply(angleConfig);
 
     errorMargin = 45;
     
 
-    followerIntakeMotor.setControl(new Follower(intakeMotor.getDeviceID(), MotorAlignmentValue.Aligned)); 
+    // followerIntakeMotor.setControl(new Follower(intakeMotor.getDeviceID(), MotorAlignmentValue.Aligned)); 
 
     anglePid = new PIDController(IntakeConstants.PIDConstants.kP, IntakeConstants.PIDConstants.kI, IntakeConstants.PIDConstants.kD);
     anglePid.setTolerance(0.05);
 
   }
 
-  public Intake(TalonFX iM, TalonFX fM, TalonFX aM, DutyCycleEncoder e, PIDController p, double eM ){
+  public Intake(TalonFX iM, TalonFX aM, DutyCycleEncoder e, PIDController p, double eM ){
     intakeMotor = iM;
-    followerIntakeMotor = fM;
+    // followerIntakeMotor = fM;
     angleMotor = aM;
     encoder = e;
     motorConfig = new TalonFXConfiguration();
