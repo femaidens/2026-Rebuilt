@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.Follower;
 
@@ -55,12 +54,10 @@ public class Intake extends SubsystemBase {
 
     errorMargin = 45;
     
-
     followerIntakeMotor.setControl(new Follower(intakeMotor.getDeviceID(), MotorAlignmentValue.Aligned)); 
 
     anglePid = new PIDController(IntakeConstants.PIDConstants.kP, IntakeConstants.PIDConstants.kI, IntakeConstants.PIDConstants.kD);
     anglePid.setTolerance(0.05);
-
   }
 
   public Intake(TalonFX iM, TalonFX fM, TalonFX aM, DutyCycleEncoder e, PIDController p, double eM ){
@@ -97,12 +94,22 @@ public class Intake extends SubsystemBase {
     return this.run(() -> intakeMotor.set(-IntakeConstants.PIVOT_SPEED));
   }
 
-  public Command setIntakeMotorCmd(){
-    return this.run(() -> intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED));
+  public Command setIntakeMotorCmd() {
+    return this.run(() -> intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED))
+        .beforeStarting(() -> setIntakeNeutralMode(NeutralModeValue.Brake))
+        .finallyDo((interrupted) -> {
+            intakeMotor.set(0);
+            setIntakeNeutralMode(NeutralModeValue.Coast);
+        });
   }
 
-  public Command reverseIntakeMotorCmd(){
-    return this.run(() -> intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED));
+  public Command reverseIntakeMotorCmd() {
+    return this.run(() -> intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED))
+        .beforeStarting(() -> setIntakeNeutralMode(NeutralModeValue.Brake))
+        .finallyDo((interrupted) -> {
+            intakeMotor.set(0);
+            setIntakeNeutralMode(NeutralModeValue.Coast);
+        });
   }
 
   public Command stopIntakeMotorCmd(){
@@ -126,6 +133,12 @@ public class Intake extends SubsystemBase {
     return anglePid.atSetpoint();
   }
 
+  private void setIntakeNeutralMode(NeutralModeValue mode) {
+    var configs = new com.ctre.phoenix6.configs.MotorOutputConfigs();
+    configs.NeutralMode = mode;
+    intakeMotor.getConfigurator().apply(configs);
+    followerIntakeMotor.getConfigurator().apply(configs);
+}
 
   @Override
   public void periodic() {
