@@ -15,6 +15,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 // import com.ctre.phoenix6.hardware.CANcoder;
 //import com.ctre.phoenix6.hardware.CANcoder;
@@ -62,6 +63,8 @@ public class AutoShooter extends SubsystemBase {
   private final SysIdRoutine shooterRoutine;
 
   private final Drive drive;
+
+  private final VelocityVoltage shooterVelocityControl = new VelocityVoltage(0);
 //   private final SimpleMotorFeedforward ff;
 
 //   private final InterpolatingDoubleTreeMap velocityMap = new InterpolatingDoubleTreeMap();
@@ -166,6 +169,10 @@ public class AutoShooter extends SubsystemBase {
     return angleTable.get(distance);
   }
 
+  public void setShooterVelocity(double velocity) {
+    shooterMotor.setControl(shooterVelocityControl.withVelocity(velocity));
+  }
+
 public Command autoShootSequence() {
     return this.run(() -> {
         double distance = drive.distanceFromTarget();
@@ -196,6 +203,10 @@ public Command autoShootSequence() {
 
   public Command runShooterMotorCmd(){
     return this.run(() -> shooterMotor.set(ShooterConstants.SHOOTER_MOTOR_SPEED));
+  }
+
+  public Command runShooterMotorPIDCmd() {
+    return this.run(() -> setShooterVelocity(ShooterConstants.SHOOTER_MOTOR_SPEED));
   }
   
   public Command runIndexerMotorCmd(){
