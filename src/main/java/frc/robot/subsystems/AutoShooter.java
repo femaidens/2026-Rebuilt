@@ -113,7 +113,13 @@ public class AutoShooter extends SubsystemBase {
     motorConfig.CurrentLimits.SupplyCurrentLimit = ShooterConstants.CURRENT_LIMIT;
     motorConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast; 
 
-    // OPTIMIZE SIGNALS: Set frequencies for high-speed SysId 
+    motorConfig.Slot0.kP = ShooterConstants.PIDConstants.kP; 
+    motorConfig.Slot0.kI = ShooterConstants.PIDConstants.kI;
+    motorConfig.Slot0.kD = ShooterConstants.PIDConstants.kD;
+
+    motorConfig.Slot0.kS = ShooterConstants.FFConstants.kS; 
+    motorConfig.Slot0.kV = ShooterConstants.FFConstants.kV;
+
     shooterMotor.getVelocity().setUpdateFrequency(100);
     shooterMotor.getPosition().setUpdateFrequency(100);
     angleMotor.getPosition().setUpdateFrequency(100);
