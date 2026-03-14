@@ -70,6 +70,9 @@ public class ModuleKraken {
         directionConfig.withAbsoluteSensorDiscontinuityPoint(0.5);
         directionConfig.MagnetOffset = magnetOffset;
         turnEncoder.getConfigurator().apply(directionConfig.withSensorDirection(SensorDirectionValue.CounterClockwise_Positive));
+
+        double absolutePosition = turnEncoder.getAbsolutePosition().waitForUpdate(0.1).getValueAsDouble();
+        turnMotor.setPosition(absolutePosition);
     }
 
     public SwerveModuleState getState() {
