@@ -124,9 +124,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     //     autoshooter.stopShooterMotorCmd()
     // );
 
-    operJoy.x().whileTrue(
-      autoshooter.runShooterMotorCmd()
-    ).onFalse(autoshooter.stopShooterMotorCmd());
+    // operJoy.x().whileTrue(
+    //   autoshooter.runShooterMotorCmd()
+    // ).onFalse(autoshooter.stopShooterMotorCmd());
     
     operJoy.povUp().whileTrue(
       autoshooter.runAngleMotorCmd()
@@ -139,6 +139,18 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     operJoy.y().whileTrue(
       shooting.prepareShot(hopper, autoshooter)
     );
+
+    operJoy.a().whileTrue(
+      autoshooter.shootHubFlushCmd())
+    .onFalse(autoshooter.stopShooterMotorCmd());
+
+      operJoy.b().whileTrue(
+      autoshooter.shootWallCmd())
+    .onFalse(autoshooter.stopShooterMotorCmd());
+
+      operJoy.x().whileTrue(
+      autoshooter.shootTrenchCmd())
+    .onFalse(autoshooter.stopShooterMotorCmd());
 
     // driveJoy.rightBumper().whileTrue(
     //   autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)

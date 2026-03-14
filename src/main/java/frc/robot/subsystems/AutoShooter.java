@@ -201,6 +201,27 @@ public Command autoShootSequence() {
     return encoder.get();
   }
 
+  public Command shootHubFlushCmd() {
+    return this.run(() -> {
+        setShooterVelocity(-55.0); 
+        angleMotor.setControl(angleVoltage.withPosition(0.0497));
+    });
+}
+
+public Command shootTrenchCmd() {
+    return this.run(() -> {
+        setShooterVelocity(-55.0); 
+        angleMotor.setControl(angleVoltage.withPosition(0.97));
+    });
+}
+
+public Command shootWallCmd() {
+    return this.run(() -> {
+        setShooterVelocity(-65.0);
+        angleMotor.setControl(angleVoltage.withPosition(0.97));
+    });
+}
+
   public Command runShooterMotorCmd(){
     return this.run(() -> shooterMotor.set(ShooterConstants.SHOOTER_MOTOR_SPEED));
   }
