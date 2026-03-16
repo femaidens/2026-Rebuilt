@@ -83,40 +83,49 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
    */
   private void configureBindings() {
 
-    driveJoy.rightBumper().onTrue(
-      drive.runOnce(() -> drive.zeroHeading())
-    );
-
+    // driveJoy.rightBumper().onTrue(
+    //   drive.runOnce(() -> drive.zeroHeading())
+    // );
     
-    operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd());
+    // operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd());
 
-    operJoy.leftBumper().whileTrue(intake.reverseIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
+    // operJoy.leftBumper().whileTrue(intake.reverseIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
 
-    operJoy.rightTrigger().whileTrue(shooting.prepareShot(hopper, autoshooter));
+    // operJoy.rightTrigger().whileTrue(shooting.prepareShot(hopper, autoshooter));
 
-    operJoy.rightBumper().onTrue(intake.stopAngleMotorCmd());
+    // operJoy.rightBumper().onTrue(intake.stopAngleMotorCmd());
 
-    operJoy.povUp().whileTrue(autoshooter.runAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
+    // operJoy.povUp().whileTrue(autoshooter.runAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
 
-    operJoy.povDown().whileTrue(autoshooter.reverseAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
+    // operJoy.povDown().whileTrue(autoshooter.reverseAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
 
-    operJoy.povLeft().whileTrue(intake.setAngleDownCmd()).onFalse(intake.stopAngleMotorCmd());
+    // operJoy.povLeft().whileTrue(intake.setAngleDownCmd()).onFalse(intake.stopAngleMotorCmd());
 
-    operJoy.povRight().whileTrue(intake.setAngleUpCmd()).onFalse(intake.stopAngleMotorCmd());
+    // operJoy.povRight().whileTrue(intake.setAngleUpCmd()).onFalse(intake.stopAngleMotorCmd());
 
-    operJoy.back().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
+    // operJoy.back().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
 
-    operJoy.start().whileTrue(autoshooter.reverseShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
+    // operJoy.start().whileTrue(autoshooter.reverseShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
-    operJoy.a().whileTrue(autoshooter.shootHubFlushCmd());
+    // // operJoy.a().whileTrue(autoshooter.shootHubFlushCmd());
 
-    operJoy.x().whileTrue(autoshooter.shootTrenchCmd());
+    // // operJoy.x().whileTrue(autoshooter.shootTrenchCmd());
 
-    operJoy.y().whileTrue(autoshooter.shootWallCmd());
+  //   // operJoy.y().whileTrue(autoshooter.shootWallCmd());
 
-    operJoy.b().whileTrue(intake.setIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
+  //   operJoy.b().whileTrue(intake.setIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
+  // operJoy.x().whileTrue(autoshooter.runShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
-    //operJoy.x().whileTrue(autoshooter.runShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
+
+
+
+
+
+
+
+  operJoy.x().whileTrue(autoshooter.shootPIDtestCMD()).onFalse(autoshooter.stopShooterMotorCmd());
+
+  operJoy.b().whileTrue(shooting.prepareShot(hopper, autoshooter));
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)

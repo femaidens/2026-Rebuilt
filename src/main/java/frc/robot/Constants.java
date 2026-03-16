@@ -37,7 +37,7 @@ public final class Constants {
 
   public static class IntakeConstants {
     public static final int CURRENT_LIMIT = 30;
-    public static final double INTAKE_MOTOR_SPEED = 0.5;
+    public static final double INTAKE_MOTOR_SPEED = 1.0;
     public static final CANBus CANBUS= new CANBus("rio");
     public static final double PIVOT_SPEED = 0.5;
     public static final double ANGLE_UP = 90; // random values for now until testing
@@ -55,7 +55,7 @@ public final class Constants {
    public static class ShooterConstants{
     public static final int CURRENT_LIMIT = 30;
     public static final double INDEXER_MOTOR_SPEED = 0.3;
-    public static final double SHOOTER_MOTOR_SPEED = -0.65;
+    public static final double SHOOTER_MOTOR_SPEED = -0.75;
     public static final double SHOOTER_CRUISE_SPEED = -0.05;
     public static final double ANGLE_MOTOR_SPEED = 0.1;
 
