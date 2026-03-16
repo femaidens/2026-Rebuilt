@@ -47,6 +47,11 @@ public class Hopper extends SubsystemBase {
   public Command runSpindexer(){
     return this.run(() -> spindexerMotor.set(HopperConstants.MOTORSPEED));
   }
+
+  public Command reverseSpindexer(){
+    return this.run(() -> spindexerMotor.set(-HopperConstants.MOTORSPEED));
+  }
+
   public Command stopSpindexer(){
     return this.runOnce(() -> spindexerMotor.set(0));
   }

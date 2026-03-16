@@ -18,6 +18,17 @@ public class Shooting {
              }
         );
     }
+
+    public Command reversePrepareShot(Hopper hopper, AutoShooter shooter) {
+        return 
+            Commands.parallel(shooter.reverseIndexerMotorCmd(),
+                hopper.reverseSpindexer())
+            .finallyDo((interrupted) -> {
+                shooter.stopIndexerMotorCmd().initialize();
+                hopper.stopSpindexer().initialize();
+             }
+        );
+    }
     // public Command shootSequence(AutoShooter shooter, Hopper hopper, Drive drive) {
     //     return Commands.deadline(
     //         Commands.sequence(

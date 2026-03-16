@@ -251,8 +251,16 @@ public class AutoShooter extends SubsystemBase {
     return this.run(() -> angleMotor.set(ShooterConstants.ANGLE_MOTOR_SPEED));
   }
 
+  public Command reverseShooterMotorCmd(){
+    return this.run(() -> shooterMotor.set(-ShooterConstants.SHOOTER_MOTOR_SPEED));
+  }
+
   public Command reverseAngleMotorCmd(){
     return this.run(() -> angleMotor.set(-ShooterConstants.ANGLE_MOTOR_SPEED));
+  }
+
+  public Command reverseIndexerMotorCmd() {
+    return this.run(() -> indexerMotor.set(-ShooterConstants.INDEXER_MOTOR_SPEED));
   }
 
   //so we don't need to ramp up from rest every time

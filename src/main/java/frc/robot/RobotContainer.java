@@ -83,99 +83,41 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
    */
   private void configureBindings() {
 
-    // autoshooter.setDefaultCommand(autoshooter.cruiseShooterMotorCmd());
-
-    // driveJoy.a().whileTrue(
-    //   drive.run( () -> 
-    //     drive.alignRotation(
-    //     )
-    //   )
-    // );
-
-    driveJoy.y().onTrue(
+    driveJoy.rightBumper().onTrue(
       drive.runOnce(() -> drive.zeroHeading())
     );
 
-    // driveJoy.a().whileTrue(
-    //   drive.run( () ->
-    //     drive.driveRaw(0.0, 0.0,0.0))
-    // );
-
-    // driveJoy.b().whileTrue(
-    //   drive.run( () ->
-    //     drive.driveRaw(0.2, 0.2,0.2))
-    // );
-
-    // driveJoy.x().whileTrue(
-    //   drive.run( () ->
-    //     drive.driveRaw(0.5, 0.5,0.5))
-    // );
-
-    // driveJoy.y().whileTrue(
-    //   drive.run( () ->
-    //     drive.driveRaw(0.8, 0.8,0.8))
-    // );
-
-    // driveJoy.x().whileTrue(
-    //   autoshooter.run( () -> 
-    //     autoshooter.autoShoot()
-    //   )
-    //   ).onFalse(
-    //     autoshooter.stopShooterMotorCmd()
-    // );
-
-    // operJoy.x().whileTrue(
-    //   autoshooter.runShooterMotorCmd()
-    // ).onFalse(autoshooter.stopShooterMotorCmd());
     
-    operJoy.povUp().whileTrue(
-      autoshooter.runAngleMotorCmd()
-    ).onFalse(autoshooter.stopAngleMotorCmd());
+    operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd());
 
-    operJoy.povDown().whileTrue(
-      autoshooter.reverseAngleMotorCmd()
-    ).onFalse(autoshooter.stopAngleMotorCmd());
-    
-    operJoy.y().whileTrue(
-      shooting.prepareShot(hopper, autoshooter)
-    );
+    operJoy.leftBumper().whileTrue(intake.reverseIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
 
-    operJoy.a().whileTrue(
-      autoshooter.shootHubFlushCmd())
-    .onFalse(autoshooter.stopShooterMotorCmd());
+    operJoy.rightTrigger().whileTrue(shooting.prepareShot(hopper, autoshooter));
 
-    //   operJoy.b().whileTrue(
-    //   autoshooter.shootWallCmd())
-    // .onFalse(autoshooter.stopShooterMotorCmd());
+    operJoy.rightBumper().onTrue(intake.stopAngleMotorCmd());
 
-    operJoy.b().whileTrue(
-      autoshooter.shootPIDtestCMD())
-    .onFalse(autoshooter.stopShooterMotorCmd());
+    operJoy.povUp().whileTrue(autoshooter.runAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
 
-    operJoy.x().whileTrue(
-      autoshooter.shootTrenchCmd())
-    .onFalse(autoshooter.stopShooterMotorCmd());
+    operJoy.povDown().whileTrue(autoshooter.reverseAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
 
-    // driveJoy.rightBumper().whileTrue(
-    //   autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kForward)
-    // );
+    operJoy.povLeft().whileTrue(intake.setAngleDownCmd()).onFalse(intake.stopAngleMotorCmd());
 
-    // driveJoy.leftBumper().whileTrue(
-    //   autoshooter.sysIdQuasistatic(SysIdRoutine.Direction.kReverse)
-    // );
+    operJoy.povRight().whileTrue(intake.setAngleUpCmd()).onFalse(intake.stopAngleMotorCmd());
 
-    // driveJoy.rightTrigger().whileTrue(
-    //   autoshooter.sysIdDynamic(SysIdRoutine.Direction.kForward)
-    // );
+    operJoy.back().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
 
-    // driveJoy.leftTrigger().whileTrue(
-    //   autoshooter.sysIdDynamic(SysIdRoutine.Direction.kReverse)
-    // );
+    operJoy.start().whileTrue(autoshooter.reverseShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
-    // driveJoy.b().whileTrue(
-    //   drive.driveToPoseCommand(2.400, 4.00, DriveConstants.Turn.radianPoseRed)
-    // );
- 
+    operJoy.a().whileTrue(autoshooter.shootHubFlushCmd());
+
+    operJoy.x().whileTrue(autoshooter.shootTrenchCmd());
+
+    operJoy.y().whileTrue(autoshooter.shootWallCmd());
+
+    operJoy.b().whileTrue(intake.setIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
+
+    //operJoy.x().whileTrue(autoshooter.runShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
+
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
     //     .onTrue(new ExampleCommand(m_exampleSubsystem));
