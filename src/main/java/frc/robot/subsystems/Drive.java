@@ -59,7 +59,7 @@ import edu.wpi.first.epilogue.Logged;
 @Logged
 public class Drive extends SubsystemBase {
 
-  private final Vision vision;
+  // private final Vision vision;
 
   private final PIDController rotPidController;
   private final PIDController xPidController;
@@ -95,7 +95,7 @@ public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
   public Drive() {
     
-    vision = new Vision();
+    // vision = new Vision();
 
     rotPidController = new PIDController(DriveConstants.Translation.rotPID.P, DriveConstants.Translation.rotPID.I,
         DriveConstants.Translation.rotPID.D);
@@ -170,7 +170,7 @@ public class Drive extends SubsystemBase {
   }
 
   public Drive(ModuleKraken fl, ModuleKraken fr, ModuleKraken rl, ModuleKraken rr, 
-               Pigeon2 gyro, Vision vision, 
+               Pigeon2 gyro, 
                PIDController rotPid, PIDController xPid, PIDController yPid) {
     this.frontLeft = fl;
     this.frontRight = fr;
@@ -178,7 +178,7 @@ public class Drive extends SubsystemBase {
     this.rearRight = rr;
     this.modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
     this.gyro = gyro;
-    this.vision = vision;
+    // this.vision = vision;
     this.rotPidController = rotPid;
     this.xPidController = xPid;
     this.yPidController = yPid;
@@ -212,26 +212,26 @@ public class Drive extends SubsystemBase {
     return swerveEstimator.getEstimatedPosition().plus(shooterOffset);
   }
 
-  public void alignRotation(){
-    var alliance = DriverStation.getAlliance();
-    Pose2d shooterPose = this.getShooterPose2d();
-    Translation2d targetLocation;
-    Translation2d difference = new Translation2d(.343, 0);
+  // public void alignRotation(){
+  //   var alliance = DriverStation.getAlliance();
+  //   Pose2d shooterPose = this.getShooterPose2d();
+  //   Translation2d targetLocation;
+  //   Translation2d difference = new Translation2d(.343, 0);
 
-     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      targetLocation = vision.getTargetTranslation(10).minus(difference);
-    } else {
-      targetLocation = vision.getTargetTranslation(26).plus(difference);
-    }
+  //   //  if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+  //   //   targetLocation = vision.getTargetTranslation(10).minus(difference);
+  //   // } else {
+  //   //   targetLocation = vision.getTargetTranslation(26).plus(difference);
+  //   // }
 
-    Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
+  //   // Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
 
-    Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
+  //   // Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
 
-    double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
+  //   double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
 
-    this.driveRaw( 0, 0,rotOutput);
-  }
+  //   this.driveRaw( 0, 0,rotOutput);
+  // }
 
   // public Rotation2d unitTestRotation(){
   //    var alliance = DriverStation.getAlliance();
@@ -260,21 +260,21 @@ public class Drive extends SubsystemBase {
     return this.run(() -> driveToPose(x, y, r));
   }
 
-  public double distanceFromTarget() {
-    Pose2d currentPose = this.getPose2d();
-    var alliance = DriverStation.getAlliance();
-    Translation2d difference = new Translation2d(.343, 0);
-    Translation2d targetLocation;
+  // public double distanceFromTarget() {
+  //   Pose2d currentPose = this.getPose2d();
+  //   var alliance = DriverStation.getAlliance();
+  //   Translation2d difference = new Translation2d(.343, 0);
+  //   Translation2d targetLocation;
 
-    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      targetLocation = vision.getTargetTranslation(10).minus(difference);
-    } else {
-      targetLocation = vision.getTargetTranslation(26).plus(difference);
-    }
+  //   if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+  //     targetLocation = vision.getTargetTranslation(10).minus(difference);
+  //   } else {
+  //     targetLocation = vision.getTargetTranslation(26).plus(difference);
+  //   }
 
-    return currentPose.getTranslation().getDistance(targetLocation);
+  //   return currentPose.getTranslation().getDistance(targetLocation);
 
-  }
+  // }
 
   
 
@@ -557,12 +557,12 @@ public class Drive extends SubsystemBase {
     Epilogue.getConfig().backend.log("pose", getPose2d(), Pose2d.struct);
 
 
-    List<EstimatedRobotPose> visionUpdates = vision.getVisionUpdates();
-    for (EstimatedRobotPose update : visionUpdates) {
-      swerveEstimator.addVisionMeasurement(
-          update.estimatedPose.toPose2d(),
-          update.timestampSeconds);
-    }
+    // // List<EstimatedRobotPose> visionUpdates = vision.getVisionUpdates();
+    // for (EstimatedRobotPose update : visionUpdates) {
+    //   swerveEstimator.addVisionMeasurement(
+    //       update.estimatedPose.toPose2d(),
+    //       update.timestampSeconds);
+    // }
 
 
     // SmartDashboard.getNumber("Angle", getAngle());

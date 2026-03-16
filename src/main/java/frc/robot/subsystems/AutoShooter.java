@@ -179,25 +179,25 @@ public class AutoShooter extends SubsystemBase {
     shooterMotor.setControl(shooterVelocityControl.withVelocity(velocity));
   }
 
-public Command autoShootSequence() {
-    return this.run(() -> {
-        double distance = drive.distanceFromTarget();
-        double targetRPS = velocityTable.get(distance);
-        double targetAngle = angleTable.get(distance);
+// public Command autoShootSequence() {
+//     return this.run(() -> {
+//         // double distance = drive.distanceFromTarget();
+//         double targetRPS = velocityTable.get(distance);
+//         double targetAngle = angleTable.get(distance);
 
-        autoShoot(targetRPS, targetAngle);
+//         autoShoot(targetRPS, targetAngle);
 
-        if (isReadyToShoot(targetRPS)) {
-            indexerMotor.set(ShooterConstants.INDEXER_MOTOR_SPEED);
-        } else {
-            indexerMotor.set(0);
-        }
-    })
-    .finallyDo(() -> {
-        indexerMotor.set(0);
-        shooterMotor.set(ShooterConstants.SHOOTER_CRUISE_SPEED);
-    });
-}
+//         if (isReadyToShoot(targetRPS)) {
+//             indexerMotor.set(ShooterConstants.INDEXER_MOTOR_SPEED);
+//         } else {
+//             indexerMotor.set(0);
+//         }
+//     })
+//     .finallyDo(() -> {
+//         indexerMotor.set(0);
+//         shooterMotor.set(ShooterConstants.SHOOTER_CRUISE_SPEED);
+//     });
+// }
 
   public double getShooterVelocity(){
     return shooterMotor.getVelocity().getValueAsDouble();
@@ -209,7 +209,7 @@ public Command autoShootSequence() {
 
   public Command shootPIDtestCMD() {
     return this.run(() -> {
-      setShooterVelocity(-15.0); 
+      setShooterVelocity(-50.0); 
       angleMotor.setControl(angleVoltage.withPosition(0.0497));
     });
   }
@@ -287,12 +287,12 @@ public Command autoShootSequence() {
     // SmartDashboard.putBoolean(()); for once we get the angle 
     // SmartDashboard.getNumber();
 
-    double dist = drive.distanceFromTarget();
-    double target = velocityTable.get(dist);
+    // double dist = drive.distanceFromTarget();
+    // double target = velocityTable.get(dist);
     
-    SmartDashboard.putBoolean("READY TO FIRE", isReadyToShoot(target));
+    // SmartDashboard.putBoolean("READY TO FIRE", isReadyToShoot(target));
     SmartDashboard.putNumber("shooter velocity: ", getShooterVelocity());
     SmartDashboard.putNumber("shooter angle", getAngle());
-    SmartDashboard.putNumber("distance from target", drive.distanceFromTarget());
+    // SmartDashboard.putNumber("distance from target", drive.distanceFromTarget());
   }
 }

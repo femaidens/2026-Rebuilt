@@ -18,29 +18,29 @@ public class Shooting {
              }
         );
     }
-    public Command shootSequence(AutoShooter shooter, Hopper hopper, Drive drive) {
-        return Commands.deadline(
-            Commands.sequence(
-                // wait for spin-up
-                Commands.waitUntil(() -> {
-                    double distance = drive.distanceFromTarget();
-                    return shooter.isReadyToShoot(shooter.getTargetRPS(distance));
-                }),
-                // feed the note 
-                Commands.parallel(
-                    shooter.runIndexerMotorCmd(),
-                    hopper.runSpindexer()
-                ).withTimeout(3.0) 
-            ),
-            // this runs the whole time the sequence above is running
-            shooter.run(() -> {
-                double distance = drive.distanceFromTarget();
-                shooter.autoShoot(shooter.getTargetRPS(distance), shooter.getTargetAngle(distance));
-            })
-        ).finallyDo((interrupted) -> {
-            shooter.stopShooterMotorCmd().initialize();
-            shooter.stopIndexerMotorCmd().initialize();
-            hopper.stopSpindexer().initialize();
-        });
-    }
+    // public Command shootSequence(AutoShooter shooter, Hopper hopper, Drive drive) {
+    //     return Commands.deadline(
+    //         Commands.sequence(
+    //             // wait for spin-up
+    //             Commands.waitUntil(() -> {
+    //                 double distance = drive.distanceFromTarget();
+    //                 return shooter.isReadyToShoot(shooter.getTargetRPS(distance));
+    //             }),
+    //             // feed the note 
+    //             Commands.parallel(
+    //                 shooter.runIndexerMotorCmd(),
+    //                 hopper.runSpindexer()
+    //             ).withTimeout(3.0) 
+    //         ),
+    //         // this runs the whole time the sequence above is running
+    //         shooter.run(() -> {
+    //             double distance = drive.distanceFromTarget();
+    //             shooter.autoShoot(shooter.getTargetRPS(distance), shooter.getTargetAngle(distance));
+    //         })
+    //     ).finallyDo((interrupted) -> {
+    //         shooter.stopShooterMotorCmd().initialize();
+    //         shooter.stopIndexerMotorCmd().initialize();
+    //         hopper.stopSpindexer().initialize();
+    //     });
+    // }
 }
