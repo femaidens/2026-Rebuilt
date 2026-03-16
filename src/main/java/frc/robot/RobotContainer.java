@@ -144,11 +144,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
       autoshooter.shootHubFlushCmd())
     .onFalse(autoshooter.stopShooterMotorCmd());
 
-      operJoy.b().whileTrue(
-      autoshooter.shootWallCmd())
+    //   operJoy.b().whileTrue(
+    //   autoshooter.shootWallCmd())
+    // .onFalse(autoshooter.stopShooterMotorCmd());
+
+    operJoy.b().whileTrue(
+      autoshooter.shootPIDtestCMD())
     .onFalse(autoshooter.stopShooterMotorCmd());
 
-      operJoy.x().whileTrue(
+    operJoy.x().whileTrue(
       autoshooter.shootTrenchCmd())
     .onFalse(autoshooter.stopShooterMotorCmd());
 
