@@ -14,7 +14,7 @@ public class ShootPreloaded extends SequentialCommandGroup {
             Commands.parallel(
                 autoshooter.runShooterMotorCmd(),
                 shooting.prepareShotAuto(hopper, autoshooter)
-            ).withTimeout(3),
+            ).withTimeout(8),
 
             autoshooter.stopShooterMotorCmd(),
             hopper.stopSpindexer(),
