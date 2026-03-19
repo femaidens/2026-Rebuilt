@@ -49,10 +49,10 @@ public class DriveConstants {
         public static final double REAR_LEFT_ANGOFFSET = Math.PI; //Math.PI;
         public static final double REAR_RIGHT_ANGOFFSET = 0; //Math.PI / 2; 
 
-        public static final double FRONT_LEFT_MAG_OFFSET = 0.4104;
-        public static final double FRONT_RIGHT_MAG_OFFSET = 0.1328;
-        public static final double REAR_LEFT_MAG_OFFSET = 0.1311;
-        public static final double REAR_RIGHT_MAG_OFFSET = -0.4675;
+        public static final double FRONT_LEFT_MAG_OFFSET = -0.0891;
+        public static final double FRONT_RIGHT_MAG_OFFSET = -0.3696;
+        public static final double REAR_LEFT_MAG_OFFSET = 0.2878;
+        public static final double REAR_RIGHT_MAG_OFFSET = 0.3979;
 
         // CHANGE THIS FOR TALONS! (Update: Fixed For Now...)
         public static final CANBus CAN_BUS = new CANBus(); 

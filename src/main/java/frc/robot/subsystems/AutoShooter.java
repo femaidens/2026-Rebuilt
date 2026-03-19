@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Ports.*;
 import frc.robot.Constants.*;
 import frc.robot.subsystems.*;
@@ -44,7 +45,7 @@ public class AutoShooter extends SubsystemBase {
   /** Creates a new Shooter. */
   private final TalonFX shooterMotor; // starting the rollers
   private final TalonFX angleMotor; // adjusting shooter to desired angle
-  private final TalonFX indexerMotor;
+  // private final TalonFX indexerMotor;
 
   private final DutyCycleEncoder encoder;
 
@@ -73,7 +74,7 @@ public class AutoShooter extends SubsystemBase {
   public AutoShooter(Drive drive) {
     shooterMotor = new TalonFX(ShooterPorts.SHOOTER_MOTOR, ShooterConstants.CANBUS);
     angleMotor = new TalonFX(ShooterPorts.ANGLE_MOTOR, ShooterConstants.CANBUS);
-    indexerMotor = new TalonFX(ShooterPorts.INDEXER_MOTOR, ShooterConstants.CANBUS);
+    // indexerMotor = new TalonFX(ShooterPorts.INDEXER_MOTOR, ShooterConstants.CANBUS);
     
     velocityTable = new InterpolatingDoubleTreeMap();
     angleTable = new InterpolatingDoubleTreeMap();
@@ -125,7 +126,7 @@ public class AutoShooter extends SubsystemBase {
     angleMotor.getPosition().setUpdateFrequency(100);
 
     shooterMotor.getConfigurator().apply(motorConfig);
-    indexerMotor.getConfigurator().apply(motorConfig);
+    // indexerMotor.getConfigurator().apply(motorConfig);
 
     angleMotor.getConfigurator().apply(angleConfig);
 
@@ -216,21 +217,21 @@ public class AutoShooter extends SubsystemBase {
 
   public Command shootHubFlushCmd() {
     return this.run(() -> {
-        setShooterVelocity(-55.0); 
+        setShooterVelocity(-50.0); //-35 within PIT
         angleMotor.setControl(angleVoltage.withPosition(0.0497));
     });
   }
 
   public Command shootTrenchCmd() {
       return this.run(() -> {
-          setShooterVelocity(-55.0); 
+          setShooterVelocity(-50.0); 
           angleMotor.setControl(angleVoltage.withPosition(0.97));
       });
   }
 
   public Command shootWallCmd() {
       return this.run(() -> {
-          setShooterVelocity(-65.0);
+          setShooterVelocity(-60.0);
           angleMotor.setControl(angleVoltage.withPosition(0.97));
       });
   }
@@ -243,9 +244,9 @@ public class AutoShooter extends SubsystemBase {
     return this.run(() -> setShooterVelocity(ShooterConstants.SHOOTER_MOTOR_SPEED));
   }
   
-  public Command runIndexerMotorCmd(){
-    return this.run(() -> indexerMotor.set(ShooterConstants.INDEXER_MOTOR_SPEED));
-  }
+  // public Command runIndexerMotorCmd(){
+  //   return this.run(() -> indexerMotor.set(ShooterConstants.INDEXER_MOTOR_SPEED));
+  // }
 
   public Command runAngleMotorCmd(){
     return this.run(() -> angleMotor.set(ShooterConstants.ANGLE_MOTOR_SPEED));
@@ -259,9 +260,9 @@ public class AutoShooter extends SubsystemBase {
     return this.run(() -> angleMotor.set(-ShooterConstants.ANGLE_MOTOR_SPEED));
   }
 
-  public Command reverseIndexerMotorCmd() {
-    return this.run(() -> indexerMotor.set(-ShooterConstants.INDEXER_MOTOR_SPEED));
-  }
+  // public Command reverseIndexerMotorCmd() {
+  //   return this.run(() -> indexerMotor.set(-ShooterConstants.INDEXER_MOTOR_SPEED));
+  // }
 
   //so we don't need to ramp up from rest every time
   public Command cruiseShooterMotorCmd(){
@@ -275,9 +276,9 @@ public class AutoShooter extends SubsystemBase {
    public Command stopAngleMotorCmd() {
     return this.runOnce(() -> angleMotor.set(0));
   }
-   public Command stopIndexerMotorCmd() {
-    return this.runOnce(() -> indexerMotor.set(0));
-  }
+  //  public Command stopIndexerMotorCmd() {
+  //   return this.runOnce(() -> indexerMotor.set(0));
+  // }
 
 
   // quasi CMD

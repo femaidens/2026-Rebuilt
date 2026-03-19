@@ -8,31 +8,33 @@ import frc.robot.subsystems.Hopper;
 
 public class Shooting {
     //testing without auto shooter, so just button to run the spindezer and indexer after ramping up shooter
-    public Command prepareShot(Hopper hopper, AutoShooter shooter){
+    public Command prepareShot(Hopper hopper){
         return 
-            Commands.parallel(shooter.runIndexerMotorCmd(),
-                hopper.runSpindexer())
+            hopper.runHopperCmd()
             .finallyDo((interrupted) -> {
-                shooter.stopIndexerMotorCmd().initialize();
+                hopper.stopIndexerMotorCmd().initialize();
                 hopper.stopSpindexer().initialize();
              }
         );
     }
 
-    public Command prepareShotAuto(Hopper hopper, AutoShooter shooter){
+    public Command shootCmd(AutoShooter shooter){
+        return shooter.runShooterMotorCmd();
+
+    }
+
+    public Command prepareShotAuto(Hopper hopper){
         return 
-            Commands.parallel(shooter.runIndexerMotorCmd(),
-                hopper.runSpindexer());
+            hopper.runHopperCmd();
     }
 
 
 
     public Command reversePrepareShot(Hopper hopper, AutoShooter shooter) {
         return 
-            Commands.parallel(shooter.reverseIndexerMotorCmd(),
-                hopper.reverseSpindexer())
+            hopper.runHopperCmd()
             .finallyDo((interrupted) -> {
-                shooter.stopIndexerMotorCmd().initialize();
+                hopper.stopIndexerMotorCmd().initialize();
                 hopper.stopSpindexer().initialize();
              }
         );

@@ -12,7 +12,7 @@ public class Ports {
         public static final int SHOOTER_MOTOR  = 14;
         public static final int INDEXER_MOTOR = 6;
         public static final int ANGLE_MOTOR = 16;
-        public static final int ENCODER = 6; //unsure
+        public static final int ENCODER = 7; //unsure
     }
         public class DrivetrainPorts {
         public static final int FRONT_LEFT_DRIVE = 13;
@@ -37,7 +37,7 @@ public class Ports {
         public static final int INTAKE_MOTOR = 1;
         public static final int ANGLE_MOTOR = 7;
         // public static final int FOLLOWER_INTAKE_MOTOR = 0; //unsure
-        public static final int ENCODER = 7; //unsure
+        public static final int ENCODER = 6; //unsure
     }
 
     public class HopperPorts{

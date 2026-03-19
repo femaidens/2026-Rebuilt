@@ -74,11 +74,11 @@ public class Intake extends SubsystemBase {
 
   public Command setAngleUpDownCmd(){
     return this.runOnce(() -> {
-      double middle = (IntakeConstants.ANGLE_DOWN + IntakeConstants.ANGLE_DOWN)/2.0;
+      double middle = (IntakeConstants.ANGLE_DOWN + IntakeConstants.ANGLE_UP)/2.0;
         if (getAngle() < middle) {
-            setAnglePid(IntakeConstants.ANGLE_UP);
-        } else {
             setAnglePid(IntakeConstants.ANGLE_DOWN);
+        } else {
+            setAnglePid(IntakeConstants.ANGLE_UP);
         }
     });
   }
@@ -88,15 +88,15 @@ public class Intake extends SubsystemBase {
   }
 
   public Command setAngleUpCmd(){
-    return this.run(() -> intakeMotor.set(IntakeConstants.PIVOT_SPEED));
+    return this.run(() -> angleMotor.set(-IntakeConstants.PIVOT_SPEED));
   }
 
   public Command setAngleDownCmd(){
-    return this.run(() -> intakeMotor.set(-IntakeConstants.PIVOT_SPEED));
+    return this.run(() -> angleMotor.set(IntakeConstants.PIVOT_SPEED));
   }
 
   public Command setIntakeMotorCmd() {
-    return this.run(() -> intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED))
+    return this.run(() -> intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED))
         .beforeStarting(() -> setIntakeNeutralMode(NeutralModeValue.Brake))
         .finallyDo((interrupted) -> {
             angleMotor.set(0);
@@ -105,7 +105,7 @@ public class Intake extends SubsystemBase {
   }
 
   public Command reverseIntakeMotorCmd() {
-    return this.run(() -> intakeMotor.set(-IntakeConstants.INTAKE_MOTOR_SPEED))
+    return this.run(() -> intakeMotor.set(IntakeConstants.INTAKE_MOTOR_SPEED))
         .beforeStarting(() -> setIntakeNeutralMode(NeutralModeValue.Brake))
         .finallyDo((interrupted) -> {
             angleMotor.set(0);
@@ -143,6 +143,6 @@ public class Intake extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("At Correct Angle", atAngle());
-    SmartDashboard.putNumber("Current Angle", getAngle());
+    SmartDashboard.putNumber("intake angle", getAngle());
   }
 }

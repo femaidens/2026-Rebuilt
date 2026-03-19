@@ -70,15 +70,15 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
         
         configureBindings();
         configureDefaultCmds();
-
+        configureAuton();
   }
  private void configureDefaultCmds() {
         drive.setDefaultCommand(
                 new RunCommand(
                         () -> drive.driveRatio(
-                                () -> MathUtil.applyDeadband(driveJoy.getLeftY(), 0.1),
-                                () -> MathUtil.applyDeadband(driveJoy.getLeftX(), 0.1),
-                                () -> MathUtil.applyDeadband(driveJoy.getRightX(), 0.1)),
+                                () -> MathUtil.applyDeadband(-driveJoy.getLeftY(), 0.1),
+                                () -> MathUtil.applyDeadband(-driveJoy.getLeftX(), 0.1),
+                                () -> MathUtil.applyDeadband(-driveJoy.getRightX(), 0.1)),
                         drive));
  }
   /**
@@ -96,11 +96,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
       drive.runOnce(() -> drive.zeroHeading())
     );
     
-    operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd());
+    operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd()).onFalse(intake.stopAngleMotorCmd());
 
     operJoy.leftBumper().whileTrue(intake.reverseIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
 
-    operJoy.rightTrigger().whileTrue(shooting.prepareShot(hopper, autoshooter));
+    operJoy.rightTrigger().whileTrue(shooting.prepareShot(hopper));
 
     operJoy.rightBumper().onTrue(intake.stopAngleMotorCmd());
 
@@ -112,18 +112,21 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
     operJoy.povRight().whileTrue(intake.setAngleUpCmd()).onFalse(intake.stopAngleMotorCmd());
 
-    operJoy.back().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
+    // operJoy.back().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
+    operJoy.back().whileTrue(autoshooter.stopShooterMotorCmd());
 
     operJoy.start().whileTrue(autoshooter.reverseShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
-    // operJoy.a().whileTrue(autoshooter.shootHubFlushCmd());
+    operJoy.a().whileTrue(autoshooter.shootHubFlushCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
-    // operJoy.x().whileTrue(autoshooter.shootTrenchCmd());
+    operJoy.x().whileTrue(autoshooter.shootTrenchCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
-    // operJoy.y().whileTrue(autoshooter.shootWallCmd());
+    operJoy.y().whileTrue(autoshooter.shootWallCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
     operJoy.b().whileTrue(intake.setIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
-  operJoy.x().whileTrue(autoshooter.runShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
+
+    
+  // operJoy.x().whileTrue(autoshooter.runShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
 
 
