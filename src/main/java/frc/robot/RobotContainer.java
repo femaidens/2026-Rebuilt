@@ -5,12 +5,15 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.autos.ShootPreloaded;
 import frc.robot.commands.Shooting;
 import frc.robot.subsystems.AutoShooter;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.DriveConstants;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -45,6 +48,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
       private final Intake intake;
       private final Hopper hopper;
       private final Shooting shooting;
+
+      private SendableChooser<Command> autonChooser;
+
       //private final Pose2d kClimbPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -55,6 +61,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
         hopper = new Hopper();
         intake = new Intake();
         shooting = new Shooting();
+
+        autonChooser = new SendableChooser<>();
+
         // kClimbPose = new Pose2d(
 
         // );
@@ -83,49 +92,49 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
    */
   private void configureBindings() {
 
-    // driveJoy.rightBumper().onTrue(
-    //   drive.runOnce(() -> drive.zeroHeading())
-    // );
+    driveJoy.rightBumper().onTrue(
+      drive.runOnce(() -> drive.zeroHeading())
+    );
     
-    // operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd());
+    operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd());
 
-    // operJoy.leftBumper().whileTrue(intake.reverseIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
+    operJoy.leftBumper().whileTrue(intake.reverseIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
 
-    // operJoy.rightTrigger().whileTrue(shooting.prepareShot(hopper, autoshooter));
+    operJoy.rightTrigger().whileTrue(shooting.prepareShot(hopper, autoshooter));
 
-    // operJoy.rightBumper().onTrue(intake.stopAngleMotorCmd());
+    operJoy.rightBumper().onTrue(intake.stopAngleMotorCmd());
 
-    // operJoy.povUp().whileTrue(autoshooter.runAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
+    operJoy.povUp().whileTrue(autoshooter.runAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
 
-    // operJoy.povDown().whileTrue(autoshooter.reverseAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
+    operJoy.povDown().whileTrue(autoshooter.reverseAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
 
-    // operJoy.povLeft().whileTrue(intake.setAngleDownCmd()).onFalse(intake.stopAngleMotorCmd());
+    operJoy.povLeft().whileTrue(intake.setAngleDownCmd()).onFalse(intake.stopAngleMotorCmd());
 
-    // operJoy.povRight().whileTrue(intake.setAngleUpCmd()).onFalse(intake.stopAngleMotorCmd());
+    operJoy.povRight().whileTrue(intake.setAngleUpCmd()).onFalse(intake.stopAngleMotorCmd());
 
-    // operJoy.back().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
+    operJoy.back().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
 
-    // operJoy.start().whileTrue(autoshooter.reverseShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
+    operJoy.start().whileTrue(autoshooter.reverseShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
-    // // operJoy.a().whileTrue(autoshooter.shootHubFlushCmd());
+    // operJoy.a().whileTrue(autoshooter.shootHubFlushCmd());
 
-    // // operJoy.x().whileTrue(autoshooter.shootTrenchCmd());
+    // operJoy.x().whileTrue(autoshooter.shootTrenchCmd());
 
-  //   // operJoy.y().whileTrue(autoshooter.shootWallCmd());
+    // operJoy.y().whileTrue(autoshooter.shootWallCmd());
 
-  //   operJoy.b().whileTrue(intake.setIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
-  // operJoy.x().whileTrue(autoshooter.runShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
-
-
+    operJoy.b().whileTrue(intake.setIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
+  operJoy.x().whileTrue(autoshooter.runShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
 
 
 
 
 
-  operJoy.x().whileTrue(autoshooter.shootPIDtestCMD()).onFalse(autoshooter.stopShooterMotorCmd());
 
-  operJoy.b().whileTrue(shooting.prepareShot(hopper, autoshooter));
+
+  // operJoy.x().whileTrue(autoshooter.shootPIDtestCMD()).onFalse(autoshooter.stopShooterMotorCmd());
+
+  // operJoy.b().whileTrue(shooting.prepareShot(hopper, autoshooter));
 
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     // new Trigger(m_exampleSubsystem::exampleCondition)
@@ -135,14 +144,17 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     // cancelling on release.
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
-
+    public void configureAuton(){
+        autonChooser.addOption("Shoot preloaded", new ShootPreloaded(shooting, autoshooter, hopper));
+        SmartDashboard.putData("Choose auto: ", autonChooser);
+    }
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
-  // public Command getAutonomousCommand() {
-  //   // An example command will be run in autonomous
-  //   //return Autos.exampleAuto(m_exampleSubsystem);
-  // }
+  public Command getAutonomousCommand() {
+            return autonChooser.getSelected();
+
+  }
 }

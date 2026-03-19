@@ -19,6 +19,14 @@ public class Shooting {
         );
     }
 
+    public Command prepareShotAuto(Hopper hopper, AutoShooter shooter){
+        return 
+            Commands.parallel(shooter.runIndexerMotorCmd(),
+                hopper.runSpindexer());
+    }
+
+
+
     public Command reversePrepareShot(Hopper hopper, AutoShooter shooter) {
         return 
             Commands.parallel(shooter.reverseIndexerMotorCmd(),
