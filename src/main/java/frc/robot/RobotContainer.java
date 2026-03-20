@@ -71,6 +71,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
         configureBindings();
         configureDefaultCmds();
         configureAuton();
+
+        SmartDashboard.putData(autoshooter);
   }
  private void configureDefaultCmds() {
         drive.setDefaultCommand(
@@ -94,6 +96,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
     driveJoy.rightBumper().onTrue(
       drive.runOnce(() -> drive.zeroHeading())
+    );
+
+    driveJoy.x().onTrue(
+      autoshooter.resetMotorPositionCmd()
     );
     
     operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd()).onFalse(intake.stopAngleMotorCmd());

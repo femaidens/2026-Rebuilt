@@ -13,10 +13,11 @@ public class ShootPreloaded extends SequentialCommandGroup {
     public ShootPreloaded(Shooting shooting, AutoShooter autoshooter, Hopper hopper) {
         addCommands(
                 Commands.sequence(
-                        autoshooter.runShooterMotorCmd().withTimeout(3),
+                        autoshooter.resetMotorPositionCmd(),
+                        autoshooter.shootHubFlushCmd().withTimeout(3),
 
                         Commands.parallel(
-                                autoshooter.runShooterMotorCmd(),
+                                autoshooter.shootHubFlushCmd(),
                                 shooting.prepareShotAuto(hopper)).withTimeout(8),
 
                         autoshooter.stopShooterMotorCmd(),
@@ -25,6 +26,7 @@ public class ShootPreloaded extends SequentialCommandGroup {
                             CommandScheduler.getInstance().schedule(
                                     Commands.sequence(
                                             autoshooter.stopShooterMotorCmd(),
+                                            autoshooter.stopAngleMotorCmd(),
                                             hopper.stopIndexerMotorCmd(),
                                             hopper.stopSpindexer()));
                         }));

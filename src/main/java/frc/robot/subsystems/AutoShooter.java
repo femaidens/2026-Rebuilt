@@ -107,6 +107,7 @@ public class AutoShooter extends SubsystemBase {
     angleConfig.Slot0.kP = 5.0; 
     angleConfig.Slot0.kD = 0.1;
 
+
     // angleConfig.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
     // angleConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
 
@@ -218,22 +219,28 @@ public class AutoShooter extends SubsystemBase {
   public Command shootHubFlushCmd() {
     return this.run(() -> {
         setShooterVelocity(-50.0); //-35 within PIT
-        angleMotor.setControl(angleVoltage.withPosition(0.0497));
+        angleMotor.setControl(angleVoltage.withPosition(2.69));
     });
   }
 
   public Command shootTrenchCmd() {
       return this.run(() -> {
-          setShooterVelocity(-50.0); 
-          angleMotor.setControl(angleVoltage.withPosition(0.97));
+          setShooterVelocity(-60.0); 
+          angleMotor.setControl(angleVoltage.withPosition(16.605));
       });
   }
 
   public Command shootWallCmd() {
       return this.run(() -> {
           setShooterVelocity(-60.0);
-          angleMotor.setControl(angleVoltage.withPosition(0.97));
+          angleMotor.setControl(angleVoltage.withPosition(7.8));
       });
+  }
+
+  public Command resetMotorPositionCmd(){
+    return this.runOnce( () ->
+      angleMotor.setPosition(0)
+    );
   }
 
   public Command runShooterMotorCmd(){
@@ -302,6 +309,7 @@ public class AutoShooter extends SubsystemBase {
     // SmartDashboard.putBoolean("READY TO FIRE", isReadyToShoot(target));
     SmartDashboard.putNumber("shooter velocity: ", getShooterVelocity());
     SmartDashboard.putNumber("shooter angle", getAngle());
+    SmartDashboard.putNumber("position of motor", angleMotor.getPosition().getValueAsDouble() );
     // SmartDashboard.putNumber("distance from target", drive.distanceFromTarget());
   }
 }
