@@ -39,6 +39,8 @@ public class Shooting {
              }
         );
     }
+
+    
     // public Command shootSequence(AutoShooter shooter, Hopper hopper, Drive drive) {
     //     return Commands.deadline(
     //         Commands.sequence(

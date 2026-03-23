@@ -117,11 +117,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     operJoy.povLeft().whileTrue(intake.setAngleDownCmd()).onFalse(intake.stopAngleMotorCmd());
 
     operJoy.povRight().whileTrue(intake.setAngleUpCmd()).onFalse(intake.stopAngleMotorCmd());
-
-    // operJoy.back().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
+    operJoy.start().whileTrue(shooting.reversePrepareShot(hopper, autoshooter));
     operJoy.back().whileTrue(autoshooter.stopShooterMotorCmd());
 
-    operJoy.start().whileTrue(autoshooter.reverseShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
+    // operJoy.start().whileTrue(autoshooter.reverseShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
     operJoy.a().whileTrue(autoshooter.shootHubFlushCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
