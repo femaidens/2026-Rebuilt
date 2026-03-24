@@ -6,10 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.KaileyLeds;
 import frc.robot.subsystems.KaseyLeds;
+import frc.robot.subsystems.LEDS;
 import frc.robot.subsystems.LydiaLeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -27,11 +26,12 @@ public class RobotContainer {
 
   // private final KaileyLeds kailey = new KaileyLeds();
   //private final LydiaLeds lydia = new LydiaLeds();
-  private final KaseyLeds kasey = new KaseyLeds();
+  // private final KaseyLeds kasey = new KaseyLeds();
+  private final LEDS leds = new LEDS();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController operJoy = new CommandXboxController(OperatorConstants.OPERATOR_PORT);
-    private final CommandXboxController driveJoy = new CommandXboxController(OperatorConstants.DRIVER_PORT);
+   // private final CommandXboxController driveJoy = new CommandXboxController(OperatorConstants.DRIVER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -81,16 +81,16 @@ public class RobotContainer {
 
 
 
-         operJoy.leftTrigger().onTrue(kasey.setDefault());
+         operJoy.leftTrigger().onTrue(leds.setDefault());
 
-        operJoy.a().onTrue(kasey.setPurpleCommand());
-         operJoy.x().onTrue(kasey.setGreenCommand());
-         operJoy.y().onTrue(kasey.setRedCommand());
-         operJoy.b().onTrue(kasey.setBlueCommand());
-         operJoy.leftBumper().onTrue(kasey.breatheEffect());
-         operJoy.rightBumper().onTrue(kasey.progressMaskEffect());
-         operJoy.leftTrigger().onTrue(kasey.setPinkCommand());
-         operJoy.start().onTrue(kasey.progressMaskEffectGreenPurple());
+        operJoy.a().onTrue(leds.setFemaidensPan());
+         operJoy.x().onTrue(leds.setFemaidensScrollGrad());
+         operJoy.y().onTrue(leds.setFemaidensSplit());
+         operJoy.b().onTrue(leds.setFemaidensStaticGrad());
+         operJoy.leftBumper().onTrue(leds.sparkleEffect());
+         operJoy.rightBumper().onTrue(leds.purpleScroll());
+         operJoy.leftTrigger().onTrue(leds.greenScroll());
+         operJoy.start().onTrue(leds.progressMask());
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

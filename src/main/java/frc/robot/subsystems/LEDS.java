@@ -20,7 +20,7 @@ import frc.robot.Ports.LedPorts;
 public class LEDS extends SubsystemBase {
     private final AddressableLED strip;
     private final AddressableLEDBuffer buffer;
-    private int count = 0;
+    private int count;
     private final Color firstRed, firstBlue, green, purple, black;
 
     public LEDS() {

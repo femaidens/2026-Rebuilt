@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class KaileyLeds extends SubsystemBase {
     private final AddressableLED strip;
     private final AddressableLEDBuffer buffer;
-    private int count = 0;
+    private int count;
 
     public KaileyLeds() {
         strip = new AddressableLED(Ports.LedPorts.LED_PORT);
