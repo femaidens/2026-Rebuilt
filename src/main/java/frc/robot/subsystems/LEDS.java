@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Percent;
 import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Seconds;
 
 import java.util.Map;
 
@@ -21,17 +22,21 @@ public class LEDS extends SubsystemBase {
     private final AddressableLED strip;
     private final AddressableLEDBuffer buffer;
     private int count;
-    private final Color firstRed, firstBlue, green, purple, black;
+    private final Color firstRed, firstBlue, green, purple, black, blue, pink, orange, teal;
 
     public LEDS() {
         strip = new AddressableLED(Ports.LedPorts.LED_PORT);
         buffer = new AddressableLEDBuffer(Constants.LedConstants.LED_LENGTH);
 
-        firstRed = Color.kGreen; //deep red (first)
-        firstBlue = Color.kDarkViolet; //navy blue (first)
-        green = Color.kFirstRed; //bright green
-        purple = Color.kFirstBlue; //shows purple
-        black = Color.kBlack; //off
+        firstRed = Color.kGreen; // deep red (first)
+        firstBlue = Color.kDarkViolet; // navy blue (first)
+        blue = Color.kPowderBlue;
+        green = Color.kFirstRed; // bright green
+        purple = Color.kFirstBlue; // shows purple
+        black = Color.kBlack; // off
+        pink = Color.kPink;
+        orange = Color.kOrange;
+        teal = Color.kTeal;
 
         strip.setLength(buffer.getLength());
         strip.setData(buffer);
@@ -44,6 +49,37 @@ public class LEDS extends SubsystemBase {
             off.applyTo(buffer);
             strip.setData(buffer);
             System.out.println("LED Off");
+        });
+    }
+
+    public Command purpleBlink() {
+        return this.run(() -> {
+            LEDPattern base = LEDPattern.solid(purple);
+            LEDPattern pattern = base.blink(Seconds.of(1.5));
+            pattern.applyTo(buffer);
+            strip.setData(buffer);
+            System.out.println("LED Purple Blink");
+
+        });
+    }
+
+    public Command blueBlink() {
+        return this.run(() -> {
+            LEDPattern base = LEDPattern.solid(blue);
+            LEDPattern pattern = base.blink(Seconds.of(1.5));
+            pattern.applyTo(buffer);
+            strip.setData(buffer);
+            System.out.println("LED Blue Blink");
+        });
+    }
+
+    public Command pinkBlink() {
+        return this.run(() -> {
+            LEDPattern base = LEDPattern.solid(pink);
+            LEDPattern pattern = base.blink(Seconds.of(1.5));
+            pattern.applyTo(buffer);
+            strip.setData(buffer);
+            System.out.println("LED Pink Blink");
         });
     }
 
@@ -83,8 +119,26 @@ public class LEDS extends SubsystemBase {
         });
     }
 
+    public Command setOrangeSolid() {
+        return this.run(() -> {
+            LEDPattern solid = LEDPattern.solid(orange);
+            solid.applyTo(buffer);
+            strip.setData(buffer);
+            System.out.println("LED Orange");
+        });
+    }
+
+    public Command setTealSolid() {
+        return this.run(() -> {
+            LEDPattern solid = LEDPattern.solid(teal);
+            solid.applyTo(buffer);
+            strip.setData(buffer);
+            System.out.println("LED Teal");
+        });
+    }
+
     public void fillStrip(int g, int r, int b) {
-        for(int i = 0; i < buffer.getLength(); i++) {
+        for (int i = 0; i < buffer.getLength(); i++) {
             buffer.setRGB(i, g, r, b);
         }
         strip.setData(buffer);
@@ -93,13 +147,11 @@ public class LEDS extends SubsystemBase {
     public Command pulseEffect() {
         return this.run(() -> {
             count++;
-            if(count < 40) {
-                fillStrip(66, 104,152);
-            }
-            else if(count < 80) {
+            if (count < 40) {
+                fillStrip(66, 104, 152);
+            } else if (count < 80) {
                 fillStrip(212, 162, 10);
-            }
-            else {
+            } else {
                 count = 0;
             }
             System.out.println("LED Pulse");
@@ -109,7 +161,7 @@ public class LEDS extends SubsystemBase {
     public Command sparkleEffect() {
         return this.run(() -> {
             fillStrip(66, 104, 152);
-            for(int i = 0; i < 50; i++) {
+            for (int i = 0; i < 50; i++) {
                 int position = (int) (Math.random() * buffer.getLength());
                 buffer.setRGB(position, 212, 162, 10);
             }
@@ -121,11 +173,10 @@ public class LEDS extends SubsystemBase {
     public Command progressMask() {
         return this.run(() -> {
             double progress = (count % 100) / 100.0;
-            for(int i = 0; i < buffer.getLength(); i++) {
-                if(i < progress * buffer.getLength()) {
+            for (int i = 0; i < buffer.getLength(); i++) {
+                if (i < progress * buffer.getLength()) {
                     buffer.setRGB(i, 66, 104, 152);
-                }
-                else {
+                } else {
                     buffer.setRGB(i, 212, 162, 10);
                 }
             }
@@ -144,8 +195,7 @@ public class LEDS extends SubsystemBase {
                 if (i < buffer.getLength() / 2) {
                     r = (255 * i) / (buffer.getLength() / 2);
                     b = 255;
-                }
-                else {
+                } else {
                     b = (255 * (buffer.getLength() - i - 1)) / (buffer.getLength() / 2);
                     r = 255;
                 }
@@ -210,7 +260,7 @@ public class LEDS extends SubsystemBase {
             Map<Number, Color> maskSteps = Map.of(0, purple, 0.25, green, 0.5, black);
             LEDPattern femaidensGradient = LEDPattern.gradient(GradientType.kContinuous, green, purple);
             LEDPattern mask = LEDPattern.steps(maskSteps).scrollAtRelativeSpeed(Percent.per(Second).of(15));
-            
+
             LEDPattern pan = femaidensGradient.mask(mask);
 
             pan.applyTo(buffer);
@@ -228,10 +278,9 @@ public class LEDS extends SubsystemBase {
         });
     }
 
-    
     @Override
     public void periodic() {
         strip.setData(buffer);
     }
-    
+
 }
