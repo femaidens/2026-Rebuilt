@@ -57,10 +57,11 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
         // );
 
+        autoChooser = drive.configurePathPlanner();
+        
         NamedCommands.registerCommand("shoot", autoshooter.runAutonShooterMotorCmd().withTimeout(2.0));
         NamedCommands.registerCommand("index", autoshooter.runIndexerMotorCmd().withTimeout(3.0));
-        autoChooser = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        // SmartDashboard.putData("Auto Chooser", autoChooser);
         configureBindings();
         configureDefaultCmds();
 
@@ -87,12 +88,12 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
     // autoshooter.setDefaultCommand(autoshooter.cruiseShooterMotorCmd());
 
-    driveJoy.a().whileTrue(
-      drive.run( () -> 
-        drive.alignRotation(
-        )
-      )
-    );
+    // driveJoy.a().whileTrue(
+    //   drive.run( () -> 
+    //     drive.alignRotation(
+    //     )
+    //   )
+    // );
 
     driveJoy.y().onTrue(
       drive.runOnce(() -> drive.zeroHeading())
@@ -183,5 +184,5 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
-}
+  }
 }

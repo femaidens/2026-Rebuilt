@@ -12,11 +12,12 @@ import edu.wpi.first.units.measure.Angle;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
-
+import org.ejml.dense.block.linsol.chol.CholeskyOuterSolver_DDRB;
 import org.photonvision.EstimatedRobotPose;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
@@ -33,10 +34,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Ports.DrivetrainPorts;
 import frc.robot.subsystems.DriveConstants.Drivetrain;
@@ -47,7 +51,7 @@ import edu.wpi.first.epilogue.Logged;
 @Logged
 public class Drive extends SubsystemBase {
 
-  private final Vision vision;
+  // private final Vision vision;
 
   private final PIDController rotPidController;
   private final PIDController xPidController;
@@ -83,7 +87,7 @@ public class Drive extends SubsystemBase {
   /** Creates a new Drive. */
   public Drive() {
     
-    vision = new Vision();
+    // vision = new Vision();
 
     rotPidController = new PIDController(DriveConstants.Translation.rotPID.P, DriveConstants.Translation.rotPID.I,
         DriveConstants.Translation.rotPID.D);
@@ -156,11 +160,11 @@ public class Drive extends SubsystemBase {
     //         null,
     //         this));
 
-    configurePathPlanner();
+    // configurePathPlanner();
   }
 
   public Drive(ModuleKraken fl, ModuleKraken fr, ModuleKraken rl, ModuleKraken rr, 
-               Pigeon2 gyro, Vision vision, 
+               Pigeon2 gyro, 
                PIDController rotPid, PIDController xPid, PIDController yPid) {
     this.frontLeft = fl;
     this.frontRight = fr;
@@ -168,7 +172,7 @@ public class Drive extends SubsystemBase {
     this.rearRight = rr;
     this.modules = List.of(frontLeft, frontRight, rearLeft, rearRight);
     this.gyro = gyro;
-    this.vision = vision;
+    // this.vision = vision;
     this.rotPidController = rotPid;
     this.xPidController = xPid;
     this.yPidController = yPid;
@@ -191,10 +195,7 @@ public class Drive extends SubsystemBase {
         DriveConstants.Drivetrain.VISION_STD_DEV);
   }
 
-  public void configurePathPlanner() {
-    try {
-      // 1. Load the RobotConfig from the GUI settings (ensure you set these up in the app!)
-      RobotConfig config = RobotConfig.fromGUISettings();
+  public SendableChooser<Command> configurePathPlanner() {
 
       // 2. Configure the AutoBuilder
       AutoBuilder.configure(
@@ -206,18 +207,16 @@ public class Drive extends SubsystemBase {
               new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
               new PIDConstants(5.0, 0.0, 0.0)  // Rotation PID constants
           ),
-          config,
-          () -> {
-              // Boolean supplier that controls when the path will be mirrored for the red alliance
-              var alliance = DriverStation.getAlliance();
-              return alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red;
-          },
-          this // Reference to this subsystem to set requirements
-      );
-    } catch (Exception e) {
-      DriverStation.reportError("Failed to load PathPlanner config", e.getStackTrace());
+          new RobotConfig(1, 1, 
+            new ModuleConfig(5, 5, 5, DCMotor.getKrakenX60(1).withReduction(694), 1, 1), 
+            1),
+          () -> false,
+          this);
+
+      
+      SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
+      return chooser;
     }
-}
   
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return Drivetrain.kDriveKinematics.toChassisSpeeds(getSwerveModuleStates());
@@ -255,26 +254,26 @@ public class Drive extends SubsystemBase {
     return swerveEstimator.getEstimatedPosition().plus(shooterOffset);
   }
 
-  public void alignRotation(){
-    var alliance = DriverStation.getAlliance();
-    Pose2d shooterPose = this.getShooterPose2d();
-    Translation2d targetLocation;
-    Translation2d difference = new Translation2d(.343, 0);
+  // public void alignRotation(){
+  //   var alliance = DriverStation.getAlliance();
+  //   Pose2d shooterPose = this.getShooterPose2d();
+  //   Translation2d targetLocation;
+  //   Translation2d difference = new Translation2d(.343, 0);
 
-     if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      targetLocation = vision.getTargetTranslation(10).minus(difference);
-    } else {
-      targetLocation = vision.getTargetTranslation(26).plus(difference);
-    }
+  //    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+  //     targetLocation = vision.getTargetTranslation(10).minus(difference);
+  //   } else {
+  //     targetLocation = vision.getTargetTranslation(26).plus(difference);
+  //   }
 
-    Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
+  //   Translation2d displacement = targetLocation.minus(shooterPose.getTranslation());
 
-    Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
+  //   Rotation2d targetAngle = displacement.getAngle().plus(Rotation2d.kCCW_90deg);
 
-    double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
+  //   double rotOutput = rotPidController.calculate(shooterPose.getRotation().getRadians(), targetAngle.getRadians());
 
-    this.driveRaw( 0, 0,rotOutput);
-  }
+  //   this.driveRaw( 0, 0,rotOutput);
+  // }
 
   // public Rotation2d unitTestRotation(){
   //    var alliance = DriverStation.getAlliance();
@@ -303,21 +302,21 @@ public class Drive extends SubsystemBase {
     return this.run(() -> driveToPose(x, y, r));
   }
 
-  public double distanceFromTarget() {
-    Pose2d currentPose = this.getPose2d();
-    var alliance = DriverStation.getAlliance();
-    Translation2d difference = new Translation2d(.343, 0);
-    Translation2d targetLocation;
+  // public double distanceFromTarget() {
+  //   Pose2d currentPose = this.getPose2d();
+  //   var alliance = DriverStation.getAlliance();
+  //   Translation2d difference = new Translation2d(.343, 0);
+  //   Translation2d targetLocation;
 
-    if (alliance.isPresent() && alliance.get() == Alliance.Red) {
-      targetLocation = vision.getTargetTranslation(10).minus(difference);
-    } else {
-      targetLocation = vision.getTargetTranslation(26).plus(difference);
-    }
+  //   if (alliance.isPresent() && alliance.get() == Alliance.Red) {
+  //     targetLocation = vision.getTargetTranslation(10).minus(difference);
+  //   } else {
+  //     targetLocation = vision.getTargetTranslation(26).plus(difference);
+  //   }
 
-    return currentPose.getTranslation().getDistance(targetLocation);
+  //   return currentPose.getTranslation().getDistance(targetLocation);
 
-  }
+  // }
 
   
 
@@ -607,12 +606,12 @@ public class Drive extends SubsystemBase {
     Epilogue.getConfig().backend.log("pose", getPose2d(), Pose2d.struct);
 
 
-    List<EstimatedRobotPose> visionUpdates = vision.getVisionUpdates();
-    for (EstimatedRobotPose update : visionUpdates) {
-      swerveEstimator.addVisionMeasurement(
-          update.estimatedPose.toPose2d(),
-          update.timestampSeconds);
-    }
+    // List<EstimatedRobotPose> visionUpdates = vision.getVisionUpdates();
+    // for (EstimatedRobotPose update : visionUpdates) {
+    //   swerveEstimator.addVisionMeasurement(
+    //       update.estimatedPose.toPose2d(),
+    //       update.timestampSeconds);
+    // }
 
 
     // SmartDashboard.getNumber("Angle", getAngle());
