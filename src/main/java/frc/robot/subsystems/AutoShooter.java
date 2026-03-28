@@ -226,7 +226,7 @@ public class AutoShooter extends SubsystemBase {
   public Command shootTrenchCmd() {
       return this.run(() -> {
           setShooterVelocity(-60.0); 
-          angleMotor.setControl(angleVoltage.withPosition(16.605));
+          angleMotor.setControl(angleVoltage.withPosition(11.15));
       });
   }
 
