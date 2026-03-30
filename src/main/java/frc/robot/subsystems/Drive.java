@@ -195,28 +195,28 @@ public class Drive extends SubsystemBase {
         DriveConstants.Drivetrain.VISION_STD_DEV);
   }
 
-  public SendableChooser<Command> configurePathPlanner() {
+  // public SendableChooser<Command> configurePathPlanner() {
 
-      // 2. Configure the AutoBuilder
-      AutoBuilder.configure(
-          this::getPose2d,              // Robot pose supplier
-          this::resetPose,             // Method to reset odometry (will be called if your auto has a starting pose)
-          this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-          (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-          new PPHolonomicDriveController(
-              new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0)  // Rotation PID constants
-          ),
-          new RobotConfig(1, 1, 
-            new ModuleConfig(5, 5, 5, DCMotor.getKrakenX60(1).withReduction(694), 1, 1), 
-            1),
-          () -> false,
-          this);
+  //     // 2. Configure the AutoBuilder
+  //     AutoBuilder.configure(
+  //         this::getPose2d,              // Robot pose supplier
+  //         this::resetPose,             // Method to reset odometry (will be called if your auto has a starting pose)
+  //         this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+  //         (speeds, feedforwards) -> driveRobotRelative(speeds), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+  //         new PPHolonomicDriveController(
+  //             new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+  //             new PIDConstants(5.0, 0.0, 0.0)  // Rotation PID constants
+  //         ),
+  //         new RobotConfig(52.000, 4.477, 
+  //           new ModuleConfig(0.051, 7.500, 1.200, DCMotor.getKrakenX60(1).withReduction(694), 1, 1), 
+  //           0.736),
+  //         () -> false,
+  //         this);
 
       
-      SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
-      return chooser;
-    }
+  //     SendableChooser<Command> chooser = AutoBuilder.buildAutoChooser();
+  //     return chooser;
+  //   }
   
   public ChassisSpeeds getRobotRelativeSpeeds() {
     return Drivetrain.kDriveKinematics.toChassisSpeeds(getSwerveModuleStates());

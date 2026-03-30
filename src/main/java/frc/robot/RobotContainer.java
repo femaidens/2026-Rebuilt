@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Autos;
 import frc.robot.subsystems.AutoShooter;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.DriveConstants;
@@ -42,26 +43,23 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
        private final CommandXboxController operJoy =
       new CommandXboxController(OperatorConstants.kOperatorControllerPort);
 
-      private final Drive drive;
-      private final AutoShooter autoshooter;
+      private final Drive drive = new Drive();
+      private final AutoShooter autoshooter =  new AutoShooter(drive);
 
-      private final SendableChooser<Command> autoChooser;
+      private final SendableChooser<Command> autoChooser = Autos.configureAuto(drive, autoshooter);
       //private final Pose2d kClimbPose;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-        drive = new Drive();
-        autoshooter = new AutoShooter(drive);
+        // drive = new Drive();
         // kClimbPose = new Pose2d(
 
         // );
-
-        autoChooser = drive.configurePathPlanner();
         
-        NamedCommands.registerCommand("shoot", autoshooter.runAutonShooterMotorCmd().withTimeout(2.0));
-        NamedCommands.registerCommand("index", autoshooter.runIndexerMotorCmd().withTimeout(3.0));
-        // SmartDashboard.putData("Auto Chooser", autoChooser);
+        // autoChooser = drive.configurePathPlanner();
+        
+        SmartDashboard.putData("Auto Chooser", autoChooser);
         configureBindings();
         configureDefaultCmds();
 
@@ -182,7 +180,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
   //   //return Autos.exampleAuto(m_exampleSubsystem);
   // }
 
-  public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
-  }
+  // public Command getAutonomousCommand() {
+  //   // return autoChooser.getSelected();
+  // }
 }
