@@ -37,6 +37,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -79,6 +80,9 @@ public class Drive extends SubsystemBase {
   private final Pigeon2 gyro;
 
   public final SwerveDriveOdometry odometry;
+
+  @Logged private final Field2d field2d = new Field2d();
+
 
  // private final SysIdRoutine driveRoutine;
 
@@ -145,7 +149,7 @@ public class Drive extends SubsystemBase {
         DriveConstants.Drivetrain.kDriveKinematics,
         gyro.getRotation2d(),
         getSwerveModulePosition(),
-        new Pose2d(),
+        Pose2d.kZero,
         DriveConstants.Drivetrain.STATE_STD_DEV,
         DriveConstants.Drivetrain.VISION_STD_DEV);
 
@@ -190,7 +194,7 @@ public class Drive extends SubsystemBase {
         DriveConstants.Drivetrain.kDriveKinematics,
         gyro.getRotation2d(),
         getSwerveModulePosition(),
-        new Pose2d(),
+        Pose2d.kZero,
         DriveConstants.Drivetrain.STATE_STD_DEV,
         DriveConstants.Drivetrain.VISION_STD_DEV);
   }
@@ -243,7 +247,7 @@ public class Drive extends SubsystemBase {
         pose
     );
 }
-
+  @Logged
   public Pose2d getPose2d() {
     return swerveEstimator.getEstimatedPosition();
   }
@@ -496,6 +500,7 @@ public class Drive extends SubsystemBase {
         });
   }
 
+  @Logged
   /**
    * @return currently-estimated pose of robot
    */
@@ -605,6 +610,9 @@ public class Drive extends SubsystemBase {
 
     Epilogue.getConfig().backend.log("pose", getPose2d(), Pose2d.struct);
 
+    field2d.setRobotPose(getPose());
+
+    SmartDashboard.putData("Drive Field", field2d);
 
     // List<EstimatedRobotPose> visionUpdates = vision.getVisionUpdates();
     // for (EstimatedRobotPose update : visionUpdates) {
