@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.autos.ShootPreloaded;
+import frc.robot.autos.ShootTrench;
 import frc.robot.commands.Shooting;
 import frc.robot.subsystems.AutoShooter;
 import frc.robot.subsystems.Drive;
@@ -153,7 +154,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     //m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
     public void configureAuton(){
-        autonChooser.addOption("Shoot preloaded", new ShootPreloaded(shooting, autoshooter, hopper));
+        autonChooser.addOption("Shoot Preloaded", new ShootPreloaded(shooting, autoshooter, hopper));
+        autonChooser.addOption("Shoot Trench", new ShootTrench(shooting, autoshooter, hopper));
         SmartDashboard.putData("Choose auto: ", autonChooser);
     }
   /**

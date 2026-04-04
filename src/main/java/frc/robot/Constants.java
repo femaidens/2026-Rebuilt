@@ -29,7 +29,7 @@ public final class Constants {
   }
 
     public static class HopperConstants{
-        public static final double MOTORSPEED = 0.9;
+        public static final double MOTORSPEED = 1.0; //0.9
         public static final double INDEXER_CURRENT_LIMIT = 30; 
         public static final double HOPPER_CURRENT_LIMIT = 40;
         public static final CANBus canbus = new CANBus("rio");
@@ -54,7 +54,7 @@ public final class Constants {
 
    public static class ShooterConstants{
     public static final int CURRENT_LIMIT = 30;
-    public static final double INDEXER_MOTOR_SPEED = 0.9;
+    public static final double INDEXER_MOTOR_SPEED = 1.0; //0.9
     public static final double SHOOTER_MOTOR_SPEED = -0.55;
     public static final double SHOOTER_CRUISE_SPEED = -0.05;
     public static final double ANGLE_MOTOR_SPEED = 0.1;
