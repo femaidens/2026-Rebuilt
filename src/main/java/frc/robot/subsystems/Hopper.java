@@ -57,25 +57,27 @@ public class Hopper extends SubsystemBase {
   }
 
   public Command runHopperCmd(){
-    return this.run(() -> 
-      runHopper());
-    
+    return this.run(() -> runHopper());
   }
 
   public void runHopper(){
     indexerMotor.set(ShooterConstants.INDEXER_MOTOR_SPEED);
-      spindexerMotor.set(HopperConstants.MOTORSPEED);
+    spindexerMotor.set(HopperConstants.MOTORSPEED);
   }
 
-    public Command reverseIndexerMotorCmd() {
+  public void reverseHopper(){
+    indexerMotor.set(-ShooterConstants.INDEXER_MOTOR_SPEED);
+    spindexerMotor.set(-HopperConstants.MOTORSPEED);
+  }
+
+  public Command reverseIndexerMotorCmd() {
     return this.run(() -> indexerMotor.set(-ShooterConstants.INDEXER_MOTOR_SPEED));
   }
 
-     public Command stopIndexerMotorCmd() {
+  public Command stopIndexerMotorCmd() {
     return this.runOnce(() -> indexerMotor.set(0));
   }
 
-  
   public Command runSpindexer(){
     return this.run(() -> spindexerMotor.set(HopperConstants.MOTORSPEED));
   }
@@ -87,6 +89,11 @@ public class Hopper extends SubsystemBase {
   public Command stopSpindexer(){
     return this.runOnce(() -> spindexerMotor.set(0));
   }
+
+  public Command reverseHopperCmd() {
+    return this.run(() -> reverseHopper());
+  }
+
   /** 
   public boolean isFuelStaged(){
     return !beambreak.get();
