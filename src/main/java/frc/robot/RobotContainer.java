@@ -99,9 +99,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
       drive.runOnce(() -> drive.zeroHeading())
     );
 
-    driveJoy.x().onTrue(
-      autoshooter.resetMotorPositionCmd()
-    );
+    // driveJoy.x().onTrue(
+    //   autoshooter.resetMotorPositionCmd()
+    // );
     
     operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd()).onFalse(intake.stopAngleMotorCmd());
 
@@ -109,7 +109,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
     operJoy.rightTrigger().whileTrue(shooting.prepareShot(hopper));
 
-    operJoy.rightBumper().onTrue(intake.stopAngleMotorCmd());
+    operJoy.rightBumper().onTrue(autoshooter.resetMotorPositionCmd());
 
     operJoy.povUp().whileTrue(autoshooter.runAngleMotorCmd()).onFalse(autoshooter.stopAngleMotorCmd());
 
