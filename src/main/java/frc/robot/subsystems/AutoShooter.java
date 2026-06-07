@@ -216,10 +216,16 @@ public class AutoShooter extends SubsystemBase {
     });
   }
 
+  public Command testShootCmd(){
+    return this.run( () -> {
+        setShooterVelocity(-50);
+    });
+  }
+
   public Command shootHubFlushCmd() {
     return this.run(() -> {
         setShooterVelocity(-50.0); //-35 within PIT
-        angleMotor.setControl(angleVoltage.withPosition(4.45));
+        angleMotor.setControl(angleVoltage.withPosition(5.4));
     });
   }
 

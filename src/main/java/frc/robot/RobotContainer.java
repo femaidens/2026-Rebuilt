@@ -102,6 +102,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
     // driveJoy.x().onTrue(
     //   autoshooter.resetMotorPositionCmd()
     // );
+
+    driveJoy.x().onTrue(autoshooter.resetMotorPositionCmd());
     
     operJoy.leftTrigger().onTrue(intake.setAngleUpDownCmd()).onFalse(intake.stopAngleMotorCmd());
 
@@ -127,9 +129,10 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
     operJoy.x().whileTrue(autoshooter.shootTrenchCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
-    operJoy.y().whileTrue(autoshooter.shootWallCmd()).onFalse(autoshooter.stopShooterMotorCmd());
+    operJoy.y().whileTrue(autoshooter.testShootCmd()).onFalse(autoshooter.stopShooterMotorCmd());
 
     operJoy.b().whileTrue(intake.setIntakeMotorCmd()).onFalse(intake.stopIntakeMotorCmd());
+
 
     
   // operJoy.x().whileTrue(autoshooter.runShooterMotorCmd()).onFalse(autoshooter.stopShooterMotorCmd());
